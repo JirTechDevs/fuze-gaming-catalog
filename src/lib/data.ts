@@ -1,3 +1,5 @@
+import mockImage from "@/assets/mock_image.jpg";
+
 export interface Product {
   id: string;
   code: string;
@@ -16,32 +18,32 @@ export interface Product {
 
 export const sampleProducts: Product[] = [
   {
-    id: "1", code: "FZ3067", image: "/placeholder.svg", rank: "Platinum 1",
+    id: "1", code: "FZ3067", image: mockImage, rank: "Platinum 1",
     price: 650000, skins: ["Reaver Vandal", "Prime Phantom", "Glitchpop Classic"],
     sisaVP: "-", agent: "Full Unlock", changeNick: "Ready", region: "IDN", premier: "Can't be changed", status: "available",
   },
   {
-    id: "2", code: "FZ2044", image: "/placeholder.svg", rank: "Diamond 2",
+    id: "2", code: "FZ2044", image: mockImage, rank: "Diamond 2",
     price: 1200000, skins: ["Champions Vandal", "Oni Phantom", "Sovereign Ghost"],
     sisaVP: "320", agent: "Full Unlock", changeNick: "Ready", region: "IDN", premier: "Unranked", status: "available", featured: "hot",
   },
   {
-    id: "3", code: "FZ1891", image: "/placeholder.svg", rank: "Gold 3",
+    id: "3", code: "FZ1891", image: mockImage, rank: "Gold 3",
     price: 350000, skins: ["Spectrum Phantom", "Elderflame Vandal"],
     sisaVP: "-", agent: "20/23", changeNick: "Ready", region: "IDN", premier: "Can't be changed", status: "available", featured: "best-deal",
   },
   {
-    id: "4", code: "FZ4120", image: "/placeholder.svg", rank: "Ascendant 1",
+    id: "4", code: "FZ4120", image: mockImage, rank: "Ascendant 1",
     price: 1800000, skins: ["Champions 2022 Vandal", "RGX Vandal", "Reaver Operator", "Ion Sheriff"],
     sisaVP: "1200", agent: "Full Unlock", changeNick: "Ready", region: "IDN", premier: "Gold", status: "sold",
   },
   {
-    id: "5", code: "FZ5500", image: "/placeholder.svg", rank: "Silver 3",
+    id: "5", code: "FZ5500", image: mockImage, rank: "Silver 3",
     price: 200000, skins: ["Prime Vandal", "Sakura Vandal"],
     sisaVP: "-", agent: "15/23", changeNick: "Not Ready", region: "IDN", premier: "Can't be changed", status: "available",
   },
   {
-    id: "6", code: "FZ6789", image: "/placeholder.svg", rank: "Immortal 1",
+    id: "6", code: "FZ6789", image: mockImage, rank: "Immortal 1",
     price: 2500000, skins: ["Champions Phantom", "Prelude Vandal", "Arcane Sheriff", "BlastX Odin"],
     sisaVP: "800", agent: "Full Unlock", changeNick: "Ready", region: "IDN", premier: "Diamond", status: "available", featured: "rare",
   },

@@ -3,6 +3,10 @@ import { ChevronDown } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
+  const scrollToCatalog = () => {
+    document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <section className="relative flex min-h-[75vh] items-center justify-center overflow-hidden">
       {/* Background image */}
@@ -51,16 +55,19 @@ const HeroSection = () => {
           </p>
         </motion.div>
 
-        <motion.a
-          href="#catalog"
-          className="group flex flex-col items-center gap-2 text-primary/50 transition-colors hover:text-primary"
+        <motion.button
+          type="button"
+          onClick={scrollToCatalog}
+          className="group flex flex-col items-center gap-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          <span className="font-display text-[10px] tracking-[0.3em]">BROWSE CATALOG</span>
-          <ChevronDown size={20} className="animate-bounce" />
-        </motion.a>
+          <span className="rounded-lg bg-primary/10 px-4 py-2 font-display text-[10px] tracking-[0.3em] text-primary transition-all group-hover:bg-primary group-hover:text-primary-foreground">
+            BROWSE CATALOG
+          </span>
+          <ChevronDown size={20} className="animate-bounce text-primary/70 transition-colors group-hover:text-primary" />
+        </motion.button>
       </div>
 
       {/* Bottom edge accent */}

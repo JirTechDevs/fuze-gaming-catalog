@@ -60,6 +60,15 @@
 }
 
 @layer utilities {
+  .latest-strip-mask {
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+  .latest-strip-track {
+    animation: latest-strip-marquee 28s linear infinite;
+  }
+  .latest-strip-track:hover {
+    animation-play-state: paused;
+  }
   .text-glow {
     text-shadow: 0 0 10px hsl(187 100% 50% / 0.5), 0 0 30px hsl(187 100% 50% / 0.3);
   }
@@ -77,5 +86,14 @@
       linear-gradient(hsl(187 100% 50% / 0.03) 1px, transparent 1px),
       linear-gradient(90deg, hsl(187 100% 50% / 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
+  }
+}
+
+@keyframes latest-strip-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 0.625rem));
   }
 }

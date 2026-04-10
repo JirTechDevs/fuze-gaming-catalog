@@ -42,30 +42,25 @@ const FeaturedCard = ({ product, onSelect, index }: Props) => {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ delay: index * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      className="group relative cursor-pointer overflow-hidden rounded-2xl border border-primary/20 bg-card/90 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:box-glow"
+      className="group relative flex w-[320px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-2xl border border-primary/20 bg-card/90 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:box-glow md:w-[360px]"
       onClick={() => onSelect(product)}
     >
-      {/* Top glow accent */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
 
-      <div className="flex flex-col sm:flex-row">
-        {/* Image */}
-        <div className="relative aspect-[16/10] overflow-hidden bg-secondary/50 sm:aspect-auto sm:w-2/5">
+      <div className="flex h-full flex-col">
+        <div className="relative aspect-[16/10] overflow-hidden bg-secondary/50">
           <img
             src={product.image}
             alt={product.code}
             className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/80 hidden sm:block" />
-          <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent sm:hidden" />
+          <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
 
-          {/* Code badge */}
           <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-lg border border-primary/20 bg-background/90 px-3 py-1.5 backdrop-blur-sm">
             <Shield size={11} className="text-primary" />
             <span className="font-display text-xs font-bold tracking-[0.15em] text-primary">{product.code}</span>
           </div>
 
-          {/* Featured badge */}
           {badge && BadgeIcon && (
             <div className={`absolute right-3 top-3 flex items-center gap-1.5 rounded-lg border ${badge.border} ${badge.bg} px-3 py-1.5 backdrop-blur-sm`}>
               <BadgeIcon size={11} className={badge.text} />
@@ -74,12 +69,10 @@ const FeaturedCard = ({ product, onSelect, index }: Props) => {
           )}
         </div>
 
-        {/* Content */}
-        <div className="flex flex-1 flex-col justify-between gap-4 p-6">
+        <div className="flex flex-1 flex-col justify-between gap-4 p-5">
           <div className="flex flex-col gap-3">
-            {/* Rank */}
             <div className="flex items-center justify-between">
-              <span className={`font-display text-lg font-bold tracking-wide ${getRankColor(product.rank)}`}>
+              <span className={`font-display text-base font-bold tracking-wide ${getRankColor(product.rank)}`}>
                 {product.rank}
               </span>
               <span className="rounded border border-border/50 bg-secondary/50 px-2.5 py-0.5 font-display text-[10px] tracking-widest text-muted-foreground">
@@ -87,9 +80,8 @@ const FeaturedCard = ({ product, onSelect, index }: Props) => {
               </span>
             </div>
 
-            {/* Skins */}
             <div className="flex flex-wrap gap-1.5">
-              {product.skins.map((skin) => (
+              {product.skins.slice(0, 3).map((skin) => (
                 <span
                   key={skin}
                   className="rounded-md border border-border/30 bg-secondary/40 px-2 py-0.5 text-[11px] text-muted-foreground/80"
@@ -97,20 +89,23 @@ const FeaturedCard = ({ product, onSelect, index }: Props) => {
                   {skin}
                 </span>
               ))}
+              {product.skins.length > 3 && (
+                <span className="rounded-md border border-border/30 bg-secondary/40 px-2 py-0.5 text-[11px] text-muted-foreground/80">
+                  +{product.skins.length - 3} more
+                </span>
+              )}
             </div>
 
-            {/* Quick info */}
-            <div className="flex gap-4 text-[11px] text-muted-foreground/60">
+            <div className="flex flex-wrap gap-3 text-[11px] text-muted-foreground/60">
               <span>Agent: <span className="text-foreground/80">{product.agent}</span></span>
               <span>Nick: <span className="text-foreground/80">{product.changeNick}</span></span>
             </div>
           </div>
 
-          {/* Price + CTA */}
           <div className="flex items-end justify-between border-t border-border/30 pt-4">
             <div>
               <span className="font-display text-[10px] tracking-[0.2em] text-muted-foreground/50">PRICE</span>
-              <p className="font-display text-2xl font-bold leading-none text-primary text-glow">
+              <p className="font-display text-xl font-bold leading-none text-primary text-glow">
                 Rp {formatPrice(product.price)}
               </p>
             </div>
@@ -119,7 +114,7 @@ const FeaturedCard = ({ product, onSelect, index }: Props) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-2 rounded-xl border border-primary/20 bg-primary/10 px-5 py-2.5 font-display text-[11px] font-bold tracking-widest text-primary transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:box-glow-strong"
+              className="flex items-center gap-2 rounded-xl border border-primary/20 bg-primary/10 px-4 py-2.5 font-display text-[11px] font-bold tracking-widest text-primary transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:box-glow-strong"
             >
               <MessageCircle size={14} />
               BUY NOW

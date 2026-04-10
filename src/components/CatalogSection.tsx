@@ -14,6 +14,7 @@ const CatalogSection = () => {
     () => sampleProducts.filter((p) => p.featured && p.status === "available"),
     []
   );
+  const latestAccounts = useMemo(() => [...featured, ...featured], [featured]);
 
   const available = useMemo(() => {
     return sampleProducts
@@ -33,7 +34,7 @@ const CatalogSection = () => {
 
   return (
     <section id="catalog" className="container mx-auto px-4 py-20 space-y-24">
-      {/* ─── Featured ─── */}
+      {/* ─── Latest ─── */}
       {featured.length > 0 && (
         <div>
           <motion.div
@@ -46,23 +47,25 @@ const CatalogSection = () => {
             <div className="flex items-center gap-2">
               <Star size={14} className="text-primary" />
               <span className="font-display text-[11px] tracking-[0.4em] text-primary/60">
-                HANDPICKED FOR YOU
+                FRESH DROP SHOWCASE
               </span>
             </div>
             <h2 className="font-display text-3xl font-bold tracking-wider text-foreground md:text-4xl">
-              FEATURED <span className="text-primary text-glow">ACCOUNTS</span>
+              LATEST <span className="text-primary text-glow">ACCOUNTS</span>
             </h2>
           </motion.div>
 
-          <div className="flex flex-col gap-5">
-            {featured.map((product, i) => (
-              <FeaturedCard
-                key={product.id}
-                product={product}
-                onSelect={setSelected}
-                index={i}
-              />
-            ))}
+          <div className="latest-strip-mask relative overflow-hidden rounded-[28px] border border-border/20 bg-card/30 p-4 backdrop-blur-sm">
+            <div className="latest-strip-track flex w-max gap-5">
+              {latestAccounts.map((product, i) => (
+                <FeaturedCard
+                  key={`${product.id}-${i}`}
+                  product={product}
+                  onSelect={setSelected}
+                  index={i % featured.length}
+                />
+              ))}
+            </div>
           </div>
         </div>
       )}
