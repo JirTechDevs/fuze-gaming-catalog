@@ -11,6 +11,7 @@ export interface Product {
   region: string;
   premier: string;
   status: "available" | "sold";
+  featured?: "hot" | "best-deal" | "rare";
 }
 
 export const sampleProducts: Product[] = [
@@ -22,12 +23,12 @@ export const sampleProducts: Product[] = [
   {
     id: "2", code: "FZ2044", image: "/placeholder.svg", rank: "Diamond 2",
     price: 1200000, skins: ["Champions Vandal", "Oni Phantom", "Sovereign Ghost"],
-    sisaVP: "320", agent: "Full Unlock", changeNick: "Ready", region: "IDN", premier: "Unranked", status: "available",
+    sisaVP: "320", agent: "Full Unlock", changeNick: "Ready", region: "IDN", premier: "Unranked", status: "available", featured: "hot",
   },
   {
     id: "3", code: "FZ1891", image: "/placeholder.svg", rank: "Gold 3",
     price: 350000, skins: ["Spectrum Phantom", "Elderflame Vandal"],
-    sisaVP: "-", agent: "20/23", changeNick: "Ready", region: "IDN", premier: "Can't be changed", status: "available",
+    sisaVP: "-", agent: "20/23", changeNick: "Ready", region: "IDN", premier: "Can't be changed", status: "available", featured: "best-deal",
   },
   {
     id: "4", code: "FZ4120", image: "/placeholder.svg", rank: "Ascendant 1",
@@ -42,7 +43,7 @@ export const sampleProducts: Product[] = [
   {
     id: "6", code: "FZ6789", image: "/placeholder.svg", rank: "Immortal 1",
     price: 2500000, skins: ["Champions Phantom", "Prelude Vandal", "Arcane Sheriff", "BlastX Odin"],
-    sisaVP: "800", agent: "Full Unlock", changeNick: "Ready", region: "IDN", premier: "Diamond", status: "available",
+    sisaVP: "800", agent: "Full Unlock", changeNick: "Ready", region: "IDN", premier: "Diamond", status: "available", featured: "rare",
   },
 ];
 
