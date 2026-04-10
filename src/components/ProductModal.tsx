@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, MessageCircle } from "lucide-react";
+import { X, MessageCircle, Shield, ChevronRight } from "lucide-react";
 import { Product, formatPrice, getWhatsAppLink } from "@/lib/data";
 
 interface Props {
@@ -7,10 +7,10 @@ interface Props {
   onClose: () => void;
 }
 
-const DetailRow = ({ label, value }: { label: string; value: string }) => (
-  <div className="flex items-center justify-between border-b border-border/30 py-2">
-    <span className="font-display text-xs tracking-wider text-muted-foreground">{label}</span>
-    <span className="text-sm font-medium text-foreground">{value}</span>
+const DetailRow = ({ label, value, accent }: { label: string; value: string; accent?: boolean }) => (
+  <div className="flex items-center justify-between py-2.5">
+    <span className="font-display text-[11px] tracking-[0.2em] text-muted-foreground/60">{label}</span>
+    <span className={`text-sm font-medium ${accent ? "text-primary" : "text-foreground"}`}>{value}</span>
   </div>
 );
 
@@ -20,49 +20,51 @@ const ProductModal = ({ product, onClose }: Props) => {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-md p-4"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-background/85 backdrop-blur-lg p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
       >
         <motion.div
-          className="relative w-full max-w-lg overflow-hidden rounded-xl border border-border/50 bg-card box-glow"
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
+          className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-border/40 bg-card box-glow"
+          initial={{ scale: 0.92, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.92, opacity: 0, y: 20 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           onClick={(e) => e.stopPropagation()}
         >
-          <button onClick={onClose} className="absolute right-3 top-3 z-10 rounded-full bg-background/60 p-1.5 text-muted-foreground transition-colors hover:text-foreground">
-            <X size={18} />
+          {/* Top accent */}
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+
+          <button onClick={onClose} className="absolute right-4 top-4 z-10 rounded-full border border-border/30 bg-background/60 p-2 text-muted-foreground transition-colors hover:text-foreground backdrop-blur-sm">
+            <X size={16} />
           </button>
 
           {/* Image */}
-          <div className="relative aspect-video bg-secondary">
+          <div className="relative aspect-video bg-secondary/50">
             <img src={product.image} alt={product.code} className="h-full w-full object-cover" />
-            <div className="absolute bottom-3 left-3 rounded bg-background/80 px-3 py-1 font-display text-sm font-bold tracking-widest text-primary backdrop-blur">
-              {product.code}
+            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
+            <div className="absolute bottom-4 left-4 flex items-center gap-2">
+              <Shield size={14} className="text-primary" />
+              <span className="font-display text-lg font-bold tracking-[0.2em] text-primary text-glow">{product.code}</span>
             </div>
           </div>
 
           {/* Details */}
-          <div className="flex flex-col gap-1 p-5">
-            <h2 className="font-display text-xl font-bold tracking-wider text-foreground">
-              Account <span className="text-primary text-glow">{product.code}</span>
-            </h2>
-
+          <div className="flex flex-col gap-1 p-6">
             {/* Skins */}
-            <div className="mt-2 mb-1">
-              <span className="font-display text-xs tracking-wider text-muted-foreground">SKINS</span>
-              <div className="mt-1 flex flex-wrap gap-1.5">
+            <div className="mb-3">
+              <span className="font-display text-[10px] tracking-[0.3em] text-muted-foreground/50">SKINS</span>
+              <div className="mt-2 flex flex-wrap gap-1.5">
                 {product.skins.map((skin) => (
-                  <span key={skin} className="rounded bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">{skin}</span>
+                  <span key={skin} className="rounded-md border border-border/30 bg-secondary/40 px-2.5 py-1 text-[11px] text-secondary-foreground/80">{skin}</span>
                 ))}
               </div>
             </div>
 
-            <div className="mt-2">
-              <DetailRow label="RANK" value={product.rank} />
+            <div className="divide-y divide-border/20">
+              <DetailRow label="RANK" value={product.rank} accent />
               <DetailRow label="SISA VP" value={product.sisaVP} />
               <DetailRow label="AGENT" value={product.agent} />
               <DetailRow label="CHANGE NICK" value={product.changeNick} />
@@ -71,9 +73,9 @@ const ProductModal = ({ product, onClose }: Props) => {
             </div>
 
             {/* Price + CTA */}
-            <div className="mt-4 flex items-center justify-between">
+            <div className="mt-5 flex items-center justify-between rounded-xl border border-primary/10 bg-primary/5 p-4">
               <div>
-                <span className="text-xs text-muted-foreground">PRICE</span>
+                <span className="font-display text-[10px] tracking-[0.3em] text-muted-foreground/50">PRICE</span>
                 <p className="font-display text-2xl font-bold text-primary text-glow">
                   Rp {formatPrice(product.price)}
                 </p>
@@ -83,10 +85,11 @@ const ProductModal = ({ product, onClose }: Props) => {
                   href={getWhatsAppLink(product)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 font-display text-sm font-bold tracking-wider text-primary-foreground transition-all hover:box-glow-strong"
+                  className="flex items-center gap-2 rounded-xl bg-primary px-5 py-3 font-display text-[11px] font-bold tracking-[0.15em] text-primary-foreground transition-all duration-300 hover:box-glow-strong hover:gap-3"
                 >
-                  <MessageCircle size={18} />
+                  <MessageCircle size={16} />
                   BUY VIA WHATSAPP
+                  <ChevronRight size={14} />
                 </a>
               )}
             </div>
