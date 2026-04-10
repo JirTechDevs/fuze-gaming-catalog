@@ -1,47 +1,70 @@
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden bg-grid">
-      {/* Glow orbs */}
-      <div className="pointer-events-none absolute -top-32 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" />
-      <div className="pointer-events-none absolute bottom-0 left-1/4 h-64 w-64 rounded-full bg-primary/5 blur-[100px]" />
+    <section className="relative flex min-h-[75vh] items-center justify-center overflow-hidden">
+      {/* Background image */}
+      <img
+        src={heroBg}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover"
+        width={1920}
+        height={800}
+      />
 
-      <div className="relative z-10 flex flex-col items-center gap-6 px-4 text-center">
-        <motion.img
-          src="/images/logo.png"
-          alt="Fuzevalo"
-          className="h-28 w-28 drop-shadow-[0_0_30px_hsl(187,100%,50%,0.4)]"
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        />
-        <motion.h1
-          className="font-display text-4xl font-bold tracking-widest text-foreground md:text-6xl"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
-          FUZE<span className="text-primary text-glow">VALO</span>
-        </motion.h1>
-        <motion.p
-          className="max-w-md text-sm text-muted-foreground md:text-base"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          Premium Valorant Account Marketplace — Trusted, Fast & Secure
-        </motion.p>
+      {/* Dark overlays */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/80" />
+
+      {/* Scan line effect */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{
+        backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, hsl(187 100% 50% / 0.1) 2px, hsl(187 100% 50% / 0.1) 4px)",
+      }} />
+
+      <div className="relative z-10 flex flex-col items-center gap-8 px-4 text-center">
         <motion.div
+          className="flex flex-col items-center gap-4"
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="mb-2 flex items-center gap-3">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary/60" />
+            <span className="font-display text-xs font-semibold tracking-[0.4em] text-primary/80">TRUSTED MARKETPLACE</span>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary/60" />
+          </div>
+
+          <h1 className="font-display text-5xl font-bold leading-tight tracking-wider text-foreground md:text-7xl">
+            PREMIUM
+            <br />
+            <span className="text-primary text-glow">VALORANT</span>
+            <br />
+            ACCOUNTS
+          </h1>
+
+          <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground md:text-base">
+            Curated collection of verified accounts.
+            <br className="hidden sm:block" />
+            Fast delivery. Secure transactions.
+          </p>
+        </motion.div>
+
+        <motion.a
+          href="#catalog"
+          className="group flex flex-col items-center gap-2 text-primary/50 transition-colors hover:text-primary"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="mt-4 animate-bounce text-primary/60"
         >
-          <ChevronDown size={28} />
-        </motion.div>
+          <span className="font-display text-[10px] tracking-[0.3em]">BROWSE CATALOG</span>
+          <ChevronDown size={20} className="animate-bounce" />
+        </motion.a>
       </div>
+
+      {/* Bottom edge accent */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
     </section>
   );
 };
