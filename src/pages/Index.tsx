@@ -22,7 +22,7 @@ const Index = () => {
             transition={{ duration: 0.5 }}
           >
             <Navbar />
-            <div className="pt-14">
+            <div className="pt-12">
               <HeroSection />
               <CatalogSection />
               <Footer />

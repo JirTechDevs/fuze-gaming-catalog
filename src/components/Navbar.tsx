@@ -24,10 +24,10 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/20 bg-background/60 backdrop-blur-2xl">
-      <div className="container mx-auto flex h-14 items-center justify-between px-4">
+      <div className="container mx-auto flex h-12 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2.5">
-          <img src="/images/logo.png" alt="Fuzevalo" className="h-8 w-8 object-contain" />
-          <span className="font-display text-base font-bold tracking-[0.2em] text-foreground">
+          <img src="/images/logo.png" alt="Fuzevalo" className="h-7 w-7 object-contain" />
+          <span className="font-display text-sm font-bold tracking-[0.2em] text-foreground">
             FUZE<span className="text-primary">VALO</span>
           </span>
         </Link>
@@ -37,7 +37,7 @@ const Navbar = () => {
           <button
             type="button"
             onClick={scrollToCatalog}
-            className="rounded-lg bg-primary/10 px-3.5 py-1.5 font-display text-[11px] tracking-[0.15em] text-primary transition-all hover:bg-primary hover:text-primary-foreground"
+            className="rounded-lg bg-primary/10 px-3 py-1 font-display text-[10px] tracking-[0.15em] text-primary transition-all hover:bg-primary hover:text-primary-foreground"
           >
             CATALOG
           </button>

@@ -59,13 +59,13 @@ const HeroSection = () => {
 
       {/* Main grid */}
       <div
-        className="relative z-10 container mx-auto px-4 pb-24 pt-14 md:pt-16"
+        className="relative z-10 container mx-auto px-4 pb-20 pt-12"
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
           gap: "3rem",
-          minHeight: "82vh",
-          alignItems: "center",
+          minHeight: "64vh",
+          alignItems: "start",
         }}
       >
         {/* LEFT: Text */}
@@ -125,8 +125,8 @@ const HeroSection = () => {
 
         {/* RIGHT: Banner carousel */}
         <motion.div
-          className="relative flex items-center justify-center overflow-hidden py-12"
-          style={{ minHeight: "520px" }}
+          className="relative flex items-start justify-center overflow-hidden pt-2"
+          style={{ minHeight: "420px" }}
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
@@ -142,7 +142,7 @@ const HeroSection = () => {
             <img
               src={banners[prevIndex].src}
               alt={banners[prevIndex].alt}
-              className="aspect-[3/4] w-full object-cover"
+              className="aspect-[16/10] w-full bg-background/70 object-contain"
             />
             <div className="absolute inset-0 bg-background/50" />
           </motion.div>
@@ -155,7 +155,7 @@ const HeroSection = () => {
                   key={banners[activeIndex].src}
                   src={banners[activeIndex].src}
                   alt={banners[activeIndex].alt}
-                  className="aspect-[3/4] w-full object-cover"
+                  className="aspect-[16/10] w-full bg-background/70 object-contain"
                   initial={{ opacity: 0, scale: 1.04, y: 16 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.98, y: -16 }}
@@ -201,7 +201,7 @@ const HeroSection = () => {
             <img
               src={banners[nextIndex].src}
               alt={banners[nextIndex].alt}
-              className="aspect-[3/4] w-full object-cover"
+              className="aspect-[16/10] w-full bg-background/70 object-contain"
             />
             <div className="absolute inset-0 bg-background/50" />
           </motion.div>
