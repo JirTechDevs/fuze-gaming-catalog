@@ -58,14 +58,13 @@ const HeroSection = () => {
       <div className="absolute bottom-[-12%] right-[8%] h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
 
       {/* Main grid */}
-      <div
-        className="relative z-10 container mx-auto px-4 pb-20 pt-12"
-        style={{
+     <div
+       className="relative z-10 container mx-auto px-4 pb-16 pt-10"
+       style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
           gap: "3rem",
-          minHeight: "64vh",
-          alignItems: "start",
+          alignItems: "center",
         }}
       >
         {/* LEFT: Text */}
@@ -125,8 +124,8 @@ const HeroSection = () => {
 
         {/* RIGHT: Banner carousel */}
         <motion.div
-          className="relative flex items-start justify-center overflow-hidden pt-2"
-          style={{ minHeight: "420px" }}
+          className="relative flex items-center justify-center overflow-hidden py-12"
+          style={{ minHeight: "560px" }}
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
