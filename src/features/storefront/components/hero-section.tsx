@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
+"use client";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
-import pinkBanner from "@/assets/banner/pink.webp";
-import redBanner from "@/assets/banner/red.webp";
-import yellowBanner from "@/assets/banner/yellow.webp";
+import { useEffect, useState } from "react";
 
 const banners = [
-  { src: pinkBanner, alt: "Fuzevalo banner pink edition" },
-  { src: redBanner, alt: "Fuzevalo banner red edition" },
-  { src: yellowBanner, alt: "Fuzevalo banner yellow edition" },
+  { src: "/images/banners/pink.webp", alt: "Fuzevalo banner pink edition" },
+  { src: "/images/banners/red.webp", alt: "Fuzevalo banner red edition" },
+  { src: "/images/banners/yellow.webp", alt: "Fuzevalo banner yellow edition" },
 ];
 
 const particles = [
@@ -59,7 +58,7 @@ const consoleOrnaments = [
     scale: 0.98,
     type: "dpad",
   },
-];
+] as const;
 
 const tacticalLines = [
   { position: "left-[18%] top-[30%]", width: "w-24", delay: 0.2 },
@@ -79,35 +78,105 @@ const ConsoleCluster = () => (
     <rect x="64" y="16" width="24" height="24" rx="4" fill="none" stroke="currentColor" strokeWidth="3" />
     <path d="M22 82 L34 70 L46 82 L34 94 Z" fill="none" stroke="currentColor" strokeWidth="3" />
     <path d="M74 74 L92 92 M92 74 L74 92" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" strokeOpacity="0.3" strokeWidth="1.5" strokeDasharray="4 8" />
+    <circle
+      cx="60"
+      cy="60"
+      r="44"
+      fill="none"
+      stroke="currentColor"
+      strokeOpacity="0.3"
+      strokeWidth="1.5"
+      strokeDasharray="4 8"
+    />
   </svg>
 );
 
 const TacticalCrosshair = () => (
   <svg viewBox="0 0 140 140" className="h-full w-full" aria-hidden="true">
     <circle cx="70" cy="70" r="34" fill="none" stroke="currentColor" strokeWidth="2.5" />
-    <circle cx="70" cy="70" r="54" fill="none" stroke="currentColor" strokeOpacity="0.35" strokeWidth="1.5" strokeDasharray="6 10" />
-    <path d="M70 8 V34 M70 106 V132 M8 70 H34 M106 70 H132" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <path d="M48 70 H60 M80 70 H92 M70 48 V60 M70 80 V92" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <circle
+      cx="70"
+      cy="70"
+      r="54"
+      fill="none"
+      stroke="currentColor"
+      strokeOpacity="0.35"
+      strokeWidth="1.5"
+      strokeDasharray="6 10"
+    />
+    <path
+      d="M70 8 V34 M70 106 V132 M8 70 H34 M106 70 H132"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+    />
+    <path
+      d="M48 70 H60 M80 70 H92 M70 48 V60 M70 80 V92"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
     <circle cx="70" cy="70" r="6" fill="currentColor" />
   </svg>
 );
 
 const TacticalRadar = () => (
   <svg viewBox="0 0 160 120" className="h-full w-full" aria-hidden="true">
-    <path d="M18 100 Q44 18 132 18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-    <path d="M28 100 Q52 34 122 34" fill="none" stroke="currentColor" strokeOpacity="0.7" strokeWidth="2" strokeLinecap="round" />
-    <path d="M38 100 Q60 48 112 48" fill="none" stroke="currentColor" strokeOpacity="0.45" strokeWidth="1.5" strokeLinecap="round" />
+    <path
+      d="M18 100 Q44 18 132 18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M28 100 Q52 34 122 34"
+      fill="none"
+      stroke="currentColor"
+      strokeOpacity="0.7"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    <path
+      d="M38 100 Q60 48 112 48"
+      fill="none"
+      stroke="currentColor"
+      strokeOpacity="0.45"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
     <circle cx="104" cy="40" r="4" fill="currentColor" />
-    <path d="M18 100 H144" stroke="currentColor" strokeOpacity="0.35" strokeWidth="1.5" strokeDasharray="5 8" />
+    <path
+      d="M18 100 H144"
+      stroke="currentColor"
+      strokeOpacity="0.35"
+      strokeWidth="1.5"
+      strokeDasharray="5 8"
+    />
     <path d="M18 100 L50 68" stroke="currentColor" strokeOpacity="0.4" strokeWidth="1.5" />
   </svg>
 );
 
 const DPadPanel = () => (
   <svg viewBox="0 0 150 120" className="h-full w-full" aria-hidden="true">
-    <rect x="18" y="18" width="114" height="84" rx="18" fill="none" stroke="currentColor" strokeOpacity="0.28" strokeWidth="2" />
-    <path d="M56 40 H70 V26 H80 V40 H94 V50 H80 V64 H70 V50 H56 Z" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
+    <rect
+      x="18"
+      y="18"
+      width="114"
+      height="84"
+      rx="18"
+      fill="none"
+      stroke="currentColor"
+      strokeOpacity="0.28"
+      strokeWidth="2"
+    />
+    <path
+      d="M56 40 H70 V26 H80 V40 H94 V50 H80 V64 H70 V50 H56 Z"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinejoin="round"
+    />
     <circle cx="102" cy="44" r="7" fill="none" stroke="currentColor" strokeWidth="2.4" />
     <rect x="95" y="58" width="14" height="14" rx="3" fill="none" stroke="currentColor" strokeWidth="2.4" />
     <path d="M98 90 H118" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
@@ -116,18 +185,21 @@ const DPadPanel = () => (
   </svg>
 );
 
-const HeroSection = () => {
+export default function HeroSection() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % banners.length);
     }, 3500);
+
     return () => window.clearInterval(timer);
   }, []);
 
   const scrollToCatalog = () => {
-    document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document
+      .getElementById("catalog")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const prevIndex = (activeIndex - 1 + banners.length) % banners.length;
@@ -163,7 +235,14 @@ const HeroSection = () => {
         <motion.div
           key={ornament.position}
           className={`pointer-events-none absolute hidden text-primary/55 lg:block ${ornament.position}`}
-          style={{ width: ornament.type === "radar" ? 160 : ornament.type === "dpad" ? 150 : 120 }}
+          style={{
+            width:
+              ornament.type === "radar"
+                ? 160
+                : ornament.type === "dpad"
+                  ? 150
+                  : 120,
+          }}
           initial={{ opacity: 0.18, scale: ornament.scale, rotate: ornament.rotate }}
           animate={{
             opacity: [0.2, 0.52, 0.24],
@@ -242,63 +321,6 @@ const HeroSection = () => {
       ))}
 
       <div className="relative z-10 container mx-auto px-4 pb-16 pt-16 md:pb-24 md:pt-20">
-        {/*
-          <motion.div
-            className="mx-auto flex max-w-4xl flex-col items-center text-center"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="mb-5 flex items-center gap-3">
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary/60" />
-              <span className="font-display text-xs font-semibold tracking-[0.4em] text-primary/80">
-                TRUSTED MARKETPLACE
-              </span>
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary/60" />
-            </div>
-
-            <h1 className="font-display text-4xl font-bold leading-[0.95] tracking-[0.08em] text-foreground sm:text-5xl md:text-7xl">
-              FUZEVALO
-              <br />
-              <span className="text-primary text-glow">LIVE GLOW</span>
-              <br />
-              SHOWCASE
-            </h1>
-
-            <p className="mt-5 max-w-2xl text-sm leading-7 text-foreground/72 md:text-base">
-              A brighter cyan stage, layered atmosphere, and rotating featured banners give the storefront
-              a more active first impression before visitors dive into the catalog.
-            </p>
-
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <button
-                type="button"
-                onClick={scrollToCatalog}
-                className="rounded-full border border-primary/30 bg-primary/12 px-5 py-2.5 font-display text-[10px] tracking-[0.3em] text-primary transition-all hover:bg-primary hover:text-primary-foreground"
-              >
-                BROWSE CATALOG
-              </button>
-              <span className="rounded-full border border-white/10 bg-white/5 px-5 py-2.5 font-display text-[10px] tracking-[0.3em] text-foreground/70 backdrop-blur-sm">
-                FEATURED BANNER STAGE
-              </span>
-            </div>
-
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              {trustPoints.map(({ label, icon: Icon }) => (
-                <div
-                  key={label}
-                  className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 backdrop-blur-md"
-                >
-                  <Icon size={14} className="text-primary" />
-                  <span className="font-display text-[10px] tracking-[0.22em] text-foreground/85">
-                    {label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        */}
-
         <motion.div
           className="relative mx-auto flex w-full max-w-[1400px] items-center justify-center overflow-hidden py-10 md:py-14"
           initial={{ opacity: 0, y: 28 }}
@@ -398,8 +420,7 @@ const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Scroll cue */}
-      <div className="absolute bottom-6 left-0 right-0 z-10 hidden md:flex flex-col items-center gap-6">
+      <div className="absolute bottom-6 left-0 right-0 z-10 hidden flex-col items-center gap-6 md:flex">
         <motion.button
           type="button"
           onClick={scrollToCatalog}
@@ -433,6 +454,4 @@ const HeroSection = () => {
       </div>
     </section>
   );
-};
-
-export default HeroSection;
+}

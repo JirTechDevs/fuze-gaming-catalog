@@ -1,38 +1,37 @@
-import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+"use client";
 
-const Navbar = () => {
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+
+export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const scrollToCatalog = () => {
-    if (location.pathname !== "/") {
-      navigate("/");
-      requestAnimationFrame(() => {
-        window.setTimeout(() => {
-          document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 150);
-      });
+    if (pathname !== "/") {
+      router.push("/#catalog");
       return;
     }
 
-    document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document
+      .getElementById("catalog")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[linear-gradient(180deg,hsl(var(--background)_/_0.9),hsl(var(--background)_/_0.58))] shadow-[0_10px_45px_hsl(226_56%_4%_/_0.4)] backdrop-blur-2xl">
       <div className="container mx-auto flex h-12 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2.5">
+        <Link href="/" className="flex items-center gap-2.5">
           <img src="/images/logo.png" alt="Fuzevalo" className="h-7 w-7 object-contain" />
           <span className="font-display text-sm font-bold tracking-[0.2em] text-foreground">
             FUZE<span className="text-primary">VALO</span>
           </span>
         </Link>
 
-        {/* Desktop */}
         <div className="hidden items-center gap-1 md:flex">
           <button
             type="button"
@@ -73,6 +72,4 @@ const Navbar = () => {
       </AnimatePresence>
     </nav>
   );
-};
-
-export default Navbar;
+}

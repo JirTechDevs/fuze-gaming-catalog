@@ -1,33 +1,38 @@
-import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
-import { Search, SlidersHorizontal, Archive } from "lucide-react";
-import ProductCard from "./ProductCard";
-import ProductModal from "./ProductModal";
-import { Product, sampleProducts } from "@/lib/data";
+"use client";
 
-const CatalogSection = () => {
+import { motion } from "framer-motion";
+import { Archive, Search, SlidersHorizontal } from "lucide-react";
+import { useMemo, useState } from "react";
+import type { Product } from "@/features/catalog/domain/product";
+import ProductCard from "@/features/storefront/components/product-card";
+import ProductModal from "@/features/storefront/components/product-modal";
+
+interface CatalogSectionProps {
+  products: Product[];
+}
+
+export default function CatalogSection({ products }: CatalogSectionProps) {
   const [selected, setSelected] = useState<Product | null>(null);
   const [search, setSearch] = useState("");
 
   const available = useMemo(() => {
-    return sampleProducts
-      .filter((p) => p.status === "available" && !p.featured)
+    return products
+      .filter((product) => product.status === "available" && !product.featured)
       .filter(
-        (p) =>
+        (product) =>
           !search ||
-          p.code.toLowerCase().includes(search.toLowerCase()) ||
-          p.rank.toLowerCase().includes(search.toLowerCase())
+          product.code.toLowerCase().includes(search.toLowerCase()) ||
+          product.rank.toLowerCase().includes(search.toLowerCase()),
       );
-  }, [search]);
+  }, [products, search]);
 
   const sold = useMemo(
-    () => sampleProducts.filter((p) => p.status === "sold"),
-    []
+    () => products.filter((product) => product.status === "sold"),
+    [products],
   );
 
   return (
-    <section id="catalog" className="container mx-auto px-4 py-20 space-y-24">
-      {/* ─── Available ─── */}
+    <section id="catalog" className="container mx-auto space-y-24 px-4 py-20">
       <div>
         <motion.div
           className="mb-10 flex flex-col gap-6"
@@ -45,16 +50,11 @@ const CatalogSection = () => {
             </h2>
           </div>
 
-          {/* Controls */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
-              <SlidersHorizontal
-                size={14}
-                className="text-muted-foreground/50"
-              />
+              <SlidersHorizontal size={14} className="text-muted-foreground/50" />
               <span className="rounded bg-secondary/50 px-2 py-0.5 font-display text-[10px] tracking-wider text-muted-foreground/50">
-                {available.length}{" "}
-                {available.length === 1 ? "ITEM" : "ITEMS"}
+                {available.length} {available.length === 1 ? "ITEM" : "ITEMS"}
               </span>
             </div>
 
@@ -67,21 +67,20 @@ const CatalogSection = () => {
                 type="text"
                 placeholder="Search code or rank..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(event) => setSearch(event.target.value)}
                 className="w-full rounded-lg border border-border/50 bg-card/60 py-2.5 pl-9 pr-4 text-sm text-foreground backdrop-blur-sm placeholder:text-muted-foreground/40 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20 sm:w-60"
               />
             </div>
           </div>
         </motion.div>
 
-        {/* Grid */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {available.map((product, i) => (
+          {available.map((product, index) => (
             <ProductCard
               key={product.id}
               product={product}
               onSelect={setSelected}
-              index={i}
+              index={index}
             />
           ))}
         </div>
@@ -98,7 +97,6 @@ const CatalogSection = () => {
         )}
       </div>
 
-      {/* ─── Sold (Social Proof) ─── */}
       {sold.length > 0 && (
         <div>
           <motion.div
@@ -120,13 +118,13 @@ const CatalogSection = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {sold.map((product, i) => (
+            {sold.map((product, index) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.05, duration: 0.4 }}
+                transition={{ delay: index * 0.05, duration: 0.4 }}
                 className="relative overflow-hidden rounded-xl border border-border/20 bg-card/40 p-4 opacity-50"
               >
                 <div className="flex items-center justify-between">
@@ -152,6 +150,4 @@ const CatalogSection = () => {
       <ProductModal product={selected} onClose={() => setSelected(null)} />
     </section>
   );
-};
-
-export default CatalogSection;
+}
