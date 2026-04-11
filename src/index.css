@@ -69,6 +69,15 @@
   .latest-strip-track:hover {
     animation-play-state: paused;
   }
+  .hero-shop-mask {
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+  .hero-shop-track {
+    animation: hero-shop-marquee 22s linear infinite;
+  }
+  .hero-shop-track:hover {
+    animation-play-state: paused;
+  }
   .text-glow {
     text-shadow: 0 0 10px hsl(189 100% 72% / 0.55), 0 0 30px hsl(189 100% 72% / 0.32);
   }
@@ -95,5 +104,14 @@
   }
   to {
     transform: translateX(calc(-50% - 0.625rem));
+  }
+}
+
+@keyframes hero-shop-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 1rem));
   }
 }

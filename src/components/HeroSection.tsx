@@ -68,6 +68,11 @@ const tacticalLines = [
   { position: "right-[22%] bottom-[30%]", width: "w-28", delay: 0.4 },
 ];
 
+const shopTicker = Array.from({ length: 10 }, (_, index) => ({
+  id: index,
+  label: "FUZEVALO GAMING SHOP",
+}));
+
 const ConsoleCluster = () => (
   <svg viewBox="0 0 120 120" className="h-full w-full" aria-hidden="true">
     <circle cx="28" cy="28" r="12" fill="none" stroke="currentColor" strokeWidth="3" />
@@ -295,15 +300,15 @@ const HeroSection = () => {
         */}
 
         <motion.div
-          className="relative mx-auto flex w-full max-w-[1180px] items-center justify-center overflow-hidden py-10 md:py-14"
+          className="relative mx-auto flex w-full max-w-[1400px] items-center justify-center overflow-hidden py-10 md:py-14"
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
         >
           <motion.div
             key={`prev-${prevIndex}`}
-            className="absolute left-0 top-1/2 z-10 hidden w-[280px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 shadow-[0_30px_90px_hsl(225_60%_3%_/_0.42)] backdrop-blur-md lg:block"
-            animate={{ x: "-14%", scale: 0.88, opacity: 0.55, rotate: -4 }}
+            className="absolute left-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 shadow-[0_30px_90px_hsl(225_60%_3%_/_0.42)] backdrop-blur-md lg:block"
+            animate={{ x: "-7%", scale: 0.94, opacity: 0.66, rotate: -4 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             onClick={goToPrevious}
           >
@@ -378,8 +383,8 @@ const HeroSection = () => {
 
           <motion.div
             key={`next-${nextIndex}`}
-            className="absolute right-0 top-1/2 z-10 hidden w-[280px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 shadow-[0_30px_90px_hsl(225_60%_3%_/_0.42)] backdrop-blur-md lg:block"
-            animate={{ x: "14%", scale: 0.88, opacity: 0.55, rotate: 4 }}
+            className="absolute right-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 shadow-[0_30px_90px_hsl(225_60%_3%_/_0.42)] backdrop-blur-md lg:block"
+            animate={{ x: "7%", scale: 0.94, opacity: 0.66, rotate: 4 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             onClick={goToNext}
           >
@@ -394,21 +399,38 @@ const HeroSection = () => {
       </div>
 
       {/* Scroll cue */}
-      <motion.button
-        type="button"
-        onClick={scrollToCatalog}
-        className="absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 md:flex"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-      >
-        <span className="font-display text-[10px] tracking-[0.3em] text-primary/70">
-          SCROLL FOR CATALOG
-        </span>
-        <ChevronDown size={20} className="animate-bounce text-primary" />
-      </motion.button>
+      <div className="absolute bottom-6 left-0 right-0 z-10 hidden md:flex flex-col items-center gap-6">
+        <motion.button
+          type="button"
+          onClick={scrollToCatalog}
+          className="flex flex-col items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          <span className="pt-16He font-display text-[10px] tracking-[0.3em] text-primary/70">
+            SCROLL FOR CATALOG
+          </span>
+          <ChevronDown size={20} className="animate-bounce text-primary" />
+        </motion.button>
 
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        <div className="w-full">
+          <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          <div className="hero-shop-mask overflow-hidden py-4">
+            <div className="hero-shop-track flex w-max items-center gap-8 whitespace-nowrap">
+              {[...shopTicker, ...shopTicker].map((item, index) => (
+                <span
+                  key={`${item.id}-${index}`}
+                  className="font-display text-sm tracking-[0.5em] text-primary/72"
+                >
+                  {item.label}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        </div>
+      </div>
     </section>
   );
 };
