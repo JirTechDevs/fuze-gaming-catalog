@@ -1,0 +1,86 @@
+.catalogShell {
+  background:
+    linear-gradient(180deg, hsl(227 32% 7%) 0%, hsl(224 28% 8%) 50%, hsl(227 30% 7%) 100%);
+}
+
+.catalogAura {
+  background-image:
+    radial-gradient(circle at 18% 18%, hsl(188 100% 70% / 0.12) 0%, transparent 24%),
+    radial-gradient(circle at 78% 24%, hsl(194 100% 86% / 0.08) 0%, transparent 20%),
+    radial-gradient(circle at 32% 76%, hsl(182 100% 72% / 0.07) 0%, transparent 18%),
+    radial-gradient(circle at 82% 72%, hsl(190 100% 74% / 0.1) 0%, transparent 24%);
+}
+
+.catalogMesh {
+  background-image:
+    linear-gradient(hsl(189 100% 72% / 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(189 100% 72% / 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(circle at center, black, transparent 88%);
+}
+
+.catalogEdgeFade {
+  background:
+    linear-gradient(
+      90deg,
+      hsl(var(--background) / 0.95),
+      transparent 16%,
+      transparent 84%,
+      hsl(var(--background) / 0.95)
+    );
+}
+
+.catalogVignette {
+  background:
+    linear-gradient(
+      180deg,
+      hsl(var(--background) / 0.08) 0%,
+      transparent 16%,
+      transparent 84%,
+      hsl(var(--background) / 0.42) 100%
+    );
+}
+
+.catalogGlowTop {
+  background: radial-gradient(
+    ellipse at top,
+    hsl(189 100% 72% / 0.18) 0%,
+    hsl(189 100% 72% / 0.08) 34%,
+    transparent 72%
+  );
+}
+
+.catalogGlowBottom {
+  background: radial-gradient(
+    ellipse at bottom,
+    hsl(191 100% 82% / 0.1) 0%,
+    transparent 66%
+  );
+}
+
+.catalogStripTop,
+.catalogStripBottom {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--primary) / 0.34),
+    transparent
+  );
+}
+
+.catalogStripTop {
+  top: 0;
+}
+
+.catalogStripBottom {
+  bottom: 0;
+}
+
+.ambientParticle {
+  box-shadow: 0 0 24px hsl(var(--primary) / 0.38);
+}
+
+.techLine {
+  background: linear-gradient(90deg, hsl(var(--primary) / 0.42), transparent);
+}
