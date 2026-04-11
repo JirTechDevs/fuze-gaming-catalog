@@ -23,7 +23,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/20 bg-background/60 backdrop-blur-2xl">
+    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[linear-gradient(180deg,hsl(var(--background)_/_0.9),hsl(var(--background)_/_0.58))] shadow-[0_10px_45px_hsl(226_56%_4%_/_0.4)] backdrop-blur-2xl">
       <div className="container mx-auto flex h-12 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2.5">
           <img src="/images/logo.png" alt="Fuzevalo" className="h-7 w-7 object-contain" />
@@ -37,7 +37,7 @@ const Navbar = () => {
           <button
             type="button"
             onClick={scrollToCatalog}
-            className="rounded-lg bg-primary/10 px-3 py-1 font-display text-[10px] tracking-[0.15em] text-primary transition-all hover:bg-primary hover:text-primary-foreground"
+            className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 font-display text-[10px] tracking-[0.15em] text-primary transition-all hover:bg-primary hover:text-primary-foreground"
           >
             CATALOG
           </button>
@@ -54,7 +54,7 @@ const Navbar = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-b border-border/20 bg-background/95 backdrop-blur-2xl md:hidden"
+            className="overflow-hidden border-b border-white/10 bg-background/92 backdrop-blur-2xl md:hidden"
           >
             <div className="flex flex-col gap-1 p-3">
               <button
@@ -63,7 +63,7 @@ const Navbar = () => {
                   setOpen(false);
                   scrollToCatalog();
                 }}
-                className="rounded-lg px-3 py-2.5 text-left font-display text-[11px] tracking-[0.15em] text-foreground hover:bg-primary/10 hover:text-primary"
+                className="rounded-xl px-3 py-2.5 text-left font-display text-[11px] tracking-[0.15em] text-foreground hover:bg-primary/10 hover:text-primary"
               >
                 CATALOG
               </button>
