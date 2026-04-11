@@ -21,6 +21,19 @@ const emptyProduct: Omit<Product, "id"> = {
   status: "available",
 };
 
+const primaryButtonClassName =
+  "rounded-lg bg-primary py-2.5 font-display text-sm font-bold tracking-wider text-primary-foreground transition-all hover:box-glow-strong";
+const iconButtonClassName =
+  "rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground";
+const destructiveIconButtonClassName =
+  "rounded p-1.5 text-muted-foreground transition-colors hover:bg-destructive/20 hover:text-destructive";
+const fieldLabelClassName =
+  "mb-1 block font-display text-xs tracking-wider text-muted-foreground";
+const textFieldClassName =
+  "w-full rounded-md border border-border bg-secondary px-3 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none";
+const imageFieldClassName =
+  "flex-1 rounded-md border border-border bg-secondary px-3 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none";
+
 interface AdminCatalogPageProps {
   initialProducts: Product[];
 }
@@ -150,7 +163,7 @@ export default function AdminCatalogPage({
                     <div className="flex gap-2">
                       <button
                         onClick={() => toggleStatus(product.id)}
-                        className="rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                        className={iconButtonClassName}
                       >
                         {product.status === "available" ? (
                           <EyeOff size={15} />
@@ -160,13 +173,13 @@ export default function AdminCatalogPage({
                       </button>
                       <button
                         onClick={() => openEdit(product)}
-                        className="rounded p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                        className={iconButtonClassName}
                       >
                         <Pencil size={15} />
                       </button>
                       <button
                         onClick={() => remove(product.id)}
-                        className="rounded p-1.5 text-muted-foreground transition-colors hover:bg-destructive/20 hover:text-destructive"
+                        className={destructiveIconButtonClassName}
                       >
                         <Trash2 size={15} />
                       </button>
@@ -219,7 +232,7 @@ export default function AdminCatalogPage({
                     ] as [keyof Product, string][]
                   ).map(([key, label]) => (
                     <div key={key}>
-                      <label className="mb-1 block font-display text-xs tracking-wider text-muted-foreground">
+                      <label className={fieldLabelClassName}>
                         {label}
                       </label>
                       <input
@@ -233,25 +246,25 @@ export default function AdminCatalogPage({
                                 : event.target.value,
                           })
                         }
-                        className="w-full rounded-md border border-border bg-secondary px-3 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none"
+                        className={textFieldClassName}
                       />
                     </div>
                   ))}
 
                   <div>
-                    <label className="mb-1 block font-display text-xs tracking-wider text-muted-foreground">
+                    <label className={fieldLabelClassName}>
                       Skins (comma separated)
                     </label>
                     <textarea
                       value={skinInput}
                       onChange={(event) => setSkinInput(event.target.value)}
                       rows={2}
-                      className="w-full rounded-md border border-border bg-secondary px-3 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none"
+                      className={textFieldClassName}
                     />
                   </div>
 
                   <div>
-                    <label className="mb-1 block font-display text-xs tracking-wider text-muted-foreground">
+                    <label className={fieldLabelClassName}>
                       Image URL
                     </label>
                     <div className="flex gap-2">
@@ -260,7 +273,7 @@ export default function AdminCatalogPage({
                         onChange={(event) =>
                           setEditing({ ...editing, image: event.target.value })
                         }
-                        className="flex-1 rounded-md border border-border bg-secondary px-3 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none"
+                        className={imageFieldClassName}
                       />
                       <button className="flex items-center gap-1 rounded-md bg-secondary px-3 py-2 text-xs text-muted-foreground hover:text-foreground">
                         <Upload size={14} />
@@ -270,7 +283,7 @@ export default function AdminCatalogPage({
 
                   <button
                     onClick={save}
-                    className="mt-2 w-full rounded-lg bg-primary py-2.5 font-display text-sm font-bold tracking-wider text-primary-foreground transition-all hover:box-glow-strong"
+                    className={`mt-2 w-full ${primaryButtonClassName}`}
                   >
                     {isNew ? "CREATE ACCOUNT" : "SAVE CHANGES"}
                   </button>

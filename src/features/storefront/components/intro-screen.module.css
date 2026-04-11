@@ -1,0 +1,11 @@
+.introRadialGlow {
+  background: radial-gradient(
+    circle,
+    hsl(187 100% 50% / 0.15) 0%,
+    transparent 70%
+  );
+}
+
+.introLogo {
+  filter: drop-shadow(0 0 40px hsl(187 100% 50% / 0.5));
+}
