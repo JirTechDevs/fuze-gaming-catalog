@@ -13,7 +13,25 @@ interface ProductModalProps {
   onClose: () => void;
 }
 
-function DetailRow({
+const rankColors: Record<string, string> = {
+  Iron: "text-[hsl(20,15%,50%)]",
+  Bronze: "text-[hsl(30,50%,45%)]",
+  Silver: "text-[hsl(220,10%,65%)]",
+  Gold: "text-[hsl(45,80%,55%)]",
+  Platinum: "text-[hsl(187,60%,55%)]",
+  Diamond: "text-[hsl(280,60%,65%)]",
+  Ascendant: "text-[hsl(150,60%,50%)]",
+  Immortal: "text-[hsl(0,70%,60%)]",
+  Radiant: "text-[hsl(45,100%,65%)]",
+};
+
+function getRankColor(rank: string) {
+  const base = rank.split(" ")[0];
+
+  return rankColors[base] || "text-foreground";
+}
+
+function DetailTile({
   label,
   value,
   accent,
@@ -23,13 +41,15 @@ function DetailRow({
   accent?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between py-2.5">
-      <span className="font-display text-[11px] tracking-[0.2em] text-muted-foreground/60">
+    <div className="rounded-[1.35rem] border border-border/35 bg-background/30 px-4 py-3.5">
+      <span className="font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
         {label}
       </span>
-      <span className={`text-sm font-medium ${accent ? "text-primary" : "text-foreground"}`}>
+      <p
+        className={`mt-1 text-sm font-medium leading-5 ${accent ? "text-primary" : "text-foreground/88"}`}
+      >
         {value}
-      </span>
+      </p>
     </div>
   );
 }
@@ -45,14 +65,14 @@ export default function ProductModal({
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-background/85 p-4 backdrop-blur-lg"
+        className="fixed inset-0 z-50 overflow-y-auto bg-background/85 p-4 backdrop-blur-lg"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
       >
         <motion.div
-          className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-border/40 bg-card box-glow"
+          className="relative mx-auto my-4 w-full max-w-xl overflow-hidden rounded-[2rem] border border-border/40 bg-card box-glow"
           initial={{ scale: 0.92, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.92, opacity: 0, y: 20 }}
@@ -63,55 +83,87 @@ export default function ProductModal({
 
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 z-10 rounded-full border border-border/30 bg-background/60 p-2 text-muted-foreground transition-colors hover:text-foreground backdrop-blur-sm"
+            className="absolute right-4 top-4 z-10 rounded-full border border-border/30 bg-background/60 p-2 text-muted-foreground backdrop-blur-sm transition-colors hover:text-foreground"
           >
             <X size={16} />
           </button>
 
-          <div className="relative aspect-video bg-secondary/50">
-            <img src={product.image} alt={product.code} className="h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
-            <div className="absolute bottom-4 left-4 flex items-center gap-2">
-              <Shield size={14} className="text-primary" />
-              <span className="font-display text-lg font-bold tracking-[0.2em] text-primary text-glow">
+          <div className="relative aspect-[4/5] overflow-hidden bg-[radial-gradient(circle_at_top,_hsl(var(--primary)/0.24),_transparent_52%),linear-gradient(180deg,_hsl(var(--secondary)/0.9),_hsl(var(--card)))] p-4 sm:aspect-[5/4]">
+            <div className="relative h-full w-full overflow-hidden rounded-[1.65rem] border border-white/10 bg-background/25">
+              <img
+                src={product.image}
+                alt={product.code}
+                className="h-full w-full object-contain object-top"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/15 to-transparent" />
+            </div>
+
+            <div className="absolute left-7 top-7 flex items-center gap-2 rounded-full border border-primary/25 bg-background/88 px-4 py-2 backdrop-blur-sm">
+              <Shield size={13} className="text-primary" />
+              <span className="font-display text-sm font-bold tracking-[0.2em] text-primary text-glow">
                 {product.code}
               </span>
             </div>
-          </div>
 
-          <div className="flex flex-col gap-1 p-6">
-            <div className="mb-3">
-              <span className="font-display text-[10px] tracking-[0.3em] text-muted-foreground/50">
-                SKINS
-              </span>
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                {product.skins.map((skin) => (
-                  <span
-                    key={skin}
-                    className="rounded-md border border-border/30 bg-secondary/40 px-2.5 py-1 text-[11px] text-secondary-foreground/80"
-                  >
-                    {skin}
-                  </span>
-                ))}
+            <div className="absolute bottom-7 left-7 right-7 flex flex-wrap items-end justify-between gap-3">
+              <div className="rounded-[1.3rem] border border-primary/15 bg-background/78 px-4 py-3 backdrop-blur-sm">
+                <span className="font-display text-[10px] tracking-[0.24em] text-muted-foreground/55">
+                  RANK
+                </span>
+                <p
+                  className={`mt-1 font-display text-2xl font-bold tracking-wide ${getRankColor(product.rank)}`}
+                >
+                  {product.rank}
+                </p>
               </div>
-            </div>
-
-            <div className="divide-y divide-border/20">
-              <DetailRow label="RANK" value={product.rank} accent />
-              <DetailRow label="SISA VP" value={product.sisaVP} />
-              <DetailRow label="AGENT" value={product.agent} />
-              <DetailRow label="CHANGE NICK" value={product.changeNick} />
-              <DetailRow label="REGION" value={product.region} />
-              <DetailRow label="PREMIER" value={product.premier} />
-            </div>
-
-            <div className="mt-5 flex items-center justify-between rounded-xl border border-primary/10 bg-primary/5 p-4">
-              <div>
-                <span className="font-display text-[10px] tracking-[0.3em] text-muted-foreground/50">
+              <div className="rounded-[1.3rem] border border-primary/15 bg-background/78 px-4 py-3 backdrop-blur-sm sm:text-right">
+                <span className="font-display text-[10px] tracking-[0.24em] text-muted-foreground/55">
                   PRICE
                 </span>
-                <p className="font-display text-2xl font-bold text-primary text-glow">
+                <p className="mt-1 font-display text-2xl font-bold text-primary text-glow">
                   Rp {formatPrice(product.price)}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-5 p-6">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <DetailTile label="SISA VP" value={product.sisaVP || "-"} />
+              <DetailTile label="CHANGE NICK" value={product.changeNick} />
+              <DetailTile label="REGION" value={product.region} />
+              <DetailTile label="PREMIER" value={product.premier || "-"} />
+              <DetailTile label="AGENT" value={product.agent} />
+              <DetailTile
+                label="STATUS"
+                value={product.status === "available" ? "Tersedia" : "Sold"}
+                accent={product.status === "available"}
+              />
+            </div>
+
+            <div className="rounded-[1.6rem] border border-border/35 bg-background/32 p-5">
+              <span className="font-display text-sm font-bold tracking-[0.16em] text-foreground">
+                DAFTAR SKIN
+              </span>
+              <div className="mt-1 text-sm text-muted-foreground/72">
+                Skin yang ikut di akun ini
+              </div>
+              <ol className="mt-4 space-y-2 text-base leading-6 text-foreground/84">
+                {product.skins.map((skin, index) => (
+                  <li key={skin}>
+                    {index + 1}. {skin}
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="flex flex-col gap-4 rounded-[1.5rem] border border-primary/10 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <span className="font-display text-[10px] tracking-[0.26em] text-muted-foreground/50">
+                  SIAP CHECKOUT
+                </span>
+                <p className="mt-1 text-sm text-foreground/75">
+                  Lanjut langsung ke WhatsApp untuk proses beli.
                 </p>
               </div>
               {product.status === "available" && (
@@ -119,10 +171,10 @@ export default function ProductModal({
                   href={buildWhatsAppLink(product)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-xl bg-primary px-5 py-3 font-display text-[11px] font-bold tracking-[0.15em] text-primary-foreground transition-all duration-300 hover:box-glow-strong hover:gap-3"
+                  className="flex items-center justify-center gap-2 rounded-[1.15rem] bg-primary px-5 py-3 font-display text-[11px] font-bold tracking-[0.15em] text-primary-foreground transition-all duration-300 hover:box-glow-strong hover:gap-3"
                 >
                   <MessageCircle size={16} />
-                  BUY VIA WHATSAPP
+                  BELI AKUN INI
                   <ChevronRight size={14} />
                 </a>
               )}

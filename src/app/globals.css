@@ -122,6 +122,28 @@
       linear-gradient(90deg, hsl(189 100% 72% / 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
   }
+
+  .horizontal-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.45) transparent;
+  }
+
+  .horizontal-scrollbar::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .horizontal-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .horizontal-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: hsl(var(--primary) / 0.4);
+  }
+
+  .horizontal-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.56);
+  }
 }
 
 @keyframes latest-strip-marquee {

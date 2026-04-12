@@ -1,0 +1,108 @@
+.heroShell {
+  background:
+    linear-gradient(180deg, hsl(226 50% 6%) 0%, hsl(228 45% 8%) 100%);
+}
+
+.heroSideFade {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--background) / 0.95),
+    transparent,
+    hsl(var(--background) / 0.95)
+  );
+}
+
+.heroHalo {
+  background-image:
+    radial-gradient(circle at 50% 50%, hsl(var(--primary) / 0.38) 0%, transparent 21%),
+    radial-gradient(circle at 50% 50%, hsl(193 100% 85% / 0.2) 0%, transparent 44%),
+    radial-gradient(circle at 14% 20%, hsl(185 100% 68% / 0.15) 0%, transparent 18%),
+    radial-gradient(circle at 86% 32%, hsl(190 100% 76% / 0.14) 0%, transparent 18%);
+}
+
+.heroCenterGlow {
+  background: radial-gradient(
+    ellipse at center,
+    hsl(189 100% 72% / 0.22) 0%,
+    hsl(189 100% 72% / 0.12) 35%,
+    transparent 72%
+  );
+}
+
+.heroGridMask {
+  mask-image: radial-gradient(circle at center, black, transparent 86%);
+}
+
+.heroBottomFade {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 74%,
+    hsl(var(--background)) 100%
+  );
+}
+
+.orbTopLeft {
+  left: -10%;
+  top: 14%;
+}
+
+.orbTopRight {
+  right: -8%;
+  top: 18%;
+}
+
+.orbBottomLeft {
+  bottom: -18%;
+  left: 14%;
+}
+
+.orbBottomRight {
+  bottom: -14%;
+  right: 12%;
+}
+
+.bannerSideCard {
+  box-shadow: 0 30px 90px hsl(225 60% 3% / 0.42);
+}
+
+.bannerSideOverlayLeft {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--background) / 0.12),
+    hsl(var(--background) / 0.52)
+  );
+}
+
+.bannerSideOverlayRight {
+  background: linear-gradient(
+    270deg,
+    hsl(var(--background) / 0.12),
+    hsl(var(--background) / 0.52)
+  );
+}
+
+.bannerStage {
+  box-shadow: 0 0 60px hsl(var(--primary) / 0.24);
+}
+
+.bannerStageTop {
+  background: linear-gradient(
+    180deg,
+    hsl(var(--background) / 0.02),
+    transparent 32%,
+    hsl(var(--background) / 0.64) 100%
+  );
+}
+
+.ornamentDot {
+  box-shadow: 0 0 16px hsl(var(--primary) / 0.85);
+}
+
+.particle {
+  box-shadow: 0 0 18px hsl(var(--primary) / 0.7);
+}
+
+.scrollLabel {
+  padding-top: 16px;
+}
