@@ -350,14 +350,6 @@ export default function HeroSection() {
 
               <div className={`absolute inset-0 ${styles.bannerStageTop}`} />
               <div className="absolute bottom-0 left-0 right-0 flex flex-wrap items-end justify-between gap-3 p-4 md:p-5">
-                <div className="rounded-full border border-white/10 bg-background/35 px-3 py-1.5 backdrop-blur-md">
-                  <p className="font-display text-[10px] tracking-[0.3em] text-primary/80">
-                    FUZEVALO DROP
-                  </p>
-                  <p className="mt-1 font-display text-sm font-bold tracking-[0.16em] text-foreground md:text-base">
-                    LIVE BANNER ROTATION
-                  </p>
-                </div>
                 <div className="flex gap-2 rounded-full border border-white/10 bg-background/35 px-3 py-2 backdrop-blur-md">
                   {banners.map((banner, index) => (
                     <button
