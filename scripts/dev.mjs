@@ -9,16 +9,11 @@ if (existsSync(nextCachePath)) {
   rmSync(nextCachePath, { recursive: true, force: true });
 }
 
-const nextBinPath = resolve(projectRoot, "node_modules", "next", "dist", "bin", "next");
-const child = spawn(
-  process.execPath,
-  [nextBinPath, "dev", "--turbopack", ...process.argv.slice(2)],
-  {
+const child = spawn("bun", ["--bun", "next", "dev", "--turbopack", ...process.argv.slice(2)], {
   stdio: "inherit",
   cwd: projectRoot,
   env: process.env,
-  },
-);
+});
 
 child.on("exit", (code, signal) => {
   if (signal) {
