@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "bun --bun next dev",
+    "dev": "node scripts/dev.mjs",
     "build": "next build",
     "lint": "eslint .",
-    "start": "bun --bun next start",
+    "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"

@@ -126,6 +126,10 @@ const TacticalMarkDoodle = () => (
 export default function CatalogSection({ products }: CatalogSectionProps) {
   const [selected, setSelected] = useState<Product | null>(null);
   const [search, setSearch] = useState("");
+  const [rankFilter, setRankFilter] = useState("all");
+  const [regionFilter, setRegionFilter] = useState("all");
+  const [nickFilter, setNickFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("default");
 
   // Keep this block commented so we can quickly restore the extra demo section later.
   // const featured = useMemo(
@@ -136,21 +140,67 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   //   [products],
   // );
 
+  const availableProducts = useMemo(
+    () => products.filter((product) => product.status === "available"),
+    [products],
+  );
+
+  const rankOptions = useMemo(
+    () => [...new Set(availableProducts.map((product) => product.rank))],
+    [availableProducts],
+  );
+
+  const regionOptions = useMemo(
+    () => [...new Set(availableProducts.map((product) => product.region))],
+    [availableProducts],
+  );
+
+  const nickOptions = useMemo(
+    () => [...new Set(availableProducts.map((product) => product.changeNick))],
+    [availableProducts],
+  );
+
   const available = useMemo(() => {
-    return products
-      .filter((product) => product.status === "available")
-      .filter(
-        (product) =>
-          !search ||
-          product.code.toLowerCase().includes(search.toLowerCase()) ||
-          product.rank.toLowerCase().includes(search.toLowerCase()),
-      );
-  }, [products, search]);
+    const normalizedSearch = search.trim().toLowerCase();
+
+    const filtered = availableProducts.filter((product) => {
+      const matchesSearch =
+        !normalizedSearch ||
+        product.code.toLowerCase().includes(normalizedSearch) ||
+        product.rank.toLowerCase().includes(normalizedSearch);
+
+      const matchesRank = rankFilter === "all" || product.rank === rankFilter;
+      const matchesRegion =
+        regionFilter === "all" || product.region === regionFilter;
+      const matchesNick =
+        nickFilter === "all" || product.changeNick === nickFilter;
+
+      return matchesSearch && matchesRank && matchesRegion && matchesNick;
+    });
+
+    if (sortBy === "price-asc") {
+      return [...filtered].sort((left, right) => left.price - right.price);
+    }
+
+    if (sortBy === "price-desc") {
+      return [...filtered].sort((left, right) => right.price - left.price);
+    }
+
+    return filtered;
+  }, [availableProducts, nickFilter, rankFilter, regionFilter, search, sortBy]);
 
   const sold = useMemo(
     () => products.filter((product) => product.status === "sold"),
     [products],
   );
+
+  const resetFilters = () => {
+    setSearch("");
+    setRankFilter("all");
+    setRegionFilter("all");
+    setNickFilter("all");
+    setSortBy("default");
+  };
 
   return (
     <section id="catalog" className="relative isolate overflow-hidden py-20">
@@ -251,31 +301,122 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
               </h2>
             </div>
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-2">
-                <SlidersHorizontal size={14} className="text-muted-foreground/50" />
+            <div className="rounded-2xl border border-border/40 bg-card/50 p-4 backdrop-blur-md">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <SlidersHorizontal size={14} className="text-muted-foreground/50" />
+                  <span className="font-display text-[11px] tracking-[0.28em] text-muted-foreground/60">
+                    FILTER CATALOG
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="rounded-full border border-primary/20 bg-primary/8 px-3 py-1 font-display text-[10px] tracking-[0.18em] text-primary transition hover:bg-primary hover:text-primary-foreground"
+                >
+                  RESET
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
+                <label className="block">
+                  <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
+                    SEARCH
+                  </span>
+                  <div className="relative">
+                    <Search
+                      size={15}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/40"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Code or rank..."
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                      className="w-full rounded-lg border border-border/50 bg-background/40 py-2.5 pl-9 pr-4 text-sm text-foreground backdrop-blur-sm placeholder:text-muted-foreground/40 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                    />
+                  </div>
+                </label>
+
+                <label className="block">
+                  <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
+                    RANK
+                  </span>
+                  <select
+                    value={rankFilter}
+                    onChange={(event) => setRankFilter(event.target.value)}
+                    className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  >
+                    <option value="all">All ranks</option>
+                    {rankOptions.map((rank) => (
+                      <option key={rank} value={rank}>
+                        {rank}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="block">
+                  <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
+                    REGION
+                  </span>
+                  <select
+                    value={regionFilter}
+                    onChange={(event) => setRegionFilter(event.target.value)}
+                    className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  >
+                    <option value="all">All regions</option>
+                    {regionOptions.map((region) => (
+                      <option key={region} value={region}>
+                        {region}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="block">
+                  <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
+                    CHANGE NICK
+                  </span>
+                  <select
+                    value={nickFilter}
+                    onChange={(event) => setNickFilter(event.target.value)}
+                    className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  >
+                    <option value="all">All status</option>
+                    {nickOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="block">
+                  <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
+                    SORT
+                  </span>
+                  <select
+                    value={sortBy}
+                    onChange={(event) => setSortBy(event.target.value)}
+                    className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  >
+                    <option value="default">Recommended</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                  </select>
+                </label>
+              </div>
+
+              <div className="mt-4 flex items-center gap-2">
                 <span className="rounded bg-secondary/50 px-2 py-0.5 font-display text-[10px] tracking-wider text-muted-foreground/50">
                   {available.length} {available.length === 1 ? "ITEM" : "ITEMS"}
                 </span>
               </div>
-
-              <div className="relative">
-                <Search
-                  size={15}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/40"
-                />
-                <input
-                  type="text"
-                  placeholder="Search code or rank..."
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  className="w-full rounded-lg border border-border/50 bg-card/60 py-2.5 pl-9 pr-4 text-sm text-foreground backdrop-blur-sm placeholder:text-muted-foreground/40 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20 sm:w-60"
-                />
-              </div>
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {available.map((product, index) => (
               <ProductCard
                 key={product.id}
@@ -298,7 +439,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
           )}
         </div>
 
-        {sold.length > 0 && (
+        {/* {sold.length > 0 && (
           <div>
             <motion.div
               className="mb-8 flex flex-col gap-1"
@@ -346,7 +487,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
               ))}
             </div>
           </div>
-        )}
+        )} */}
 
         <ProductModal product={selected} onClose={() => setSelected(null)} />
       </div>
