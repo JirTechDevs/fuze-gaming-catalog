@@ -5,6 +5,7 @@ export interface Product {
   id: string;
   code: string;
   image: string;
+  images?: string[];
   rank: string;
   price: number;
   skins: string[];
@@ -19,6 +20,7 @@ export interface Product {
 
 export interface ProductRepository {
   list(): Promise<Product[]>;
+  getById(id: string): Promise<Product | null>;
 }
 
 export function formatPrice(price: number): string {
