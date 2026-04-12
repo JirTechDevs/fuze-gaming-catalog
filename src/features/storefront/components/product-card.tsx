@@ -77,11 +77,19 @@ export default function ProductCard({
           </div>
         )}
 
-        <div className="absolute left-6 top-6 flex items-center gap-1.5 rounded-full border border-primary/25 bg-background/88 px-3 py-1.5 backdrop-blur-sm">
-          <Shield size={10} className="text-primary" />
-          <span className="font-display text-[11px] font-bold tracking-[0.15em] text-primary">
+        <div className="absolute left-6 top-6 flex items-center gap-2 rounded-[1.2rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-4 py-3 shadow-[0_0_22px_hsl(var(--primary)/0.22)] backdrop-blur-md">
+          <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
+          <Shield size={14} className="relative text-primary" />
+          <span className="relative font-display text-xl font-bold leading-none tracking-[0.14em] text-primary drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)]">
             {product.code}
           </span>
+        </div>
+
+        <div className="absolute right-6 top-6 rounded-[1.2rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-4 py-3 text-right shadow-[0_0_22px_hsl(var(--primary)/0.22)] backdrop-blur-md">
+          <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
+          <p className="font-display text-xl font-bold leading-none text-primary drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)]">
+            Rp {formatPrice(product.price)}
+          </p>
         </div>
       </div>
 
@@ -98,23 +106,8 @@ export default function ProductCard({
             </p>
           </div>
           <span className="rounded-full border border-border/50 bg-secondary/50 px-3 py-1 font-display text-[10px] tracking-[0.22em] text-muted-foreground">
-            {product.region}
+            {product.changeNick.toUpperCase()}
           </span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-2xl border border-border/35 bg-background/35 px-3 py-3">
-            <span className="font-display text-[10px] tracking-[0.22em] text-muted-foreground/50">
-              VP
-            </span>
-            <p className="mt-1 text-sm font-medium text-foreground/88">{product.sisaVP}</p>
-          </div>
-          <div className="rounded-2xl border border-border/35 bg-background/35 px-3 py-3">
-            <span className="font-display text-[10px] tracking-[0.22em] text-muted-foreground/50">
-              CHANGE NICK
-            </span>
-            <p className="mt-1 text-sm font-medium text-foreground/88">{product.changeNick}</p>
-          </div>
         </div>
 
         <div className="flex h-[11.5rem] flex-col rounded-[1.5rem] border border-border/35 bg-background/35 p-4">
@@ -138,15 +131,6 @@ export default function ProductCard({
         </div>
 
         <div className="mt-auto flex flex-col gap-4">
-          <div className="rounded-[1.5rem] border border-primary/12 bg-primary/6 p-4">
-            <span className="font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-              PRICE
-            </span>
-            <p className="mt-1 font-display text-2xl font-bold leading-none text-primary text-glow">
-              Rp {formatPrice(product.price)}
-            </p>
-          </div>
-
           {!isSold && (
             <a
               href={buildWhatsAppLink(product)}
