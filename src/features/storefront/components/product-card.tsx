@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { MessageCircle, Shield } from "lucide-react";
+import { useRouter } from "next/navigation";
 import {
   buildWhatsAppLink,
   formatPrice,
@@ -10,7 +11,6 @@ import {
 
 interface ProductCardProps {
   product: Product;
-  onSelect: (product: Product) => void;
   index: number;
 }
 
@@ -34,11 +34,11 @@ function getRankColor(rank: string) {
 
 export default function ProductCard({
   product,
-  onSelect,
   index,
 }: ProductCardProps) {
   const isSold = product.status === "sold";
   const visibleSkins = product.skins.slice(0, 4);
+  const router = useRouter();
 
   return (
     <motion.div
@@ -54,7 +54,19 @@ export default function ProductCard({
       className={`group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-[1.75rem] border border-border/40 bg-card/85 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:box-glow ${
         isSold ? "pointer-events-none opacity-50" : ""
       }`}
-      onClick={() => !isSold && onSelect(product)}
+      role="link"
+      tabIndex={isSold ? -1 : 0}
+      onClick={() => !isSold && router.push(`/catalog/${product.id}`)}
+      onKeyDown={(event) => {
+        if (isSold) {
+          return;
+        }
+
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          router.push(`/catalog/${product.id}`);
+        }
+      }}
     >
       <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/0 to-transparent transition-all duration-500 group-hover:via-primary/50" />
 

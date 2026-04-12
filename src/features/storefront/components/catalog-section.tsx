@@ -5,7 +5,6 @@ import { Archive, Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
 import ProductCard from "@/features/storefront/components/product-card";
-import ProductModal from "@/features/storefront/components/product-modal";
 import styles from "./catalog-section.module.css";
 
 interface CatalogSectionProps {
@@ -124,7 +123,6 @@ const TacticalMarkDoodle = () => (
 );
 
 export default function CatalogSection({ products }: CatalogSectionProps) {
-  const [selected, setSelected] = useState<Product | null>(null);
   const [search, setSearch] = useState("");
   const [rankFilter, setRankFilter] = useState("all");
   const [regionFilter, setRegionFilter] = useState("all");
@@ -421,7 +419,6 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
               <ProductCard
                 key={product.id}
                 product={product}
-                onSelect={setSelected}
                 index={index}
               />
             ))}
@@ -488,8 +485,6 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             </div>
           </div>
         )} */}
-
-        <ProductModal product={selected} onClose={() => setSelected(null)} />
       </div>
     </section>
   );
