@@ -13,7 +13,15 @@ interface StorefrontPageProps {
 }
 
 export default function StorefrontPage({ products }: StorefrontPageProps) {
-  const [introComplete, setIntroComplete] = useState(false);
+  const [introComplete, setIntroComplete] = useState(true);
+
+  useEffect(() => {
+    if (window.location.hash === "#catalog") {
+      return;
+    }
+
+    setIntroComplete(true);
+  }, []);
 
   useEffect(() => {
     if (!introComplete) {

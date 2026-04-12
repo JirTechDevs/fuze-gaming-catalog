@@ -12,6 +12,12 @@ class InMemoryProductRepository implements ProductRepository {
   async list(): Promise<Product[]> {
     return cloneProducts(mockProducts);
   }
+
+  async getById(id: string): Promise<Product | null> {
+    const product = mockProducts.find((entry) => entry.id === id);
+
+    return product ? structuredClone(product) : null;
+  }
 }
 
 export const inMemoryProductRepository = new InMemoryProductRepository();

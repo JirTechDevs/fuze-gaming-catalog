@@ -5,6 +5,11 @@ export const mockProducts: Product[] = [
     id: "1",
     code: "FZ3067",
     image: "/images/catalog/mock_image.jpg",
+    images: [
+      "/images/catalog/mock_image.jpg?view=1",
+      "/images/catalog/mock_image.jpg?view=2",
+      "/images/catalog/mock_image.jpg?view=3",
+    ],
     rank: "Platinum 1",
     price: 650000,
     skins: [
@@ -23,6 +28,10 @@ export const mockProducts: Product[] = [
     id: "2",
     code: "FZ2044",
     image: "/images/catalog/mock_image.jpg",
+    images: [
+      "/images/catalog/mock_image.jpg?view=1",
+      "/images/catalog/mock_image.jpg?view=2",
+    ],
     rank: "Diamond 2",
     price: 1200000,
     skins: [
