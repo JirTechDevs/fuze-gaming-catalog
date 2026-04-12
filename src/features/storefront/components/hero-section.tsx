@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import styles from "./hero-section.module.css";
 
 const banners = [
   { src: "/images/banners/pink.webp", alt: "Fuzevalo banner pink edition" },
@@ -209,27 +210,17 @@ export default function HeroSection() {
 
   return (
     <section className="relative isolate overflow-hidden">
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,hsl(226_50%_6%)_0%,hsl(228_45%_8%)_100%)]" />
+      <div className={`absolute inset-0 ${styles.heroShell}`} />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-transparent to-background/95" />
-      <div
-        className="absolute inset-0 opacity-95"
-        style={{
-          backgroundImage: [
-            "radial-gradient(circle at 50% 50%, hsl(var(--primary) / 0.38) 0%, transparent 21%)",
-            "radial-gradient(circle at 50% 50%, hsl(193 100% 85% / 0.2) 0%, transparent 44%)",
-            "radial-gradient(circle at 14% 20%, hsl(185 100% 68% / 0.15) 0%, transparent 18%)",
-            "radial-gradient(circle at 86% 32%, hsl(190 100% 76% / 0.14) 0%, transparent 18%)",
-          ].join(", "),
-        }}
-      />
-      <div className="absolute inset-x-0 top-1/2 h-[24rem] -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,hsl(189_100%_72%_/_0.22)_0%,hsl(189_100%_72%_/_0.12)_35%,transparent_72%)] md:h-[34rem]" />
-      <div className="absolute inset-0 bg-grid opacity-[0.14] [mask-image:radial-gradient(circle_at_center,black,transparent_86%)]" />
-      <div className="absolute left-[-10%] top-[14%] h-56 w-56 rounded-full bg-primary/20 blur-3xl md:h-72 md:w-72" />
-      <div className="absolute right-[-8%] top-[18%] h-44 w-44 rounded-full bg-primary/16 blur-3xl md:h-64 md:w-64" />
-      <div className="absolute bottom-[-18%] left-[14%] h-48 w-48 rounded-full bg-primary/12 blur-3xl md:h-64 md:w-64" />
-      <div className="absolute bottom-[-14%] right-[12%] h-56 w-56 rounded-full bg-primary/14 blur-3xl md:h-72 md:w-72" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_74%,hsl(var(--background))_100%)]" />
+      <div className={`absolute inset-0 ${styles.heroSideFade}`} />
+      <div className={`absolute inset-0 opacity-95 ${styles.heroHalo}`} />
+      <div className={`absolute inset-x-0 top-1/2 h-[24rem] -translate-y-1/2 md:h-[34rem] ${styles.heroCenterGlow}`} />
+      <div className={`absolute inset-0 bg-grid opacity-[0.14] ${styles.heroGridMask}`} />
+      <div className={`absolute h-56 w-56 rounded-full bg-primary/20 blur-3xl md:h-72 md:w-72 ${styles.orbTopLeft}`} />
+      <div className={`absolute h-44 w-44 rounded-full bg-primary/16 blur-3xl md:h-64 md:w-64 ${styles.orbTopRight}`} />
+      <div className={`absolute h-48 w-48 rounded-full bg-primary/12 blur-3xl md:h-64 md:w-64 ${styles.orbBottomLeft}`} />
+      <div className={`absolute h-56 w-56 rounded-full bg-primary/14 blur-3xl md:h-72 md:w-72 ${styles.orbBottomRight}`} />
+      <div className={`absolute inset-0 ${styles.heroBottomFade}`} />
 
       {consoleOrnaments.map((ornament) => (
         <motion.div
@@ -275,7 +266,7 @@ export default function HeroSection() {
             delay: line.delay,
           }}
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-primary/80 shadow-[0_0_16px_hsl(var(--primary)_/_0.85)]" />
+          <span className={`h-1.5 w-1.5 rounded-full bg-primary/80 ${styles.ornamentDot}`} />
           <span className={`h-px ${line.width} bg-gradient-to-r from-primary/60 to-transparent`} />
         </motion.div>
       ))}
@@ -303,7 +294,7 @@ export default function HeroSection() {
       {particles.map((particle) => (
         <motion.span
           key={`${particle.left}-${particle.top}`}
-          className="pointer-events-none absolute rounded-full bg-primary/70 shadow-[0_0_18px_hsl(var(--primary)_/_0.7)]"
+          className={`pointer-events-none absolute rounded-full bg-primary/70 ${styles.particle}`}
           style={{
             left: particle.left,
             top: particle.top,
@@ -329,7 +320,7 @@ export default function HeroSection() {
         >
           <motion.div
             key={`prev-${prevIndex}`}
-            className="absolute left-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 shadow-[0_30px_90px_hsl(225_60%_3%_/_0.42)] backdrop-blur-md lg:block"
+            className={`absolute left-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 backdrop-blur-md lg:block ${styles.bannerSideCard}`}
             animate={{ x: "-7%", scale: 0.94, opacity: 0.66, rotate: -4 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             onClick={goToPrevious}
@@ -339,10 +330,10 @@ export default function HeroSection() {
               alt={banners[prevIndex].alt}
               className="aspect-[1840/853] w-full bg-background/70 object-contain"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,hsl(var(--background)_/_0.12),hsl(var(--background)_/_0.52))]" />
+            <div className={`absolute inset-0 ${styles.bannerSideOverlayLeft}`} />
           </motion.div>
 
-          <div className="relative z-20 w-full max-w-[920px] overflow-hidden rounded-[28px] border border-primary/25 bg-white/8 shadow-[0_0_60px_hsl(var(--primary)_/_0.24)] backdrop-blur-xl">
+          <div className={`relative z-20 w-full max-w-[920px] overflow-hidden rounded-[28px] border border-primary/25 bg-white/8 backdrop-blur-xl ${styles.bannerStage}`}>
             <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-background/30">
               <AnimatePresence mode="wait">
                 <motion.img
@@ -357,7 +348,7 @@ export default function HeroSection() {
                 />
               </AnimatePresence>
 
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)_/_0.02),transparent_32%,hsl(var(--background)_/_0.64)_100%)]" />
+              <div className={`absolute inset-0 ${styles.bannerStageTop}`} />
               <div className="absolute bottom-0 left-0 right-0 flex flex-wrap items-end justify-between gap-3 p-4 md:p-5">
                 <div className="rounded-full border border-white/10 bg-background/35 px-3 py-1.5 backdrop-blur-md">
                   <p className="font-display text-[10px] tracking-[0.3em] text-primary/80">
@@ -405,7 +396,7 @@ export default function HeroSection() {
 
           <motion.div
             key={`next-${nextIndex}`}
-            className="absolute right-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 shadow-[0_30px_90px_hsl(225_60%_3%_/_0.42)] backdrop-blur-md lg:block"
+            className={`absolute right-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 backdrop-blur-md lg:block ${styles.bannerSideCard}`}
             animate={{ x: "7%", scale: 0.94, opacity: 0.66, rotate: 4 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             onClick={goToNext}
@@ -415,7 +406,7 @@ export default function HeroSection() {
               alt={banners[nextIndex].alt}
               className="aspect-[1840/853] w-full bg-background/70 object-contain"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(270deg,hsl(var(--background)_/_0.12),hsl(var(--background)_/_0.52))]" />
+            <div className={`absolute inset-0 ${styles.bannerSideOverlayRight}`} />
           </motion.div>
         </motion.div>
       </div>
@@ -429,7 +420,7 @@ export default function HeroSection() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
         >
-          <span className="pt-16He font-display text-[10px] tracking-[0.3em] text-primary/70">
+          <span className={`font-display text-[10px] tracking-[0.3em] text-primary/70 ${styles.scrollLabel}`}>
             SCROLL FOR CATALOG
           </span>
           <ChevronDown size={20} className="animate-bounce text-primary" />

@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import styles from "./intro-screen.module.css";
 
 interface IntroScreenProps {
   onComplete: () => void;
@@ -28,11 +29,7 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
           transition={{ duration: 0.6, ease: "easeInOut" }}
         >
           <motion.div
-            className="absolute h-[400px] w-[400px] rounded-full"
-            style={{
-              background:
-                "radial-gradient(circle, hsl(187 100% 50% / 0.15) 0%, transparent 70%)",
-            }}
+            className={`absolute h-[400px] w-[400px] rounded-full ${styles.introRadialGlow}`}
             animate={{ scale: 1.2, opacity: 1 }}
             transition={{ duration: 1.4, ease: "easeOut" }}
           />
@@ -45,7 +42,7 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
             <motion.img
               src="/images/logo.png"
               alt="Fuzevalo"
-              className="h-24 w-24 drop-shadow-[0_0_40px_hsl(187,100%,50%,0.5)]"
+              className={`h-24 w-24 ${styles.introLogo}`}
               animate={{
                 filter: [
                   "drop-shadow(0 0 20px hsl(187,100%,50%,0.3))",
@@ -66,12 +63,14 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
 
             <motion.div
               className="h-[2px] w-24 overflow-hidden rounded-full bg-border/30"
+              initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
               <motion.div
                 className="h-full bg-primary"
                 style={{ width: "0%" }}
+                initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
                 transition={{ delay: 0.7, duration: 1, ease: "easeInOut" }}
               />
