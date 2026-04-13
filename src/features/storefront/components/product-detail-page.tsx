@@ -138,11 +138,12 @@ export default function ProductDetailPage({
             </span>
           </div>
 
-          <div className="space-y-8">
-            <ProductImageGallery product={product} />
+          <div className="grid gap-8 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-start">
+            <section className="xl:sticky xl:top-28">
+              <ProductImageGallery product={product} />
+            </section>
 
-            <div className="grid gap-8 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-              <section className="flex flex-col gap-6">
+            <section className="flex flex-col gap-6">
               <div className="rounded-[2rem] border border-border/35 bg-card/72 p-6 backdrop-blur-md">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
@@ -170,46 +171,44 @@ export default function ProductDetailPage({
                     </span>
                   </div>
                 </div>
-              </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                {detailRows(product).map((item) => (
-                  <div
-                    key={item.label}
-                    className="rounded-[1.5rem] border border-border/35 bg-card/62 px-5 py-4 backdrop-blur-md"
-                  >
-                    <span className="font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                      {item.label}
-                    </span>
-                    <p className="mt-2 text-sm font-medium text-foreground/88">
-                      {item.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              </section>
-
-              <section className="flex flex-col gap-6">
-                <div className="rounded-[2rem] border border-border/35 bg-card/72 p-6 backdrop-blur-md">
-                <div className="flex items-center gap-2">
-                  <CircleCheck size={15} className="text-primary" />
-                  <span className="font-display text-[11px] tracking-[0.24em] text-primary/74">
-                    DAFTAR SKIN
-                  </span>
-                </div>
-                <ol className="mt-5 space-y-3 text-sm leading-7 text-foreground/84">
-                  {product.skins.map((skin, index) => (
-                    <li
-                      key={skin}
-                      className="rounded-[1.1rem] border border-border/25 bg-background/28 px-4 py-3"
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  {detailRows(product).map((item) => (
+                    <div
+                      key={item.label}
+                      className="rounded-[1.5rem] border border-border/35 bg-card/62 px-5 py-4 backdrop-blur-md"
                     >
-                      <span className="mr-2 font-display text-primary/86">
-                        {String(index + 1).padStart(2, "0")}.
+                      <span className="font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
+                        {item.label}
                       </span>
-                      {skin}
-                    </li>
+                      <p className="mt-2 text-sm font-medium text-foreground/88">
+                        {item.value}
+                      </p>
+                    </div>
                   ))}
-                </ol>
+                </div>
+              </div>
+
+                <div className="rounded-[2rem] border border-border/35 bg-card/72 p-6 backdrop-blur-md">
+                  <div className="flex items-center gap-2">
+                    <CircleCheck size={15} className="text-primary" />
+                    <span className="font-display text-[11px] tracking-[0.24em] text-primary/74">
+                      DAFTAR SKIN
+                    </span>
+                  </div>
+                  <ol className="panel-scrollbar mt-5 max-h-[26rem] min-h-[22rem] space-y-3 overflow-y-auto pr-2 text-sm leading-7 text-foreground/84">
+                    {product.skins.map((skin, index) => (
+                      <li
+                        key={skin}
+                        className="rounded-[1.1rem] border border-border/25 bg-background/28 px-4 py-3"
+                      >
+                        <span className="mr-2 font-display text-primary/86">
+                          {String(index + 1).padStart(2, "0")}.
+                        </span>
+                        {skin}
+                      </li>
+                    ))}
+                  </ol>
                 </div>
 
                 {isAvailable ? (
@@ -229,11 +228,10 @@ export default function ProductDetailPage({
                 )}
               </section>
             </div>
-          </div>
         </div>
       </main>
 
-      <Footer />
+      <Footer compact />
     </div>
   );
 }

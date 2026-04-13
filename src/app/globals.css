@@ -128,11 +128,24 @@
     scrollbar-color: hsl(var(--primary) / 0.45) transparent;
   }
 
+  .panel-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.45) transparent;
+  }
+
   .horizontal-scrollbar::-webkit-scrollbar {
     height: 8px;
   }
 
+  .panel-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
   .horizontal-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .panel-scrollbar::-webkit-scrollbar-track {
     background: transparent;
   }
 
@@ -141,7 +154,16 @@
     background: hsl(var(--primary) / 0.4);
   }
 
+  .panel-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: hsl(var(--primary) / 0.4);
+  }
+
   .horizontal-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.56);
+  }
+
+  .panel-scrollbar::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--primary) / 0.56);
   }
 }
