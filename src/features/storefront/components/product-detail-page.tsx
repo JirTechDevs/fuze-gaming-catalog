@@ -172,7 +172,7 @@ export default function ProductDetailPage({
                   </div>
                 </div>
 
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {/* <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   {detailRows(product).map((item) => (
                     <div
                       key={item.label}
@@ -186,7 +186,7 @@ export default function ProductDetailPage({
                       </p>
                     </div>
                   ))}
-                </div>
+                </div> */}
               </div>
 
                 <div className="rounded-[2rem] border border-border/35 bg-card/72 p-6 backdrop-blur-md">
@@ -196,11 +196,11 @@ export default function ProductDetailPage({
                       DAFTAR SKIN
                     </span>
                   </div>
-                  <ol className="panel-scrollbar mt-5 max-h-[26rem] min-h-[22rem] space-y-3 overflow-y-auto pr-2 text-sm leading-7 text-foreground/84">
+                  <ol className="panel-scrollbar mt-5 max-h-[37rem] min-h-[31.5rem] space-y-2 overflow-y-auto pr-2 text-[13px] leading-5 text-foreground/84">
                     {product.skins.map((skin, index) => (
                       <li
                         key={skin}
-                        className="rounded-[1.1rem] border border-border/25 bg-background/28 px-4 py-3"
+                        className="rounded-[1rem] border border-border/25 bg-background/28 px-4 py-2.5"
                       >
                         <span className="mr-2 font-display text-primary/86">
                           {String(index + 1).padStart(2, "0")}.
