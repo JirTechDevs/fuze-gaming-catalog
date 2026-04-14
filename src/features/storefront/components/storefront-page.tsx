@@ -38,7 +38,7 @@ export default function StorefrontPage({ products }: StorefrontPageProps) {
       {introComplete && (
         <div className="min-h-screen bg-background">
           <Navbar />
-          <div className="pt-12">
+          <div className="pt-14 sm:pt-16">
             <HeroSection />
             <CatalogSection products={products} />
             <Footer />

@@ -15,26 +15,28 @@ export default function ProductImageGallery({
   const [activeImage, setActiveImage] = useState(images[0]);
 
   return (
-    <section className="rounded-[2rem] border border-border/35 bg-card/70 p-4 shadow-[0_0_40px_hsl(var(--primary)_/_0.08)] backdrop-blur-md">
-      <div className="relative overflow-hidden rounded-[1.7rem] border border-white/10 bg-[radial-gradient(circle_at_top,_hsl(var(--primary)/0.22),_transparent_54%),linear-gradient(180deg,_hsl(var(--secondary)/0.9),_hsl(var(--card)))] p-5">
-        <div className="absolute left-5 top-5 z-10 flex items-center gap-2 rounded-[1.2rem] border border-primary/40 bg-background/88 px-4 py-2.5 shadow-[0_0_18px_hsl(var(--primary)_/_0.16)] backdrop-blur-md">
-          <Shield size={14} className="text-primary" />
-          <span className="font-display text-lg font-bold tracking-[0.16em] text-primary">
-            {product.code}
-          </span>
+    <section className="rounded-[1.6rem] border border-border/35 bg-card/70 p-3 shadow-[0_0_40px_hsl(var(--primary)_/_0.08)] backdrop-blur-md sm:rounded-[2rem] sm:p-4">
+      <div className="relative overflow-hidden rounded-[1.4rem] border border-white/10 bg-[radial-gradient(circle_at_top,_hsl(var(--primary)/0.22),_transparent_54%),linear-gradient(180deg,_hsl(var(--secondary)/0.9),_hsl(var(--card)))] p-3 sm:rounded-[1.7rem] sm:p-5">
+        <div className="absolute left-3 right-3 top-3 z-10 flex flex-wrap items-start justify-between gap-2 sm:left-5 sm:right-5 sm:top-5">
+          <div className="flex min-w-0 items-center gap-2 rounded-[1rem] border border-primary/40 bg-background/88 px-3 py-2 shadow-[0_0_18px_hsl(var(--primary)_/_0.16)] backdrop-blur-md sm:rounded-[1.2rem] sm:px-4 sm:py-2.5">
+            <Shield size={14} className="shrink-0 text-primary" />
+            <span className="truncate font-display text-sm font-bold tracking-[0.14em] text-primary sm:text-lg sm:tracking-[0.16em]">
+              {product.code}
+            </span>
+          </div>
+
+          <div className="rounded-[1rem] border border-primary/40 bg-background/88 px-3 py-2 text-right shadow-[0_0_18px_hsl(var(--primary)_/_0.16)] backdrop-blur-md sm:rounded-[1.2rem] sm:px-4 sm:py-2.5">
+            <p className="font-display text-base font-bold leading-none text-primary text-glow sm:text-xl">
+              Rp {formatPrice(product.price)}
+            </p>
+          </div>
         </div>
 
-        <div className="absolute right-5 top-5 z-10 rounded-[1.2rem] border border-primary/40 bg-background/88 px-4 py-2.5 text-right shadow-[0_0_18px_hsl(var(--primary)_/_0.16)] backdrop-blur-md">
-          <p className="font-display text-xl font-bold leading-none text-primary text-glow">
-            Rp {formatPrice(product.price)}
-          </p>
-        </div>
-
-        <div className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-background/25">
+        <div className="relative overflow-hidden rounded-[1.2rem] border border-white/10 bg-background/25 sm:rounded-[1.5rem]">
           <img
             src={activeImage}
             alt={`${product.code} preview`}
-            className="aspect-[4/5] w-full object-contain object-top sm:aspect-[5/6] xl:min-h-[46rem] xl:aspect-auto"
+            className="aspect-[4/5] w-full object-contain object-top sm:aspect-[5/6] lg:aspect-[4/5] xl:min-h-[46rem] xl:aspect-auto"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-card via-card/10 to-transparent" />
         </div>
@@ -58,7 +60,7 @@ export default function ProductImageGallery({
                   <img
                     src={image}
                     alt={`${product.code} thumbnail ${index + 1}`}
-                    className="h-24 w-28 object-cover"
+                    className="h-20 w-24 object-cover sm:h-24 sm:w-28"
                   />
                   <div
                     className={`absolute inset-0 transition ${

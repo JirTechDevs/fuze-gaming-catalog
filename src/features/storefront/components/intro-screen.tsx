@@ -29,20 +29,20 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
           transition={{ duration: 0.6, ease: "easeInOut" }}
         >
           <motion.div
-            className={`absolute h-[400px] w-[400px] rounded-full ${styles.introRadialGlow}`}
+            className={`absolute h-[280px] w-[280px] rounded-full sm:h-[400px] sm:w-[400px] ${styles.introRadialGlow}`}
             animate={{ scale: 1.2, opacity: 1 }}
             transition={{ duration: 1.4, ease: "easeOut" }}
           />
 
           <motion.div
-            className="relative flex flex-col items-center gap-5"
+            className="relative flex flex-col items-center gap-4 px-6 text-center sm:gap-5"
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <motion.img
               src="/images/logo.png"
               alt="Fuzevalo"
-              className={`h-24 w-24 ${styles.introLogo}`}
+              className={`h-20 w-20 sm:h-24 sm:w-24 ${styles.introLogo}`}
               animate={{
                 filter: [
                   "drop-shadow(0 0 20px hsl(187,100%,50%,0.3))",
@@ -54,7 +54,7 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
             />
 
             <motion.span
-              className="font-display text-2xl font-bold tracking-[0.3em] text-foreground"
+              className="font-display text-xl font-bold tracking-[0.24em] text-foreground sm:text-2xl sm:tracking-[0.3em]"
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
             >

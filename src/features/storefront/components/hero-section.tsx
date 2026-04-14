@@ -311,9 +311,9 @@ export default function HeroSection() {
         />
       ))}
 
-      <div className="relative z-10 container mx-auto px-4 pb-16 pt-16 md:pb-24 md:pt-20">
+      <div className="relative z-10 container mx-auto px-4 pb-10 pt-10 sm:pb-14 sm:pt-12 md:pb-20 md:pt-16 lg:pb-24 lg:pt-20">
         <motion.div
-          className="relative mx-auto flex w-full max-w-[1400px] items-center justify-center overflow-hidden py-10 md:py-14"
+          className="relative mx-auto flex w-full max-w-[1400px] flex-col items-center justify-center overflow-visible py-4 sm:py-8 md:py-12"
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
@@ -333,8 +333,8 @@ export default function HeroSection() {
             <div className={`absolute inset-0 ${styles.bannerSideOverlayLeft}`} />
           </motion.div>
 
-          <div className={`relative z-20 w-full max-w-[920px] overflow-hidden rounded-[28px] border border-primary/25 bg-white/8 backdrop-blur-xl ${styles.bannerStage}`}>
-            <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-background/30">
+          <div className={`relative z-20 w-full max-w-[920px] overflow-hidden rounded-[22px] border border-primary/25 bg-white/8 backdrop-blur-xl sm:rounded-[28px] ${styles.bannerStage}`}>
+            <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-background/30 sm:rounded-[28px]">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={banners[activeIndex].src}
@@ -349,7 +349,7 @@ export default function HeroSection() {
               </AnimatePresence>
 
               <div className={`absolute inset-0 ${styles.bannerStageTop}`} />
-              <div className="absolute bottom-0 left-0 right-0 flex flex-wrap items-end justify-between gap-3 p-4 md:p-5">
+              <div className="absolute bottom-0 left-0 right-0 flex flex-wrap items-end justify-between gap-3 p-3 sm:p-4 md:p-5">
                 <div className="flex gap-2 rounded-full border border-white/10 bg-background/35 px-3 py-2 backdrop-blur-md">
                   {banners.map((banner, index) => (
                     <button
@@ -365,25 +365,69 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              <div className="pointer-events-none absolute inset-0 rounded-[28px] ring-1 ring-white/10" />
+              <div className="pointer-events-none absolute inset-0 rounded-[22px] ring-1 ring-white/10 sm:rounded-[28px]" />
 
               <button
                 type="button"
                 onClick={goToPrevious}
                 aria-label="Show previous banner"
-                className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-background/50 text-foreground transition hover:bg-primary hover:text-primary-foreground md:left-5"
+                className="absolute left-2.5 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-background/55 text-foreground transition hover:bg-primary hover:text-primary-foreground sm:left-3 sm:h-10 sm:w-10 md:left-5 md:h-11 md:w-11"
               >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={18} className="sm:h-5 sm:w-5" />
               </button>
               <button
                 type="button"
                 onClick={goToNext}
                 aria-label="Show next banner"
-                className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-background/50 text-foreground transition hover:bg-primary hover:text-primary-foreground md:right-5"
+                className="absolute right-2.5 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-background/55 text-foreground transition hover:bg-primary hover:text-primary-foreground sm:right-3 sm:h-10 sm:w-10 md:right-5 md:h-11 md:w-11"
               >
-                <ChevronRight size={20} />
+                <ChevronRight size={18} className="sm:h-5 sm:w-5" />
               </button>
             </div>
+          </div>
+
+          <div className="mt-4 grid w-full max-w-[920px] grid-cols-1 gap-3 sm:grid-cols-2 lg:hidden">
+            <button
+              type="button"
+              onClick={goToPrevious}
+              className={`group relative overflow-hidden rounded-[20px] border border-white/12 bg-white/6 text-left backdrop-blur-md transition hover:border-primary/30 ${styles.bannerSideCard}`}
+            >
+              <img
+                src={banners[prevIndex].src}
+                alt={banners[prevIndex].alt}
+                className="aspect-[1840/853] w-full bg-background/70 object-contain"
+              />
+              <div className={`absolute inset-0 ${styles.bannerSideOverlayLeft}`} />
+              <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 p-3">
+                <span className="font-display text-[10px] tracking-[0.24em] text-foreground/80">
+                  PREVIOUS BANNER
+                </span>
+                <span className="rounded-full border border-white/10 bg-background/50 p-2 text-foreground transition group-hover:bg-primary group-hover:text-primary-foreground">
+                  <ChevronLeft size={16} />
+                </span>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={goToNext}
+              className={`group relative overflow-hidden rounded-[20px] border border-white/12 bg-white/6 text-left backdrop-blur-md transition hover:border-primary/30 ${styles.bannerSideCard}`}
+            >
+              <img
+                src={banners[nextIndex].src}
+                alt={banners[nextIndex].alt}
+                className="aspect-[1840/853] w-full bg-background/70 object-contain"
+              />
+              <div className={`absolute inset-0 ${styles.bannerSideOverlayRight}`} />
+              <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 p-3">
+                <span className="font-display text-[10px] tracking-[0.24em] text-foreground/80">
+                  NEXT BANNER
+                </span>
+                <span className="rounded-full border border-white/10 bg-background/50 p-2 text-foreground transition group-hover:bg-primary group-hover:text-primary-foreground">
+                  <ChevronRight size={16} />
+                </span>
+              </div>
+            </button>
           </div>
 
           <motion.div
@@ -401,6 +445,39 @@ export default function HeroSection() {
             <div className={`absolute inset-0 ${styles.bannerSideOverlayRight}`} />
           </motion.div>
         </motion.div>
+      </div>
+
+      <div className="px-4 pb-10 md:hidden">
+        <motion.button
+          type="button"
+          onClick={scrollToCatalog}
+          className="mx-auto flex flex-col items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          <span className={`font-display text-[10px] tracking-[0.26em] text-primary/70 ${styles.scrollLabel}`}>
+            SCROLL FOR CATALOG
+          </span>
+          <ChevronDown size={18} className="animate-bounce text-primary" />
+        </motion.button>
+
+        <div className="mt-5 w-full">
+          <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          <div className="hero-shop-mask overflow-hidden py-3">
+            <div className="hero-shop-track flex w-max items-center gap-6 whitespace-nowrap">
+              {[...shopTicker, ...shopTicker].map((item, index) => (
+                <span
+                  key={`${item.id}-${index}`}
+                  className="font-display text-xs tracking-[0.34em] text-primary/72"
+                >
+                  {item.label}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        </div>
       </div>
 
       <div className="absolute bottom-6 left-0 right-0 z-10 hidden flex-col items-center gap-6 md:flex">

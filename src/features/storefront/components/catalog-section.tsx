@@ -201,7 +201,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   };
 
   return (
-    <section id="catalog" className="relative isolate overflow-hidden py-20">
+    <section id="catalog" className="relative isolate overflow-hidden py-14 sm:py-16 lg:py-20">
       <div className={`absolute inset-0 ${styles.catalogShell}`} />
       <div className={`absolute inset-0 opacity-90 ${styles.catalogAura}`} />
       <div className={`absolute inset-0 ${styles.catalogMesh}`} />
@@ -281,26 +281,26 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
         </motion.div>
       ))}
 
-      <div className="relative z-10 container mx-auto space-y-24 px-4">
+      <div className="relative z-10 container mx-auto space-y-16 px-4 sm:space-y-20 lg:space-y-24">
         <div>
           <motion.div
-            className="mb-10 flex flex-col gap-6"
+            className="mb-8 flex flex-col gap-6 sm:mb-10"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2">
               <span className="font-display text-[11px] tracking-[0.4em] text-primary/60">
                 BROWSE OUR COLLECTION
               </span>
-              <h2 className="font-display text-3xl font-bold tracking-wider text-foreground md:text-4xl">
+              <h2 className="font-display text-3xl font-bold tracking-[0.12em] text-foreground md:text-4xl">
                 ACCOUNT <span className="text-primary text-glow">CATALOG</span>
               </h2>
             </div>
 
-            <div className="rounded-2xl border border-border/40 bg-card/50 p-4 backdrop-blur-md">
-              <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="rounded-[1.5rem] border border-border/40 bg-card/50 p-4 backdrop-blur-md sm:p-5 lg:p-6">
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal size={14} className="text-muted-foreground/50" />
                   <span className="font-display text-[11px] tracking-[0.28em] text-muted-foreground/60">
@@ -310,14 +310,14 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="rounded-full border border-primary/20 bg-primary/8 px-3 py-1 font-display text-[10px] tracking-[0.18em] text-primary transition hover:bg-primary hover:text-primary-foreground"
+                  className="w-full rounded-full border border-primary/20 bg-primary/8 px-3 py-2 font-display text-[10px] tracking-[0.18em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:w-auto"
                 >
                   RESET
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
-                <label className="block">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                <label className="block sm:col-span-2 xl:col-span-1">
                   <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
                     SEARCH
                   </span>
@@ -406,7 +406,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                 </label>
               </div>
 
-              <div className="mt-4 flex items-center gap-2">
+              <div className="mt-4 flex flex-wrap items-center gap-2">
                 <span className="rounded bg-secondary/50 px-2 py-0.5 font-display text-[10px] tracking-wider text-muted-foreground/50">
                   {available.length} {available.length === 1 ? "ITEM" : "ITEMS"}
                 </span>
@@ -414,7 +414,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:gap-6 xl:grid-cols-3">
             {available.map((product, index) => (
               <ProductCard
                 key={product.id}
@@ -425,7 +425,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
           </div>
 
           {available.length === 0 && (
-            <div className="mt-20 flex flex-col items-center gap-3">
+            <div className="mt-16 flex flex-col items-center gap-3 sm:mt-20">
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary/30">
                 <Search size={24} className="text-muted-foreground/30" />
               </div>
