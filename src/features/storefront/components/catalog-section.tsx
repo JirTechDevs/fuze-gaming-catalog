@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Archive, Search, SlidersHorizontal } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Archive, ChevronDown, Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
 import ProductCard from "@/features/storefront/components/product-card";
@@ -128,6 +128,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   const [regionFilter, setRegionFilter] = useState("all");
   const [nickFilter, setNickFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Keep this block commented so we can quickly restore the extra demo section later.
   // const featured = useMemo(
@@ -201,7 +202,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   };
 
   return (
-    <section id="catalog" className="relative isolate overflow-hidden py-20">
+    <section id="catalog" className="relative isolate overflow-hidden py-14 sm:py-16 lg:py-20">
       <div className={`absolute inset-0 ${styles.catalogShell}`} />
       <div className={`absolute inset-0 opacity-90 ${styles.catalogAura}`} />
       <div className={`absolute inset-0 ${styles.catalogMesh}`} />
@@ -281,140 +282,165 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
         </motion.div>
       ))}
 
-      <div className="relative z-10 container mx-auto space-y-24 px-4">
+      <div className="relative z-10 container mx-auto space-y-16 px-4 sm:space-y-20 lg:space-y-24">
         <div>
           <motion.div
-            className="mb-10 flex flex-col gap-6"
+            className="mb-8 flex flex-col gap-6 sm:mb-10"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2">
               <span className="font-display text-[11px] tracking-[0.4em] text-primary/60">
                 BROWSE OUR COLLECTION
               </span>
-              <h2 className="font-display text-3xl font-bold tracking-wider text-foreground md:text-4xl">
+              <h2 className="font-display text-3xl font-bold tracking-[0.12em] text-foreground md:text-4xl">
                 ACCOUNT <span className="text-primary text-glow">CATALOG</span>
               </h2>
             </div>
 
-            <div className="rounded-2xl border border-border/40 bg-card/50 p-4 backdrop-blur-md">
-              <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="rounded-[1.5rem] border border-border/40 bg-card/50 p-4 backdrop-blur-md sm:p-5 lg:p-6">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal size={14} className="text-muted-foreground/50" />
                   <span className="font-display text-[11px] tracking-[0.28em] text-muted-foreground/60">
                     FILTER CATALOG
                   </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={resetFilters}
-                  className="rounded-full border border-primary/20 bg-primary/8 px-3 py-1 font-display text-[10px] tracking-[0.18em] text-primary transition hover:bg-primary hover:text-primary-foreground"
-                >
-                  RESET
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
-                <label className="block">
-                  <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                    SEARCH
+                <div className="flex items-center justify-between gap-2 sm:justify-end">
+                  <span className="rounded bg-secondary/50 px-2 py-0.5 font-display text-[10px] tracking-wider text-muted-foreground/50">
+                    {available.length} {available.length === 1 ? "ITEM" : "ITEMS"}
                   </span>
-                  <div className="relative">
-                    <Search
-                      size={15}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/40"
+                  <button
+                    type="button"
+                    onClick={() => setFiltersOpen((current) => !current)}
+                    aria-expanded={filtersOpen}
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-3 py-2 font-display text-[10px] tracking-[0.18em] text-primary transition hover:bg-primary hover:text-primary-foreground"
+                  >
+                    {filtersOpen ? "COLLAPSE" : "FILTERS"}
+                    <ChevronDown
+                      size={14}
+                      className={`transition-transform ${filtersOpen ? "rotate-180" : ""}`}
                     />
-                    <input
-                      type="text"
-                      placeholder="Code or rank..."
-                      value={search}
-                      onChange={(event) => setSearch(event.target.value)}
-                      className="w-full rounded-lg border border-border/50 bg-background/40 py-2.5 pl-9 pr-4 text-sm text-foreground backdrop-blur-sm placeholder:text-muted-foreground/40 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                    />
-                  </div>
-                </label>
-
-                <label className="block">
-                  <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                    RANK
-                  </span>
-                  <select
-                    value={rankFilter}
-                    onChange={(event) => setRankFilter(event.target.value)}
-                    className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                  >
-                    <option value="all">All ranks</option>
-                    {rankOptions.map((rank) => (
-                      <option key={rank} value={rank}>
-                        {rank}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="block">
-                  <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                    REGION
-                  </span>
-                  <select
-                    value={regionFilter}
-                    onChange={(event) => setRegionFilter(event.target.value)}
-                    className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                  >
-                    <option value="all">All regions</option>
-                    {regionOptions.map((region) => (
-                      <option key={region} value={region}>
-                        {region}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="block">
-                  <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                    CHANGE NICK
-                  </span>
-                  <select
-                    value={nickFilter}
-                    onChange={(event) => setNickFilter(event.target.value)}
-                    className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                  >
-                    <option value="all">All status</option>
-                    {nickOptions.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="block">
-                  <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                    SORT
-                  </span>
-                  <select
-                    value={sortBy}
-                    onChange={(event) => setSortBy(event.target.value)}
-                    className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                  >
-                    <option value="default">Recommended</option>
-                    <option value="price-asc">Price: Low to High</option>
-                    <option value="price-desc">Price: High to Low</option>
-                  </select>
-                </label>
+                  </button>
+                </div>
               </div>
 
-              <div className="mt-4 flex items-center gap-2">
-                <span className="rounded bg-secondary/50 px-2 py-0.5 font-display text-[10px] tracking-wider text-muted-foreground/50">
-                  {available.length} {available.length === 1 ? "ITEM" : "ITEMS"}
-                </span>
-              </div>
+              <AnimatePresence initial={false}>
+                {filtersOpen && (
+                  <motion.div
+                    key="catalog-filters"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mt-4 grid grid-cols-1 gap-3 border-t border-white/5 pt-4 sm:grid-cols-2 xl:grid-cols-5">
+                      <label className="block sm:col-span-2 xl:col-span-1">
+                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
+                          SEARCH
+                        </span>
+                        <div className="relative">
+                          <Search
+                            size={15}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/40"
+                          />
+                          <input
+                            type="text"
+                            placeholder="Code or rank..."
+                            value={search}
+                            onChange={(event) => setSearch(event.target.value)}
+                            className="w-full rounded-lg border border-border/50 bg-background/40 py-2.5 pl-9 pr-4 text-sm text-foreground backdrop-blur-sm placeholder:text-muted-foreground/40 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                          />
+                        </div>
+                      </label>
+
+                      <label className="block">
+                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
+                          RANK
+                        </span>
+                        <select
+                          value={rankFilter}
+                          onChange={(event) => setRankFilter(event.target.value)}
+                          className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                        >
+                          <option value="all">All ranks</option>
+                          {rankOptions.map((rank) => (
+                            <option key={rank} value={rank}>
+                              {rank}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+
+                      <label className="block">
+                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
+                          REGION
+                        </span>
+                        <select
+                          value={regionFilter}
+                          onChange={(event) => setRegionFilter(event.target.value)}
+                          className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                        >
+                          <option value="all">All regions</option>
+                          {regionOptions.map((region) => (
+                            <option key={region} value={region}>
+                              {region}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+
+                      <label className="block">
+                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
+                          CHANGE NICK
+                        </span>
+                        <select
+                          value={nickFilter}
+                          onChange={(event) => setNickFilter(event.target.value)}
+                          className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                        >
+                          <option value="all">All status</option>
+                          {nickOptions.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+
+                      <label className="block">
+                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
+                          SORT
+                        </span>
+                        <select
+                          value={sortBy}
+                          onChange={(event) => setSortBy(event.target.value)}
+                          className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                        >
+                          <option value="default">Recommended</option>
+                          <option value="price-asc">Price: Low to High</option>
+                          <option value="price-desc">Price: High to Low</option>
+                        </select>
+                      </label>
+
+                      <button
+                        type="button"
+                        onClick={resetFilters}
+                        className="rounded-full border border-primary/20 bg-primary/8 px-3 py-2 font-display text-[10px] tracking-[0.18em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:col-span-2 xl:col-span-5 xl:justify-self-end"
+                      >
+                        RESET
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:gap-6 xl:grid-cols-3">
             {available.map((product, index) => (
               <ProductCard
                 key={product.id}
@@ -425,7 +451,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
           </div>
 
           {available.length === 0 && (
-            <div className="mt-20 flex flex-col items-center gap-3">
+            <div className="mt-16 flex flex-col items-center gap-3 sm:mt-20">
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-secondary/30">
                 <Search size={24} className="text-muted-foreground/30" />
               </div>
