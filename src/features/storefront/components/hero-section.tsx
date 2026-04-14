@@ -386,50 +386,6 @@ export default function HeroSection() {
             </div>
           </div>
 
-          <div className="mt-4 grid w-full max-w-[920px] grid-cols-1 gap-3 sm:grid-cols-2 lg:hidden">
-            <button
-              type="button"
-              onClick={goToPrevious}
-              className={`group relative overflow-hidden rounded-[20px] border border-white/12 bg-white/6 text-left backdrop-blur-md transition hover:border-primary/30 ${styles.bannerSideCard}`}
-            >
-              <img
-                src={banners[prevIndex].src}
-                alt={banners[prevIndex].alt}
-                className="aspect-[1840/853] w-full bg-background/70 object-contain"
-              />
-              <div className={`absolute inset-0 ${styles.bannerSideOverlayLeft}`} />
-              <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 p-3">
-                <span className="font-display text-[10px] tracking-[0.24em] text-foreground/80">
-                  PREVIOUS BANNER
-                </span>
-                <span className="rounded-full border border-white/10 bg-background/50 p-2 text-foreground transition group-hover:bg-primary group-hover:text-primary-foreground">
-                  <ChevronLeft size={16} />
-                </span>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={goToNext}
-              className={`group relative overflow-hidden rounded-[20px] border border-white/12 bg-white/6 text-left backdrop-blur-md transition hover:border-primary/30 ${styles.bannerSideCard}`}
-            >
-              <img
-                src={banners[nextIndex].src}
-                alt={banners[nextIndex].alt}
-                className="aspect-[1840/853] w-full bg-background/70 object-contain"
-              />
-              <div className={`absolute inset-0 ${styles.bannerSideOverlayRight}`} />
-              <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 p-3">
-                <span className="font-display text-[10px] tracking-[0.24em] text-foreground/80">
-                  NEXT BANNER
-                </span>
-                <span className="rounded-full border border-white/10 bg-background/50 p-2 text-foreground transition group-hover:bg-primary group-hover:text-primary-foreground">
-                  <ChevronRight size={16} />
-                </span>
-              </div>
-            </button>
-          </div>
-
           <motion.div
             key={`next-${nextIndex}`}
             className={`absolute right-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 backdrop-blur-md lg:block ${styles.bannerSideCard}`}
