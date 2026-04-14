@@ -138,15 +138,15 @@ export default function ProductDetailPage({
             </span>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start xl:gap-8">
-            <section className="lg:sticky lg:top-24 xl:top-28">
+          <div className="grid gap-8 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-start">
+            <section className="xl:sticky xl:top-28">
               <ProductImageGallery product={product} />
             </section>
 
             <section className="flex flex-col gap-6">
-              <div className="rounded-[1.6rem] border border-border/35 bg-card/72 p-5 backdrop-blur-md sm:rounded-[2rem] sm:p-6">
-                <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
-                  <div className="min-w-0">
+              <div className="rounded-[2rem] border border-border/35 bg-card/72 p-6 backdrop-blur-md">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
                     <span className="font-display text-[11px] tracking-[0.34em] text-primary/62">
                       FUZEVALO ACCOUNT
                     </span>
@@ -172,7 +172,7 @@ export default function ProductDetailPage({
                   </div>
                 </div>
 
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {/* <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   {detailRows(product).map((item) => (
                     <div
                       key={item.label}
@@ -186,50 +186,48 @@ export default function ProductDetailPage({
                       </p>
                     </div>
                   ))}
-                </div>
+                </div> */}
               </div>
 
-              <div className="rounded-[1.6rem] border border-border/35 bg-card/72 p-5 backdrop-blur-md sm:rounded-[2rem] sm:p-6">
-                <div className="flex items-center gap-2">
-                  <CircleCheck size={15} className="text-primary" />
-                  <span className="font-display text-[11px] tracking-[0.24em] text-primary/74">
-                    DAFTAR SKIN
-                  </span>
-                </div>
-                <ol className="panel-scrollbar mt-5 min-h-[16rem] max-h-[25rem] space-y-2 overflow-y-auto pr-2 text-[13px] leading-5 text-foreground/84 sm:min-h-[22rem] lg:max-h-[30rem] xl:min-h-[31.5rem] xl:max-h-[37rem]">
-                  {product.skins.map((skin, index) => (
-                    <li
-                      key={skin}
-                      className="rounded-[1rem] border border-border/25 bg-background/28 px-4 py-2.5"
-                    >
-                      <span className="mr-2 font-display text-primary/86">
-                        {String(index + 1).padStart(2, "0")}.
-                      </span>
-                      <span className="break-words">
+                <div className="rounded-[2rem] border border-border/35 bg-card/72 p-6 backdrop-blur-md">
+                  <div className="flex items-center gap-2">
+                    <CircleCheck size={15} className="text-primary" />
+                    <span className="font-display text-[11px] tracking-[0.24em] text-primary/74">
+                      DAFTAR SKIN
+                    </span>
+                  </div>
+                  <ol className="panel-scrollbar mt-5 max-h-[37rem] min-h-[31.5rem] space-y-2 overflow-y-auto pr-2 text-[13px] leading-5 text-foreground/84">
+                    {product.skins.map((skin, index) => (
+                      <li
+                        key={skin}
+                        className="rounded-[1rem] border border-border/25 bg-background/28 px-4 py-2.5"
+                      >
+                        <span className="mr-2 font-display text-primary/86">
+                          {String(index + 1).padStart(2, "0")}.
+                        </span>
                         {skin}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
 
-              {isAvailable ? (
-                <a
-                  href={buildWhatsAppLink(product)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-3 rounded-[1.35rem] bg-primary px-6 py-4 text-center font-display text-sm font-bold tracking-[0.16em] text-primary-foreground transition hover:box-glow-strong"
-                >
-                  <WhatsAppGlyph />
-                  BELI AKUN
-                </a>
-              ) : (
-                <span className="inline-flex items-center justify-center rounded-[1.35rem] border border-border/35 bg-background/36 px-6 py-4 text-center font-display text-sm tracking-[0.16em] text-muted-foreground">
-                  AKUN SUDAH SOLD
-                </span>
-              )}
-            </section>
-          </div>
+                {isAvailable ? (
+                  <a
+                    href={buildWhatsAppLink(product)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex w-full items-center justify-center gap-3 rounded-[1.35rem] bg-primary px-6 py-4 font-display text-sm font-bold tracking-[0.16em] text-primary-foreground transition hover:box-glow-strong"
+                  >
+                    <WhatsAppGlyph />
+                    BELI AKUN
+                  </a>
+                ) : (
+                  <span className="inline-flex items-center justify-center rounded-[1.35rem] border border-border/35 bg-background/36 px-6 py-4 font-display text-sm tracking-[0.16em] text-muted-foreground">
+                    AKUN SUDAH SOLD
+                  </span>
+                )}
+              </section>
+            </div>
         </div>
       </main>
 

@@ -36,7 +36,7 @@ export default function ProductImageGallery({
           <img
             src={activeImage}
             alt={`${product.code} preview`}
-            className="aspect-[4/5] w-full object-contain object-top sm:aspect-[5/6] lg:aspect-[4/5] xl:min-h-[46rem] xl:aspect-auto"
+            className="aspect-[4/5] w-full object-contain object-top sm:aspect-[5/6] xl:min-h-[46rem] xl:aspect-auto"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-card via-card/10 to-transparent" />
         </div>
