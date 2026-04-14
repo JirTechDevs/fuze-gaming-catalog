@@ -1,9 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Archive, ChevronDown, Search, SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
+import { useIsMobile } from "@/hooks/use-mobile";
 import ProductCard from "@/features/storefront/components/product-card";
 import styles from "./catalog-section.module.css";
 
@@ -125,6 +126,9 @@ const TacticalMarkDoodle = () => (
 );
 
 export default function CatalogSection({ products }: CatalogSectionProps) {
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
+  const isLiteMode = isMobile || prefersReducedMotion;
   const [search, setSearch] = useState("");
   const [rankFilter, setRankFilter] = useState("all");
   const [regionFilter, setRegionFilter] = useState("all");
@@ -196,6 +200,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   const startIndex = available.length === 0 ? 0 : (currentPageSafe - 1) * ACCOUNTS_PER_PAGE;
   const endIndex = Math.min(startIndex + ACCOUNTS_PER_PAGE, available.length);
   const visibleProducts = available.slice(startIndex, endIndex);
+  const visibleAmbientParticles = isLiteMode ? ambientParticles.slice(0, 2) : ambientParticles;
 
   const paginationItems = useMemo(() => {
     if (totalPages <= 1) {
@@ -258,7 +263,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
       <div className={`absolute left-0 right-0 ${styles.catalogStripTop}`} />
       <div className={`absolute left-0 right-0 ${styles.catalogStripBottom}`} />
 
-      {ambientParticles.map((particle) => (
+      {visibleAmbientParticles.map((particle) => (
         <motion.span
           key={`${particle.left}-${particle.top}`}
           className={`pointer-events-none absolute rounded-full bg-primary/14 blur-3xl ${styles.ambientParticle}`}
@@ -268,18 +273,26 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             width: particle.size,
             height: particle.size,
           }}
-          animate={{
-            opacity: [particle.opacity, particle.opacity * 1.4, particle.opacity],
-            y: [0, -18, 0],
-            x: [0, 10, 0],
-            scale: [1, 1.06, 0.98],
-          }}
-          transition={{
-            duration: particle.duration,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-            delay: particle.delay,
-          }}
+          animate={
+            isLiteMode
+              ? { opacity: particle.opacity, y: 0, x: 0, scale: 1 }
+              : {
+                  opacity: [particle.opacity, particle.opacity * 1.4, particle.opacity],
+                  y: [0, -18, 0],
+                  x: [0, 10, 0],
+                  scale: [1, 1.06, 0.98],
+                }
+          }
+          transition={
+            isLiteMode
+              ? { duration: 0.2 }
+              : {
+                  duration: particle.duration,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                  delay: particle.delay,
+                }
+          }
         />
       ))}
 
@@ -345,7 +358,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
               </h2>
             </div>
 
-            <div className="rounded-[1.5rem] border border-border/40 bg-card/50 p-4 backdrop-blur-md sm:p-5 lg:p-6">
+            <div className="rounded-[1.5rem] border border-border/40 bg-card/75 p-4 backdrop-blur-none sm:bg-card/50 sm:backdrop-blur-md sm:p-5 lg:p-6">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal size={14} className="text-muted-foreground/50" />
