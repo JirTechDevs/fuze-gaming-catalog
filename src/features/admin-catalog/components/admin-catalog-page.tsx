@@ -105,20 +105,84 @@ export default function AdminCatalogPage({
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container mx-auto px-4 pb-12 pt-24">
-        <div className="mb-6 flex items-center justify-between">
+      <div className="container mx-auto px-4 pb-12 pt-20 sm:pt-24">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="font-display text-2xl font-bold tracking-widest text-foreground">
             ADMIN <span className="text-glow text-primary">PANEL</span>
           </h1>
           <button
             onClick={openNew}
-            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 font-display text-sm font-semibold tracking-wider text-primary-foreground transition-all hover:box-glow-strong"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 font-display text-sm font-semibold tracking-wider text-primary-foreground transition-all hover:box-glow-strong sm:w-auto"
           >
             <Plus size={16} /> ADD
           </button>
         </div>
 
-        <div className="overflow-x-auto rounded-lg border border-border/50 bg-card">
+        <div className="grid gap-4 md:hidden">
+          {products.map((product, index) => (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: index * 0.03 }}
+              className="rounded-xl border border-border/50 bg-card p-4"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="font-display text-lg font-semibold tracking-wider text-primary">
+                    {product.code}
+                  </p>
+                  <p className="mt-1 text-sm text-foreground">{product.rank}</p>
+                </div>
+                <span
+                  className={`inline-block rounded-full px-2.5 py-1 font-display text-xs tracking-wider ${
+                    product.status === "available"
+                      ? "bg-primary/10 text-primary"
+                      : "bg-destructive/10 text-destructive"
+                  }`}
+                >
+                  {product.status.toUpperCase()}
+                </span>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border border-border/40 bg-secondary/30 px-3 py-2.5">
+                <span className="font-display text-xs tracking-wider text-muted-foreground">
+                  PRICE
+                </span>
+                <span className="font-display font-semibold text-primary">
+                  Rp {formatPrice(product.price)}
+                </span>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button
+                  onClick={() => toggleStatus(product.id)}
+                  className={`${iconButtonClassName} flex h-10 min-w-10 items-center justify-center rounded-lg border border-border/40 bg-secondary/40`}
+                >
+                  {product.status === "available" ? (
+                    <EyeOff size={15} />
+                  ) : (
+                    <Eye size={15} />
+                  )}
+                </button>
+                <button
+                  onClick={() => openEdit(product)}
+                  className={`${iconButtonClassName} flex h-10 min-w-10 items-center justify-center rounded-lg border border-border/40 bg-secondary/40`}
+                >
+                  <Pencil size={15} />
+                </button>
+                <button
+                  onClick={() => remove(product.id)}
+                  className={`${destructiveIconButtonClassName} flex h-10 min-w-10 items-center justify-center rounded-lg border border-border/40 bg-secondary/40`}
+                >
+                  <Trash2 size={15} />
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="hidden overflow-x-auto rounded-lg border border-border/50 bg-card md:block">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border/50">
@@ -201,7 +265,7 @@ export default function AdminCatalogPage({
               onClick={() => setEditing(null)}
             >
               <motion.div
-                className="relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-xl border border-border/50 bg-card p-6"
+                className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-border/50 bg-card p-4 sm:p-6"
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
@@ -218,7 +282,7 @@ export default function AdminCatalogPage({
                   <span className="text-primary">ACCOUNT</span>
                 </h3>
 
-                <div className="flex flex-col gap-3">
+                <div className="grid gap-3 sm:grid-cols-2">
                   {(
                     [
                       ["code", "Code"],
@@ -251,23 +315,23 @@ export default function AdminCatalogPage({
                     </div>
                   ))}
 
-                  <div>
+                  <div className="sm:col-span-2">
                     <label className={fieldLabelClassName}>
                       Skins (comma separated)
                     </label>
                     <textarea
                       value={skinInput}
                       onChange={(event) => setSkinInput(event.target.value)}
-                      rows={2}
+                      rows={4}
                       className={textFieldClassName}
                     />
                   </div>
 
-                  <div>
+                  <div className="sm:col-span-2">
                     <label className={fieldLabelClassName}>
                       Image URL
                     </label>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col gap-2 sm:flex-row">
                       <input
                         value={editing.image}
                         onChange={(event) =>
@@ -275,7 +339,7 @@ export default function AdminCatalogPage({
                         }
                         className={imageFieldClassName}
                       />
-                      <button className="flex items-center gap-1 rounded-md bg-secondary px-3 py-2 text-xs text-muted-foreground hover:text-foreground">
+                      <button className="flex items-center justify-center gap-1 rounded-md bg-secondary px-3 py-2 text-xs text-muted-foreground hover:text-foreground">
                         <Upload size={14} />
                       </button>
                     </div>
@@ -283,7 +347,7 @@ export default function AdminCatalogPage({
 
                   <button
                     onClick={save}
-                    className={`mt-2 w-full ${primaryButtonClassName}`}
+                    className={`mt-2 w-full sm:col-span-2 ${primaryButtonClassName}`}
                   >
                     {isNew ? "CREATE ACCOUNT" : "SAVE CHANGES"}
                   </button>

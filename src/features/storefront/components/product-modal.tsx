@@ -65,14 +65,14 @@ export default function ProductModal({
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 overflow-y-auto bg-background/85 p-4 backdrop-blur-lg"
+        className="fixed inset-0 z-50 overflow-y-auto bg-background/85 p-3 backdrop-blur-lg sm:p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
       >
         <motion.div
-          className="relative mx-auto my-4 w-full max-w-xl overflow-hidden rounded-[2rem] border border-border/40 bg-card box-glow"
+          className="relative mx-auto my-2 w-full max-w-2xl overflow-hidden rounded-[1.6rem] border border-border/40 bg-card box-glow sm:my-4 sm:rounded-[2rem]"
           initial={{ scale: 0.92, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.92, opacity: 0, y: 20 }}
@@ -88,7 +88,7 @@ export default function ProductModal({
             <X size={16} />
           </button>
 
-          <div className="relative aspect-[4/5] overflow-hidden bg-[radial-gradient(circle_at_top,_hsl(var(--primary)/0.24),_transparent_52%),linear-gradient(180deg,_hsl(var(--secondary)/0.9),_hsl(var(--card)))] p-4 sm:aspect-[5/4]">
+          <div className="relative aspect-[4/5] overflow-hidden bg-[radial-gradient(circle_at_top,_hsl(var(--primary)/0.24),_transparent_52%),linear-gradient(180deg,_hsl(var(--secondary)/0.9),_hsl(var(--card)))] p-3 sm:aspect-[5/4] sm:p-4">
             <div className="relative h-full w-full overflow-hidden rounded-[1.65rem] border border-white/10 bg-background/25">
               <img
                 src={product.image}
@@ -98,20 +98,22 @@ export default function ProductModal({
               <div className="absolute inset-0 bg-gradient-to-t from-card via-card/15 to-transparent" />
             </div>
 
-            <div className="absolute left-7 top-7 flex items-center gap-2 rounded-full border border-primary/25 bg-background/88 px-4 py-2 backdrop-blur-sm">
-              <Shield size={13} className="text-primary" />
-              <span className="font-display text-sm font-bold tracking-[0.2em] text-primary text-glow">
-                {product.code}
-              </span>
+            <div className="absolute left-4 right-4 top-4 flex flex-wrap items-start justify-between gap-2 sm:left-7 sm:right-7 sm:top-7">
+              <div className="flex min-w-0 items-center gap-2 rounded-full border border-primary/25 bg-background/88 px-3 py-2 backdrop-blur-sm sm:px-4">
+                <Shield size={13} className="shrink-0 text-primary" />
+                <span className="truncate font-display text-xs font-bold tracking-[0.16em] text-primary text-glow sm:text-sm sm:tracking-[0.2em]">
+                  {product.code}
+                </span>
+              </div>
             </div>
 
-            <div className="absolute bottom-7 left-7 right-7 flex flex-wrap items-end justify-between gap-3">
+            <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2 sm:bottom-7 sm:left-7 sm:right-7 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-3">
               <div className="rounded-[1.3rem] border border-primary/15 bg-background/78 px-4 py-3 backdrop-blur-sm">
                 <span className="font-display text-[10px] tracking-[0.24em] text-muted-foreground/55">
                   RANK
                 </span>
                 <p
-                  className={`mt-1 font-display text-2xl font-bold tracking-wide ${getRankColor(product.rank)}`}
+                  className={`mt-1 font-display text-xl font-bold tracking-wide sm:text-2xl ${getRankColor(product.rank)}`}
                 >
                   {product.rank}
                 </p>
@@ -120,14 +122,14 @@ export default function ProductModal({
                 <span className="font-display text-[10px] tracking-[0.24em] text-muted-foreground/55">
                   PRICE
                 </span>
-                <p className="mt-1 font-display text-2xl font-bold text-primary text-glow">
+                <p className="mt-1 font-display text-xl font-bold text-primary text-glow sm:text-2xl">
                   Rp {formatPrice(product.price)}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-5 p-6">
+          <div className="flex flex-col gap-5 p-4 sm:p-6">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <DetailTile label="SISA VP" value={product.sisaVP || "-"} />
               <DetailTile label="CHANGE NICK" value={product.changeNick} />
@@ -148,9 +150,9 @@ export default function ProductModal({
               <div className="mt-1 text-sm text-muted-foreground/72">
                 Skin yang ikut di akun ini
               </div>
-              <ol className="mt-4 space-y-2 text-base leading-6 text-foreground/84">
+              <ol className="panel-scrollbar mt-4 max-h-64 space-y-2 overflow-y-auto pr-1 text-sm leading-6 text-foreground/84 sm:text-base">
                 {product.skins.map((skin, index) => (
-                  <li key={skin}>
+                  <li key={skin} className="break-words">
                     {index + 1}. {skin}
                   </li>
                 ))}
