@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Archive, ChevronDown, Search, SlidersHorizontal } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
 import ProductCard from "@/features/storefront/components/product-card";
 import styles from "./catalog-section.module.css";
@@ -10,6 +10,8 @@ import styles from "./catalog-section.module.css";
 interface CatalogSectionProps {
   products: Product[];
 }
+
+const ACCOUNTS_PER_PAGE = 6;
 
 const ambientParticles = [
   { left: "5%", top: "14%", size: 180, delay: 0, duration: 14, opacity: 0.14 },
@@ -129,6 +131,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   const [nickFilter, setNickFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Keep this block commented so we can quickly restore the extra demo section later.
   // const featured = useMemo(
@@ -188,10 +191,51 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
     return filtered;
   }, [availableProducts, nickFilter, rankFilter, regionFilter, search, sortBy]);
 
+  const totalPages = Math.max(1, Math.ceil(available.length / ACCOUNTS_PER_PAGE));
+  const currentPageSafe = Math.min(currentPage, totalPages);
+  const startIndex = available.length === 0 ? 0 : (currentPageSafe - 1) * ACCOUNTS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ACCOUNTS_PER_PAGE, available.length);
+  const visibleProducts = available.slice(startIndex, endIndex);
+
+  const paginationItems = useMemo(() => {
+    if (totalPages <= 1) {
+      return [1];
+    }
+
+    const pages = new Set<number>([1, totalPages, currentPageSafe - 1, currentPageSafe, currentPageSafe + 1]);
+    const sortedPages = [...pages]
+      .filter((page) => page >= 1 && page <= totalPages)
+      .sort((left, right) => left - right);
+
+    const items: Array<number | string> = [];
+
+    sortedPages.forEach((page, index) => {
+      const previous = sortedPages[index - 1];
+
+      if (previous && page - previous > 1) {
+        items.push(`ellipsis-${previous}-${page}`);
+      }
+
+      items.push(page);
+    });
+
+    return items;
+  }, [currentPageSafe, totalPages]);
+
   const sold = useMemo(
     () => products.filter((product) => product.status === "sold"),
     [products],
   );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, rankFilter, regionFilter, nickFilter, sortBy]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const resetFilters = () => {
     setSearch("");
@@ -199,6 +243,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
     setRegionFilter("all");
     setNickFilter("all");
     setSortBy("default");
+    setCurrentPage(1);
   };
 
   return (
@@ -310,7 +355,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                 </div>
                 <div className="flex items-center justify-between gap-2 sm:justify-end">
                   <span className="rounded bg-secondary/50 px-2 py-0.5 font-display text-[10px] tracking-wider text-muted-foreground/50">
-                    {available.length} {available.length === 1 ? "ITEM" : "ITEMS"}
+                    {available.length} {available.length === 1 ? "ACCOUNT" : "ACCOUNTS"}
                   </span>
                   <button
                     type="button"
@@ -440,12 +485,12 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:gap-6 xl:grid-cols-3">
-            {available.map((product, index) => (
+          <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-5 lg:gap-6 xl:grid-cols-3">
+            {visibleProducts.map((product, index) => (
               <ProductCard
                 key={product.id}
                 product={product}
-                index={index}
+                index={startIndex + index}
               />
             ))}
           </div>
@@ -458,6 +503,50 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
               <p className="font-display text-sm tracking-widest text-muted-foreground/50">
                 NO ACCOUNTS FOUND
               </p>
+            </div>
+          )}
+
+          {available.length > 0 && (
+            <div className="mt-8 flex flex-col items-center gap-4 sm:mt-10">
+              <p className="text-center font-display text-[11px] tracking-[0.18em] text-muted-foreground/60 sm:text-xs">
+                Showing {startIndex + 1} - {endIndex} of {available.length}{" "}
+                {available.length === 1 ? "Account" : "Accounts"}
+              </p>
+
+              {totalPages > 1 && (
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  {paginationItems.map((item) => {
+                    if (typeof item === "string") {
+                      return (
+                        <span
+                          key={item}
+                          className="px-1 font-display text-sm tracking-[0.2em] text-muted-foreground/45"
+                        >
+                          ...
+                        </span>
+                      );
+                    }
+
+                    const isActive = item === currentPageSafe;
+
+                    return (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => setCurrentPage(item)}
+                        aria-current={isActive ? "page" : undefined}
+                        className={`flex h-10 min-w-10 items-center justify-center rounded-[0.9rem] border px-3 font-display text-sm font-bold transition ${
+                          isActive
+                            ? "border-primary bg-primary text-primary-foreground shadow-[0_0_24px_hsl(var(--primary)_/_0.28)]"
+                            : "border-border/40 bg-card/55 text-foreground/78 hover:border-primary/30 hover:text-primary"
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
         </div>
