@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styles from "./intro-screen.module.css";
 
@@ -10,6 +10,7 @@ interface IntroScreenProps {
 
 export default function IntroScreen({ onComplete }: IntroScreenProps) {
   const [show, setShow] = useState(true);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -30,8 +31,8 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
         >
           <motion.div
             className={`absolute h-[280px] w-[280px] rounded-full sm:h-[400px] sm:w-[400px] ${styles.introRadialGlow}`}
-            animate={{ scale: 1.2, opacity: 1 }}
-            transition={{ duration: 1.4, ease: "easeOut" }}
+            animate={prefersReducedMotion ? { scale: 1, opacity: 0.9 } : { scale: 1.2, opacity: 1 }}
+            transition={{ duration: prefersReducedMotion ? 0.2 : 1.4, ease: "easeOut" }}
           />
 
           <motion.div
@@ -43,14 +44,22 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
               src="/images/logo.png"
               alt="Fuzevalo"
               className={`h-20 w-20 sm:h-24 sm:w-24 ${styles.introLogo}`}
-              animate={{
-                filter: [
-                  "drop-shadow(0 0 20px hsl(187,100%,50%,0.3))",
-                  "drop-shadow(0 0 40px hsl(187,100%,50%,0.6))",
-                  "drop-shadow(0 0 20px hsl(187,100%,50%,0.3))",
-                ],
-              }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              animate={
+                prefersReducedMotion
+                  ? undefined
+                  : {
+                      filter: [
+                        "drop-shadow(0 0 20px hsl(187,100%,50%,0.3))",
+                        "drop-shadow(0 0 40px hsl(187,100%,50%,0.6))",
+                        "drop-shadow(0 0 20px hsl(187,100%,50%,0.3))",
+                      ],
+                    }
+              }
+              transition={
+                prefersReducedMotion
+                  ? undefined
+                  : { duration: 2, repeat: Infinity, ease: "easeInOut" }
+              }
             />
 
             <motion.span

@@ -1,8 +1,9 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import styles from "./hero-section.module.css";
 
 const banners = [
@@ -188,14 +189,18 @@ const DPadPanel = () => (
 
 export default function HeroSection() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
+  const isLiteMode = isMobile || prefersReducedMotion;
+  const visibleParticles = isLiteMode ? particles.slice(0, 4) : particles;
 
   useEffect(() => {
     const timer = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % banners.length);
-    }, 3500);
+    }, isLiteMode ? 5000 : 3500);
 
     return () => window.clearInterval(timer);
-  }, []);
+  }, [isLiteMode]);
 
   const scrollToCatalog = () => {
     document
@@ -216,10 +221,10 @@ export default function HeroSection() {
       <div className={`absolute inset-0 opacity-95 ${styles.heroHalo}`} />
       <div className={`absolute inset-x-0 top-1/2 h-[24rem] -translate-y-1/2 md:h-[34rem] ${styles.heroCenterGlow}`} />
       <div className={`absolute inset-0 bg-grid opacity-[0.14] ${styles.heroGridMask}`} />
-      <div className={`absolute h-56 w-56 rounded-full bg-primary/20 blur-3xl md:h-72 md:w-72 ${styles.orbTopLeft}`} />
-      <div className={`absolute h-44 w-44 rounded-full bg-primary/16 blur-3xl md:h-64 md:w-64 ${styles.orbTopRight}`} />
-      <div className={`absolute h-48 w-48 rounded-full bg-primary/12 blur-3xl md:h-64 md:w-64 ${styles.orbBottomLeft}`} />
-      <div className={`absolute h-56 w-56 rounded-full bg-primary/14 blur-3xl md:h-72 md:w-72 ${styles.orbBottomRight}`} />
+      <div className={`absolute h-48 w-48 rounded-full bg-primary/16 blur-2xl md:h-72 md:w-72 md:bg-primary/20 md:blur-3xl ${styles.orbTopLeft}`} />
+      <div className={`absolute h-40 w-40 rounded-full bg-primary/14 blur-2xl md:h-64 md:w-64 md:bg-primary/16 md:blur-3xl ${styles.orbTopRight}`} />
+      <div className={`absolute h-40 w-40 rounded-full bg-primary/10 blur-2xl md:h-64 md:w-64 md:bg-primary/12 md:blur-3xl ${styles.orbBottomLeft}`} />
+      <div className={`absolute h-48 w-48 rounded-full bg-primary/12 blur-2xl md:h-72 md:w-72 md:bg-primary/14 md:blur-3xl ${styles.orbBottomRight}`} />
       <div className={`absolute inset-0 ${styles.heroBottomFade}`} />
 
       {consoleOrnaments.map((ornament) => (
@@ -235,17 +240,25 @@ export default function HeroSection() {
                   : 120,
           }}
           initial={{ opacity: 0.18, scale: ornament.scale, rotate: ornament.rotate }}
-          animate={{
-            opacity: [0.2, 0.52, 0.24],
-            y: [0, -10, 0],
-            rotate: [ornament.rotate, ornament.rotate + 2, ornament.rotate],
-          }}
-          transition={{
-            duration: ornament.duration,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-            delay: ornament.delay,
-          }}
+          animate={
+            isLiteMode
+              ? { opacity: 0.24, y: 0, rotate: ornament.rotate }
+              : {
+                  opacity: [0.2, 0.52, 0.24],
+                  y: [0, -10, 0],
+                  rotate: [ornament.rotate, ornament.rotate + 2, ornament.rotate],
+                }
+          }
+          transition={
+            isLiteMode
+              ? { duration: 0.2 }
+              : {
+                  duration: ornament.duration,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                  delay: ornament.delay,
+                }
+          }
         >
           {ornament.type === "cluster" && <ConsoleCluster />}
           {ornament.type === "crosshair" && <TacticalCrosshair />}
@@ -258,13 +271,17 @@ export default function HeroSection() {
         <motion.div
           key={line.position}
           className={`pointer-events-none absolute hidden items-center gap-2 lg:flex ${line.position}`}
-          animate={{ opacity: [0.2, 0.55, 0.22], x: [0, 8, 0] }}
-          transition={{
-            duration: 4.8,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-            delay: line.delay,
-          }}
+          animate={isLiteMode ? { opacity: 0.22, x: 0 } : { opacity: [0.2, 0.55, 0.22], x: [0, 8, 0] }}
+          transition={
+            isLiteMode
+              ? { duration: 0.2 }
+              : {
+                  duration: 4.8,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                  delay: line.delay,
+                }
+          }
         >
           <span className={`h-1.5 w-1.5 rounded-full bg-primary/80 ${styles.ornamentDot}`} />
           <span className={`h-px ${line.width} bg-gradient-to-r from-primary/60 to-transparent`} />
@@ -273,8 +290,8 @@ export default function HeroSection() {
 
       <motion.div
         className="pointer-events-none absolute left-[14%] top-1/2 hidden h-24 w-24 -translate-y-1/2 rounded-full border border-primary/18 lg:block"
-        animate={{ rotate: [0, 360], opacity: [0.18, 0.32, 0.18] }}
-        transition={{ duration: 18, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+        animate={isLiteMode ? { rotate: 0, opacity: 0.18 } : { rotate: [0, 360], opacity: [0.18, 0.32, 0.18] }}
+        transition={isLiteMode ? { duration: 0.2 } : { duration: 18, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
       >
         <div className="absolute inset-3 rounded-full border border-primary/20 border-dashed" />
         <div className="absolute left-1/2 top-0 h-3 w-px -translate-x-1/2 bg-primary/60" />
@@ -283,15 +300,15 @@ export default function HeroSection() {
 
       <motion.div
         className="pointer-events-none absolute right-[15%] top-1/2 hidden h-28 w-28 -translate-y-1/2 lg:block"
-        animate={{ rotate: [0, -360], opacity: [0.15, 0.28, 0.15] }}
-        transition={{ duration: 22, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+        animate={isLiteMode ? { rotate: 0, opacity: 0.15 } : { rotate: [0, -360], opacity: [0.15, 0.28, 0.15] }}
+        transition={isLiteMode ? { duration: 0.2 } : { duration: 22, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
       >
         <div className="absolute inset-0 rounded-full border border-primary/16" />
         <div className="absolute inset-4 rounded-full border border-primary/18 border-dashed" />
         <div className="absolute left-1/2 top-2 h-[calc(50%-0.5rem)] w-px -translate-x-1/2 bg-primary/40" />
       </motion.div>
 
-      {particles.map((particle) => (
+      {visibleParticles.map((particle) => (
         <motion.span
           key={`${particle.left}-${particle.top}`}
           className={`pointer-events-none absolute rounded-full bg-primary/70 ${styles.particle}`}
@@ -301,13 +318,21 @@ export default function HeroSection() {
             width: particle.size,
             height: particle.size,
           }}
-          animate={{ opacity: [0.18, 0.85, 0.25], y: [0, -14, 0], scale: [1, 1.35, 0.92] }}
-          transition={{
-            duration: particle.duration,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-            delay: particle.delay,
-          }}
+          animate={
+            isLiteMode
+              ? { opacity: 0.2, y: 0, scale: 1 }
+              : { opacity: [0.18, 0.85, 0.25], y: [0, -14, 0], scale: [1, 1.35, 0.92] }
+          }
+          transition={
+            isLiteMode
+              ? { duration: 0.2 }
+              : {
+                  duration: particle.duration,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                  delay: particle.delay,
+                }
+          }
         />
       ))}
 
@@ -421,7 +446,7 @@ export default function HeroSection() {
         <div className="mt-5 w-full">
           <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
           <div className="hero-shop-mask overflow-hidden py-3">
-            <div className="hero-shop-track flex w-max items-center gap-6 whitespace-nowrap">
+            <div className={`${isLiteMode ? "" : "hero-shop-track"} flex w-max items-center gap-6 whitespace-nowrap`}>
               {[...shopTicker, ...shopTicker].map((item, index) => (
                 <span
                   key={`${item.id}-${index}`}
@@ -454,7 +479,7 @@ export default function HeroSection() {
         <div className="w-full">
           <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
           <div className="hero-shop-mask overflow-hidden py-4">
-            <div className="hero-shop-track flex w-max items-center gap-8 whitespace-nowrap">
+            <div className={`${isLiteMode ? "" : "hero-shop-track"} flex w-max items-center gap-8 whitespace-nowrap`}>
               {[...shopTicker, ...shopTicker].map((item, index) => (
                 <span
                   key={`${item.id}-${index}`}

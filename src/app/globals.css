@@ -168,6 +168,20 @@
   }
 }
 
+@media (max-width: 767px) {
+  .text-glow {
+    text-shadow: 0 0 6px hsl(189 100% 72% / 0.32);
+  }
+
+  .box-glow {
+    box-shadow: 0 0 10px hsl(189 100% 72% / 0.14);
+  }
+
+  .box-glow-strong {
+    box-shadow: 0 0 14px hsl(189 100% 72% / 0.22);
+  }
+}
+
 @keyframes latest-strip-marquee {
   from {
     transform: translateX(0);

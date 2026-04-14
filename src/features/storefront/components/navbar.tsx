@@ -29,7 +29,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[linear-gradient(180deg,hsl(var(--background)_/_0.9),hsl(var(--background)_/_0.58))] shadow-[0_10px_45px_hsl(226_56%_4%_/_0.4)] backdrop-blur-2xl">
+    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[linear-gradient(180deg,hsl(var(--background)_/_0.96),hsl(var(--background)_/_0.88))] shadow-[0_8px_28px_hsl(226_56%_4%_/_0.28)] backdrop-blur-md sm:bg-[linear-gradient(180deg,hsl(var(--background)_/_0.9),hsl(var(--background)_/_0.58))] sm:shadow-[0_10px_45px_hsl(226_56%_4%_/_0.4)] sm:backdrop-blur-2xl">
       <div className="container mx-auto flex h-14 items-center justify-between gap-3 px-4 sm:h-16">
         <Link href="/" className="flex min-w-0 items-center gap-2.5">
           <img src="/images/logo.png" alt="Fuzevalo" className="h-7 w-7 shrink-0 object-contain sm:h-8 sm:w-8" />
@@ -51,7 +51,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-background/40 text-foreground backdrop-blur-sm transition hover:border-primary/30 hover:text-primary sm:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-background/70 text-foreground backdrop-blur-none transition hover:border-primary/30 hover:text-primary sm:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
         >
           {open ? <X size={22} /> : <Menu size={22} />}
@@ -64,7 +64,7 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-b border-white/10 bg-background/92 backdrop-blur-2xl sm:hidden"
+            className="overflow-hidden border-b border-white/10 bg-background/96 backdrop-blur-none sm:hidden"
           >
             <div className="flex flex-col gap-2 p-3">
               <button
