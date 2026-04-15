@@ -76,3 +76,24 @@
 .detailStripBottom {
   bottom: 0;
 }
+
+.pricePanel {
+  position: relative;
+  isolation: isolate;
+}
+
+.pricePanel::after {
+  content: "";
+  position: absolute;
+  inset: auto -10% -45% auto;
+  width: 14rem;
+  height: 14rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, hsl(var(--primary) / 0.22) 0%, transparent 68%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.ctaDock {
+  box-shadow: 0 -16px 40px hsl(var(--background) / 0.55);
+}

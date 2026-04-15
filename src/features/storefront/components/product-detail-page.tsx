@@ -2,9 +2,12 @@ import Link from "next/link";
 import {
   ArrowLeft,
   CircleCheck,
+  MessageCircleMore,
+  ShieldCheck,
 } from "lucide-react";
 import {
   buildWhatsAppLink,
+  formatPrice,
   type Product,
 } from "@/features/catalog/domain/product";
 import Footer from "@/features/storefront/components/footer";
@@ -16,13 +19,73 @@ interface ProductDetailPageProps {
   product: Product;
 }
 
+function getHeroCount(product: Product) {
+  if (product.agent.toLowerCase() === "full unlock") {
+    return "23/23";
+  }
+
+  return product.agent || "-";
+}
+
+function getAgentRankNote(product: Product) {
+  const notes = [];
+
+  if (product.changeNick) {
+    notes.push(`Nick ${product.changeNick}`);
+  }
+
+  if (product.sisaVP && product.sisaVP !== "-") {
+    notes.push(`${product.sisaVP} VP`);
+  }
+
+  if (product.premier && product.premier !== "Unranked") {
+    notes.push(`Premier ${product.premier}`);
+  }
+
+  return notes.join(" • ") || "No special note";
+}
+
+function getMinusNotes(product: Product) {
+  const minusNotes = [];
+
+  if (product.changeNick.toLowerCase() !== "ready") {
+    minusNotes.push("Change nick belum ready.");
+  }
+
+  if (product.agent.toLowerCase() !== "full unlock") {
+    minusNotes.push(`Hero belum full unlock (${product.agent}).`);
+  }
+
+  if (product.premier.toLowerCase() === "can't be changed") {
+    minusNotes.push("Premier/emblem tidak bisa diganti.");
+  }
+
+  if (product.status !== "available") {
+    minusNotes.push("Akun sudah sold.");
+  }
+
+  return minusNotes;
+}
+
+function buildNegotiationLink(product: Product) {
+  const message = encodeURIComponent(
+    `Halo, saya tertarik nego untuk akun ${product.code} (${product.rank}) dengan harga Rp ${formatPrice(product.price)}. Apakah masih tersedia?`,
+  );
+
+  return `https://wa.me/6281234567890?text=${message}`;
+}
+
 const detailRows = (product: Product) => [
-  { label: "Status Akun", value: product.status === "available" ? "Tersedia" : "Sold" },
-  { label: "Change Nick", value: product.changeNick },
+  {
+    label: "Status",
+    value: product.status === "available" ? "Tersedia" : "Sold",
+  },
+  { label: "Hero Count", value: getHeroCount(product) },
+  { label: "Skin Count", value: `${product.skins.length}` },
+  { label: "Rank", value: product.rank },
+  { label: "Emblem", value: product.premier || "-" },
   { label: "Region", value: product.region },
-  { label: "Sisa VP", value: product.sisaVP || "-" },
-  { label: "Premier", value: product.premier || "-" },
-  { label: "Agent", value: product.agent },
+  { label: "Agent/Rank Note", value: getAgentRankNote(product) },
 ];
 
 function GamepadDoodle() {
@@ -98,6 +161,14 @@ export default function ProductDetailPage({
   product,
 }: ProductDetailPageProps) {
   const isAvailable = product.status === "available";
+  const minusNotes = getMinusNotes(product);
+  const minusSummary = minusNotes[0] || "-";
+  const detailsList = [
+    { label: "Kode Akun", value: product.code },
+    { label: "Region", value: product.region },
+    { label: "Minus", value: minusSummary },
+    { label: "Notes", value: getAgentRankNote(product) },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -143,49 +214,141 @@ export default function ProductDetailPage({
               <ProductImageGallery product={product} />
             </section>
 
-            <section className="flex flex-col gap-6">
-              <div className="rounded-[1.6rem] border border-border/35 bg-card/72 p-5 backdrop-blur-md sm:rounded-[2rem] sm:p-6">
-                <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
-                  <div className="min-w-0">
-                    <span className="font-display text-[11px] tracking-[0.34em] text-primary/62">
-                      FUZEVALO ACCOUNT
-                    </span>
-                    <h1 className="mt-3 break-words font-display text-2xl font-bold tracking-[0.08em] text-foreground sm:text-3xl xl:text-4xl">
+            <section className="flex flex-col gap-4">
+              <div className="rounded-[1.8rem] border border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.88),hsl(var(--background)/0.92))] p-5 backdrop-blur-md sm:p-6 xl:p-7">
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <h1 className="break-words font-display text-2xl font-black tracking-[0.02em] text-white sm:text-3xl xl:text-[2.55rem]">
+                        Valorant Account {product.rank}
+                      </h1>
+                    </div>
+                    <div className="font-display text-xl font-bold tracking-[0.08em] text-white/92 sm:pt-1 sm:text-2xl">
                       {product.code}
-                    </h1>
-                    <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground/82">
-                      Halaman detail akun dibuat ringkas supaya informasi utama
-                      cepat terbaca tanpa kehilangan nuansa visual dari storefront.
-                    </p>
+                    </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-2">
-                    <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 font-display text-[10px] tracking-[0.2em] text-primary">
-                      {product.rank}
-                    </span>
-                    <span className="rounded-full border border-border/40 bg-background/35 px-3 py-1.5 font-display text-[10px] tracking-[0.2em] text-muted-foreground">
-                      {product.region}
-                    </span>
-                    <span className="rounded-full border border-border/40 bg-background/35 px-3 py-1.5 font-display text-[10px] tracking-[0.2em] text-muted-foreground">
-                      {product.changeNick.toUpperCase()}
-                    </span>
-                  </div>
-                </div>
+                  <div className="h-px bg-border/35" />
 
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {detailRows(product).map((item) => (
-                    <div
-                      key={item.label}
-                      className="rounded-[1.5rem] border border-border/35 bg-card/62 px-5 py-4 backdrop-blur-md"
-                    >
-                      <span className="font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                        {item.label}
-                      </span>
-                      <p className="mt-2 text-sm font-medium text-foreground/88">
-                        {item.value}
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    {detailRows(product).slice(1, 4).map((item) => (
+                      <div key={item.label}>
+                        <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground/72">
+                          {item.label}
+                        </span>
+                        <p className="mt-1 text-lg font-bold text-white sm:text-xl">
+                          {item.value}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="h-px bg-border/35" />
+
+                  <div className="space-y-2 text-base leading-7 text-white/90 sm:text-lg">
+                    <p><span className="font-bold text-white">Minus:</span> {minusSummary}</p>
+                    <p><span className="font-bold text-white">Emblem:</span> {product.premier || "-"}</p>
+                    <p><span className="font-bold text-white">Region:</span> {product.region}</p>
+                    <p><span className="font-bold text-white">Agent:</span> {getHeroCount(product)}</p>
+                  </div>
+
+                  <div className="rounded-[1.35rem] border border-primary/30 bg-primary/20 px-4 py-4 shadow-[0_0_24px_hsl(var(--primary)_/_0.14)]">
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-primary/35 bg-primary/16 text-primary">
+                        <ShieldCheck size={18} />
+                      </div>
+                      <div>
+                        <p className="font-display text-[10px] tracking-[0.26em] text-primary/78">
+                          GUARANTEE
+                        </p>
+                        <p className="mt-1 text-sm font-bold uppercase tracking-[0.06em] text-white sm:text-base">
+                          Lifetime Warranty, No Hackback, Best Price
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-5 border-t border-border/35 pt-5">
+                    <div>
+                      <p className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
+                        Contact Admin For More Info
+                      </p>
+                      <p className="mt-3 text-lg font-medium text-white/92">
+                        Price: IDR {formatPrice(product.price)}
                       </p>
                     </div>
-                  ))}
+
+                    <div>
+                      <p className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
+                        Details
+                      </p>
+                      <div className="mt-4 space-y-2 text-base leading-7 text-white/90 sm:text-lg">
+                        {detailsList.map((item) => (
+                          <p key={item.label}>
+                            <span className="font-bold text-white">{item.label}:</span> {item.value}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="border-t border-border/35 pt-5">
+                      <p className="font-display text-lg font-black uppercase tracking-[0.04em] text-white">
+                        Reminder
+                      </p>
+                      <div className="mt-3 space-y-2 text-base leading-7 text-white/88 sm:text-lg">
+                        <p>* Garansi akun selamanya & anti HB</p>
+                        <p>* Pembelian akun diproses aman via admin storefront</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={`rounded-[1.6rem] border border-border/40 px-4 py-5 sm:px-5 ${styles.pricePanel}`}>
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                      <div>
+                        <p className="font-display text-[2.6rem] font-black leading-none text-white sm:text-[3.15rem] xl:text-[3.75rem]">
+                          Rp {formatPrice(product.price)}
+                        </p>
+                      </div>
+                      <div className="inline-flex items-center gap-3 self-start sm:self-auto">
+                        <span className="text-base font-semibold text-white/82">Status:</span>
+                        <span className={`rounded-full px-4 py-2 text-sm font-bold lowercase ${
+                          isAvailable
+                            ? "bg-[linear-gradient(135deg,#cbff54,#e8b900)] text-zinc-950"
+                            : "bg-zinc-700 text-white"
+                        }`}>
+                          {isAvailable ? "available" : "sold"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                      <a
+                        href={buildNegotiationLink(product)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 rounded-[1.2rem] border border-border/50 bg-background/28 px-5 py-4 text-center font-display text-base font-bold text-white transition hover:border-primary/35 hover:text-primary"
+                      >
+                        <MessageCircleMore size={18} />
+                        Negosiasi
+                      </a>
+
+                      {isAvailable ? (
+                        <a
+                          href={buildWhatsAppLink(product)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-2 rounded-[1.2rem] bg-white px-5 py-4 text-center font-display text-base font-bold text-zinc-950 transition hover:bg-primary hover:text-primary-foreground"
+                        >
+                          <WhatsAppGlyph />
+                          Beli Sekarang
+                        </a>
+                      ) : (
+                        <span className="flex items-center justify-center rounded-[1.2rem] border border-border/35 bg-background/28 px-5 py-4 text-center font-display text-base font-bold text-muted-foreground">
+                          Akun Sudah Sold
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -212,22 +375,6 @@ export default function ProductDetailPage({
                   ))}
                 </ol>
               </div>
-
-              {isAvailable ? (
-                <a
-                  href={buildWhatsAppLink(product)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-3 rounded-[1.35rem] bg-primary px-6 py-4 text-center font-display text-sm font-bold tracking-[0.16em] text-primary-foreground transition hover:box-glow-strong"
-                >
-                  <WhatsAppGlyph />
-                  BELI AKUN
-                </a>
-              ) : (
-                <span className="inline-flex items-center justify-center rounded-[1.35rem] border border-border/35 bg-background/36 px-6 py-4 text-center font-display text-sm tracking-[0.16em] text-muted-foreground">
-                  AKUN SUDAH SOLD
-                </span>
-              )}
             </section>
           </div>
         </div>
