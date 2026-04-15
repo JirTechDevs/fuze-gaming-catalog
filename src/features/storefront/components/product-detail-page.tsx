@@ -1,8 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
-  CircleCheck,
-  MessageCircleMore,
   ShieldCheck,
 } from "lucide-react";
 import {
@@ -18,6 +19,8 @@ import styles from "./product-detail-page.module.css";
 interface ProductDetailPageProps {
   product: Product;
 }
+
+type DetailPanelMode = "overview" | "heroes" | "skins";
 
 function getHeroCount(product: Product) {
   if (product.agent.toLowerCase() === "full unlock") {
@@ -67,26 +70,24 @@ function getMinusNotes(product: Product) {
   return minusNotes;
 }
 
-function buildNegotiationLink(product: Product) {
-  const message = encodeURIComponent(
-    `Halo, saya tertarik nego untuk akun ${product.code} (${product.rank}) dengan harga Rp ${formatPrice(product.price)}. Apakah masih tersedia?`,
-  );
+function buildHeroItems(product: Product) {
+  const heroCount = getHeroCount(product);
+  const items = [
+    `Status unlock agent: ${heroCount}`,
+    `Change nick: ${product.changeNick}`,
+    `Region account: ${product.region}`,
+  ];
 
-  return `https://wa.me/6281234567890?text=${message}`;
+  if (product.premier) {
+    items.push(`Emblem / Premier: ${product.premier}`);
+  }
+
+  if (product.sisaVP && product.sisaVP !== "-") {
+    items.push(`Sisa VP: ${product.sisaVP}`);
+  }
+
+  return items;
 }
-
-const detailRows = (product: Product) => [
-  {
-    label: "Status",
-    value: product.status === "available" ? "Tersedia" : "Sold",
-  },
-  { label: "Hero Count", value: getHeroCount(product) },
-  { label: "Skin Count", value: `${product.skins.length}` },
-  { label: "Rank", value: product.rank },
-  { label: "Emblem", value: product.premier || "-" },
-  { label: "Region", value: product.region },
-  { label: "Agent/Rank Note", value: getAgentRankNote(product) },
-];
 
 function GamepadDoodle() {
   return (
@@ -161,6 +162,7 @@ export default function ProductDetailPage({
   product,
 }: ProductDetailPageProps) {
   const isAvailable = product.status === "available";
+  const [detailPanelMode, setDetailPanelMode] = useState<DetailPanelMode>("overview");
   const minusNotes = getMinusNotes(product);
   const minusSummary = minusNotes[0] || "-";
   const detailsList = [
@@ -168,6 +170,23 @@ export default function ProductDetailPage({
     { label: "Region", value: product.region },
     { label: "Minus", value: minusSummary },
     { label: "Notes", value: getAgentRankNote(product) },
+  ];
+  const heroItems = buildHeroItems(product);
+  const statCards = [
+    {
+      label: "Hero Count",
+      value: getHeroCount(product),
+      mode: "heroes" as const,
+    },
+    {
+      label: "Skin Count",
+      value: `${product.skins.length}`,
+      mode: "skins" as const,
+    },
+    {
+      label: "Rank",
+      value: product.rank,
+    },
   ];
 
   return (
@@ -209,8 +228,8 @@ export default function ProductDetailPage({
             </span>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start xl:gap-8">
-            <section className="lg:sticky lg:top-24 xl:top-28">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-stretch xl:gap-8">
+            <section className="h-full">
               <ProductImageGallery product={product} />
             </section>
 
@@ -231,75 +250,185 @@ export default function ProductDetailPage({
                   <div className="h-px bg-border/35" />
 
                   <div className="grid gap-3 sm:grid-cols-3">
-                    {detailRows(product).slice(1, 4).map((item) => (
-                      <div key={item.label}>
-                        <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground/72">
-                          {item.label}
-                        </span>
-                        <p className="mt-1 text-lg font-bold text-white sm:text-xl">
-                          {item.value}
-                        </p>
-                      </div>
-                    ))}
+                    {statCards.map((item) => {
+                      const isActive = item.mode && detailPanelMode === item.mode;
+
+                      if (item.mode) {
+                        return (
+                          <button
+                            key={item.label}
+                            type="button"
+                            onClick={() => setDetailPanelMode(item.mode)}
+                            className={`rounded-[1.15rem] border px-3 py-3 text-left transition ${
+                              isActive
+                                ? "border-primary/45 bg-primary/12 shadow-[0_0_18px_hsl(var(--primary)_/_0.14)]"
+                                : "border-border/30 bg-background/16 hover:border-primary/25 hover:bg-primary/6"
+                            }`}
+                          >
+                            <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground/72">
+                              {item.label}
+                            </span>
+                            <p className="mt-1 text-lg font-bold text-white sm:text-xl">
+                              {item.value}
+                            </p>
+                          </button>
+                        );
+                      }
+
+                      return (
+                        <div
+                          key={item.label}
+                          className="rounded-[1.15rem] border border-border/30 bg-background/12 px-3 py-3"
+                        >
+                          <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground/72">
+                            {item.label}
+                          </span>
+                          <p className="mt-1 text-lg font-bold text-white sm:text-xl">
+                            {item.value}
+                          </p>
+                        </div>
+                      );
+                    })}
                   </div>
 
                   <div className="h-px bg-border/35" />
 
-                  <div className="space-y-2 text-base leading-7 text-white/90 sm:text-lg">
-                    <p><span className="font-bold text-white">Minus:</span> {minusSummary}</p>
-                    <p><span className="font-bold text-white">Emblem:</span> {product.premier || "-"}</p>
-                    <p><span className="font-bold text-white">Region:</span> {product.region}</p>
-                    <p><span className="font-bold text-white">Agent:</span> {getHeroCount(product)}</p>
-                  </div>
-
-                  <div className="rounded-[1.35rem] border border-primary/30 bg-primary/20 px-4 py-4 shadow-[0_0_24px_hsl(var(--primary)_/_0.14)]">
-                    <div className="flex items-start gap-3">
-                      <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-primary/35 bg-primary/16 text-primary">
-                        <ShieldCheck size={18} />
-                      </div>
-                      <div>
-                        <p className="font-display text-[10px] tracking-[0.26em] text-primary/78">
-                          GUARANTEE
-                        </p>
-                        <p className="mt-1 text-sm font-bold uppercase tracking-[0.06em] text-white sm:text-base">
-                          Lifetime Warranty, No Hackback, Best Price
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-5 border-t border-border/35 pt-5">
-                    <div>
-                      <p className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
-                        Contact Admin For More Info
-                      </p>
-                      <p className="mt-3 text-lg font-medium text-white/92">
-                        Price: IDR {formatPrice(product.price)}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
-                        Details
-                      </p>
-                      <div className="mt-4 space-y-2 text-base leading-7 text-white/90 sm:text-lg">
-                        {detailsList.map((item) => (
-                          <p key={item.label}>
-                            <span className="font-bold text-white">{item.label}:</span> {item.value}
+                  <div className="min-h-[22rem] rounded-[1.5rem] border border-border/30 bg-background/12 p-4 sm:p-5">
+                    {detailPanelMode !== "overview" ? (
+                      <div className="mb-4 flex items-center justify-between gap-3 border-b border-border/35 pb-4">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground/72">
+                            Detail Viewer
                           </p>
-                        ))}
+                          <p className="mt-1 text-sm text-white/84">
+                            Showing {detailPanelMode === "heroes" ? "hero info" : "skin list"}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setDetailPanelMode("overview")}
+                          className="rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-primary transition hover:bg-primary hover:text-primary-foreground"
+                        >
+                          Kembali ke Deskripsi
+                        </button>
                       </div>
-                    </div>
+                    ) : null}
 
-                    <div className="border-t border-border/35 pt-5">
-                      <p className="font-display text-lg font-black uppercase tracking-[0.04em] text-white">
-                        Reminder
-                      </p>
-                      <div className="mt-3 space-y-2 text-base leading-7 text-white/88 sm:text-lg">
-                        <p>* Garansi akun selamanya & anti HB</p>
-                        <p>* Pembelian akun diproses aman via admin storefront</p>
+                    {detailPanelMode === "overview" ? (
+                      <div className="space-y-5">
+                        <div className="space-y-2 text-base leading-7 text-white/90 sm:text-lg">
+                          <p><span className="font-bold text-white">Minus:</span> {minusSummary}</p>
+                          <p><span className="font-bold text-white">Emblem:</span> {product.premier || "-"}</p>
+                          <p><span className="font-bold text-white">Region:</span> {product.region}</p>
+                          <p><span className="font-bold text-white">Agent:</span> {getHeroCount(product)}</p>
+                        </div>
+
+                        <div className="rounded-[1.35rem] border border-primary/30 bg-primary/20 px-4 py-4 shadow-[0_0_24px_hsl(var(--primary)_/_0.14)]">
+                          <div className="flex items-start gap-3">
+                            <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-primary/35 bg-primary/16 text-primary">
+                              <ShieldCheck size={18} />
+                            </div>
+                            <div>
+                              <p className="font-display text-[10px] tracking-[0.26em] text-primary/78">
+                                GUARANTEE
+                              </p>
+                              <p className="mt-1 text-sm font-bold uppercase tracking-[0.06em] text-white sm:text-base">
+                                Lifetime Warranty, No Hackback, Best Price
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-5 border-t border-border/35 pt-5">
+                          <div>
+                            <p className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
+                              Contact Admin For More Info
+                            </p>
+                          </div>
+
+                          <div>
+                            <p className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
+                              Details
+                            </p>
+                            <div className="mt-4 space-y-2 text-base leading-7 text-white/90 sm:text-lg">
+                              {detailsList.map((item) => (
+                                <p key={item.label}>
+                                  <span className="font-bold text-white">{item.label}:</span> {item.value}
+                                </p>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="border-t border-border/35 pt-5">
+                            <p className="font-display text-lg font-black uppercase tracking-[0.04em] text-white">
+                              Reminder
+                            </p>
+                            <div className="mt-3 space-y-2 text-base leading-7 text-white/88 sm:text-lg">
+                              <p>* Garansi akun selamanya & anti HB</p>
+                              <p>* Pembelian akun diproses aman via admin storefront</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    ) : detailPanelMode === "heroes" ? (
+                      <div className="flex h-full flex-col">
+                        <div className="flex items-center justify-between gap-3 border-b border-border/35 pb-4">
+                          <div>
+                            <p className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white">
+                              Hero Unlock
+                            </p>
+                            <p className="mt-1 text-sm text-muted-foreground/78">
+                              Detail unlock yang tersedia dari data akun saat ini.
+                            </p>
+                          </div>
+                          <span className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-sm font-bold text-primary">
+                            {getHeroCount(product)}
+                          </span>
+                        </div>
+                        <ol className="panel-scrollbar mt-4 max-h-[16rem] space-y-2 overflow-y-auto pr-2 text-sm leading-6 text-white/88 sm:max-h-[18rem] sm:text-base">
+                          {heroItems.slice(0, 10).map((item, index) => (
+                            <li
+                              key={`${item}-${index}`}
+                              className="rounded-[1rem] border border-border/25 bg-background/22 px-4 py-3"
+                            >
+                              <span className="mr-2 font-display text-primary/86">
+                                {String(index + 1).padStart(2, "0")}.
+                              </span>
+                              {item}
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    ) : (
+                      <div className="flex h-full flex-col">
+                        <div className="flex items-center justify-between gap-3 border-b border-border/35 pb-4">
+                          <div>
+                            <p className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white">
+                              Skin List
+                            </p>
+                            <p className="mt-1 text-sm text-muted-foreground/78">
+                              Menampilkan hingga 10 skin pertama di panel ini.
+                            </p>
+                          </div>
+                          <span className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-sm font-bold text-primary">
+                            {product.skins.length} skins
+                          </span>
+                        </div>
+                        <ol className="panel-scrollbar mt-4 max-h-[16rem] space-y-2 overflow-y-auto pr-2 text-sm leading-6 text-white/88 sm:max-h-[18rem] sm:text-base">
+                          {product.skins.slice(0, 10).map((skin, index) => (
+                            <li
+                              key={skin}
+                              className="rounded-[1rem] border border-border/25 bg-background/22 px-4 py-3"
+                            >
+                              <span className="mr-2 font-display text-primary/86">
+                                {String(index + 1).padStart(2, "0")}.
+                              </span>
+                              {skin}
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
                   </div>
 
                   <div className={`rounded-[1.6rem] border border-border/40 px-4 py-5 sm:px-5 ${styles.pricePanel}`}>
@@ -313,7 +442,7 @@ export default function ProductDetailPage({
                         <span className="text-base font-semibold text-white/82">Status:</span>
                         <span className={`rounded-full px-4 py-2 text-sm font-bold lowercase ${
                           isAvailable
-                            ? "bg-[linear-gradient(135deg,#cbff54,#e8b900)] text-zinc-950"
+                            ? "border border-primary/35 bg-primary/18 text-primary"
                             : "bg-zinc-700 text-white"
                         }`}>
                           {isAvailable ? "available" : "sold"}
@@ -321,60 +450,25 @@ export default function ProductDetailPage({
                       </div>
                     </div>
 
-                    <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                    {isAvailable ? (
                       <a
-                        href={buildNegotiationLink(product)}
+                        href={buildWhatsAppLink(product)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 rounded-[1.2rem] border border-border/50 bg-background/28 px-5 py-4 text-center font-display text-base font-bold text-white transition hover:border-primary/35 hover:text-primary"
+                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-[1.2rem] bg-white px-5 py-4 text-center font-display text-base font-bold text-zinc-950 transition hover:bg-primary hover:text-primary-foreground"
                       >
-                        <MessageCircleMore size={18} />
-                        Negosiasi
+                        <WhatsAppGlyph />
+                        Beli Sekarang
                       </a>
-
-                      {isAvailable ? (
-                        <a
-                          href={buildWhatsAppLink(product)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-2 rounded-[1.2rem] bg-white px-5 py-4 text-center font-display text-base font-bold text-zinc-950 transition hover:bg-primary hover:text-primary-foreground"
-                        >
-                          <WhatsAppGlyph />
-                          Beli Sekarang
-                        </a>
-                      ) : (
-                        <span className="flex items-center justify-center rounded-[1.2rem] border border-border/35 bg-background/28 px-5 py-4 text-center font-display text-base font-bold text-muted-foreground">
-                          Akun Sudah Sold
-                        </span>
-                      )}
-                    </div>
+                    ) : (
+                      <span className="mt-5 flex items-center justify-center rounded-[1.2rem] border border-border/35 bg-background/28 px-5 py-4 text-center font-display text-base font-bold text-muted-foreground">
+                        Akun Sudah Sold
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-[1.6rem] border border-border/35 bg-card/72 p-5 backdrop-blur-md sm:rounded-[2rem] sm:p-6">
-                <div className="flex items-center gap-2">
-                  <CircleCheck size={15} className="text-primary" />
-                  <span className="font-display text-[11px] tracking-[0.24em] text-primary/74">
-                    DAFTAR SKIN
-                  </span>
-                </div>
-                <ol className="panel-scrollbar mt-5 min-h-[16rem] max-h-[25rem] space-y-2 overflow-y-auto pr-2 text-[13px] leading-5 text-foreground/84 sm:min-h-[22rem] lg:max-h-[30rem] xl:min-h-[31.5rem] xl:max-h-[37rem]">
-                  {product.skins.map((skin, index) => (
-                    <li
-                      key={skin}
-                      className="rounded-[1rem] border border-border/25 bg-background/28 px-4 py-2.5"
-                    >
-                      <span className="mr-2 font-display text-primary/86">
-                        {String(index + 1).padStart(2, "0")}.
-                      </span>
-                      <span className="break-words">
-                        {skin}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
             </section>
           </div>
         </div>
