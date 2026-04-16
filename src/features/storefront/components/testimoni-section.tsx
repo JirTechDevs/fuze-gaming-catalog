@@ -35,7 +35,7 @@ export default function TestimoniSection() {
         </div>
 
         <div className="testimoni-strip-mask -mx-4 overflow-hidden px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-          <div className="testimoni-strip-track flex w-max gap-4 sm:gap-5 lg:gap-6">
+          <div className="testimoni-strip-track flex w-max gap-3 sm:gap-5 lg:gap-6">
             {loopedTestimonials.map((item, index) => (
               <div
                 key={`${item.alt}-${index}`}
@@ -44,7 +44,7 @@ export default function TestimoniSection() {
                 <Image
                   src={item.src}
                   alt={item.alt}
-                  className="h-auto w-[260px] object-cover sm:w-[320px] lg:w-[380px] xl:w-[420px]"
+                  className="h-auto w-[190px] object-cover sm:w-[320px] lg:w-[380px] xl:w-[420px]"
                   priority={index < testimonials.length}
                 />
               </div>
