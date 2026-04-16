@@ -7,6 +7,7 @@ import Footer from "@/features/storefront/components/footer";
 import HeroSection from "@/features/storefront/components/hero-section";
 import IntroScreen from "@/features/storefront/components/intro-screen";
 import Navbar from "@/features/storefront/components/navbar";
+import TestimoniSection from "@/features/storefront/components/testimoni-section";
 
 interface StorefrontPageProps {
   products: Product[];
@@ -41,6 +42,7 @@ export default function StorefrontPage({ products }: StorefrontPageProps) {
           <div className="pt-14 sm:pt-16">
             <HeroSection />
             <CatalogSection products={products} />
+            <TestimoniSection />
             <Footer />
           </div>
         </div>
