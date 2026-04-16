@@ -1,10 +1,16 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
-  CircleCheck,
+  ChevronLeft,
+  ChevronRight,
+  ShieldCheck,
 } from "lucide-react";
 import {
   buildWhatsAppLink,
+  formatPrice,
   type Product,
 } from "@/features/catalog/domain/product";
 import Footer from "@/features/storefront/components/footer";
@@ -16,14 +22,87 @@ interface ProductDetailPageProps {
   product: Product;
 }
 
-const detailRows = (product: Product) => [
-  { label: "Status Akun", value: product.status === "available" ? "Tersedia" : "Sold" },
-  { label: "Change Nick", value: product.changeNick },
-  { label: "Region", value: product.region },
-  { label: "Sisa VP", value: product.sisaVP || "-" },
-  { label: "Premier", value: product.premier || "-" },
-  { label: "Agent", value: product.agent },
-];
+type DetailPanelMode = "overview" | "heroes" | "skins";
+const detailPanelOrder: DetailPanelMode[] = ["overview", "skins", "heroes"];
+
+function getHeroCount(product: Product) {
+  if (product.agent.toLowerCase() === "full unlock") {
+    return "23/23";
+  }
+
+  return product.agent || "-";
+}
+
+function getAgentRankNote(product: Product) {
+  const notes = [];
+
+  if (product.changeNick) {
+    notes.push(`Nick ${product.changeNick}`);
+  }
+
+  if (product.sisaVP && product.sisaVP !== "-") {
+    notes.push(`${product.sisaVP} VP`);
+  }
+
+  if (product.premier && product.premier !== "Unranked") {
+    notes.push(`Premier ${product.premier}`);
+  }
+
+  return notes.join(" • ") || "No special note";
+}
+
+function getMinusNotes(product: Product) {
+  const minusNotes = [];
+
+  if (product.changeNick.toLowerCase() !== "ready") {
+    minusNotes.push("Change nick belum ready.");
+  }
+
+  if (product.agent.toLowerCase() !== "full unlock") {
+    minusNotes.push(`Hero belum full unlock (${product.agent}).`);
+  }
+
+  if (product.premier.toLowerCase() === "can't be changed") {
+    minusNotes.push("Premier/emblem tidak bisa diganti.");
+  }
+
+  if (product.status !== "available") {
+    minusNotes.push("Akun sudah sold.");
+  }
+
+  return minusNotes;
+}
+
+function buildHeroItems(product: Product) {
+  const heroCount = getHeroCount(product);
+  const items = [
+    `Status unlock agent: ${heroCount}`,
+    `Change nick: ${product.changeNick}`,
+    `Region account: ${product.region}`,
+  ];
+
+  if (product.premier) {
+    items.push(`Emblem / Premier: ${product.premier}`);
+  }
+
+  if (product.sisaVP && product.sisaVP !== "-") {
+    items.push(`Sisa VP: ${product.sisaVP}`);
+  }
+
+  return items;
+}
+
+function getDetailPanelLabel(mode: DetailPanelMode) {
+  if (mode === "overview") {
+    return "Description";
+  }
+
+  if (mode === "skins") {
+    return "Skins";
+  }
+
+  return "Heroes";
+}
 
 function GamepadDoodle() {
   return (
@@ -98,6 +177,38 @@ export default function ProductDetailPage({
   product,
 }: ProductDetailPageProps) {
   const isAvailable = product.status === "available";
+  const [detailPanelMode, setDetailPanelMode] = useState<DetailPanelMode>("overview");
+  const minusNotes = getMinusNotes(product);
+  const minusSummary = minusNotes[0] || "-";
+  const detailsList = [
+    { label: "Kode Akun", value: product.code },
+    { label: "Region", value: product.region },
+    { label: "Minus", value: minusSummary },
+    { label: "Notes", value: getAgentRankNote(product) },
+  ];
+  const heroItems = buildHeroItems(product);
+  const currentPanelIndex = detailPanelOrder.indexOf(detailPanelMode);
+  const previousPanelMode = currentPanelIndex > 0 ? detailPanelOrder[currentPanelIndex - 1] : null;
+  const nextPanelMode = currentPanelIndex < detailPanelOrder.length - 1
+    ? detailPanelOrder[currentPanelIndex + 1]
+    : null;
+  const desktopTabs = [
+    {
+      label: "Description",
+      mode: "overview" as const,
+      meta: `${product.code} info`,
+    },
+    {
+      label: "Skins",
+      mode: "skins" as const,
+      meta: `${product.skins.length} skins`,
+    },
+    {
+      label: "Heroes",
+      mode: "heroes" as const,
+      meta: getHeroCount(product),
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -138,96 +249,269 @@ export default function ProductDetailPage({
             </span>
           </div>
 
-          <div className="grid gap-8 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-start">
-            <section className="xl:sticky xl:top-28">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-stretch xl:gap-8">
+            <section className="h-full">
               <ProductImageGallery product={product} />
             </section>
 
-            <section className="flex flex-col gap-6">
-              <div className="rounded-[2rem] border border-border/35 bg-card/72 p-6 backdrop-blur-md">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <span className="font-display text-[11px] tracking-[0.34em] text-primary/62">
-                      FUZEVALO ACCOUNT
-                    </span>
-                    <h1 className="mt-3 break-words font-display text-2xl font-bold tracking-[0.08em] text-foreground sm:text-3xl xl:text-4xl">
-                      {product.code}
-                    </h1>
-                    <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground/82">
-                      Halaman detail akun dibuat ringkas supaya informasi utama
-                      cepat terbaca tanpa kehilangan nuansa visual dari storefront.
-                    </p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 font-display text-[10px] tracking-[0.2em] text-primary">
-                      {product.rank}
-                    </span>
-                    <span className="rounded-full border border-border/40 bg-background/35 px-3 py-1.5 font-display text-[10px] tracking-[0.2em] text-muted-foreground">
-                      {product.region}
-                    </span>
-                    <span className="rounded-full border border-border/40 bg-background/35 px-3 py-1.5 font-display text-[10px] tracking-[0.2em] text-muted-foreground">
-                      {product.changeNick.toUpperCase()}
-                    </span>
-                  </div>
-                </div>
-
-                {/* <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {detailRows(product).map((item) => (
-                    <div
-                      key={item.label}
-                      className="rounded-[1.5rem] border border-border/35 bg-card/62 px-5 py-4 backdrop-blur-md"
-                    >
-                      <span className="font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                        {item.label}
+            <section className="flex flex-col gap-4">
+              <div className="rounded-[1.8rem] border border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.88),hsl(var(--background)/0.92))] p-5 backdrop-blur-md sm:p-6 xl:p-7">
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <h1 className="break-words font-display text-xl font-black tracking-[0.02em] text-white sm:text-3xl xl:text-[2.55rem]">
+                        Valorant Account
+                      </h1>
+                    </div>
+                    <div className="flex items-center gap-2 self-start font-display text-lg font-bold tracking-[0.08em] text-white/92 sm:pt-1 sm:text-2xl">
+                      <span>{product.code}</span>
+                      <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] tracking-[0.18em] text-primary sm:hidden">
+                        {product.rank}
                       </span>
-                      <p className="mt-2 text-sm font-medium text-foreground/88">
-                        {item.value}
+                    </div>
+                  </div>
+
+                  <div className="hidden items-center justify-between gap-4 rounded-[1.2rem] border border-border/30 bg-background/12 px-4 py-3 sm:flex">
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground/72">
+                        Rank
+                      </p>
+                      <p className="mt-1 font-display text-lg font-bold text-white sm:text-xl">
+                        {product.rank}
                       </p>
                     </div>
-                  ))}
-                </div> */}
-              </div>
-
-                <div className="rounded-[2rem] border border-border/35 bg-card/72 p-6 backdrop-blur-md">
-                  <div className="flex items-center gap-2">
-                    <CircleCheck size={15} className="text-primary" />
-                    <span className="font-display text-[11px] tracking-[0.24em] text-primary/74">
-                      DAFTAR SKIN
+                    <span className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-primary">
+                      {isAvailable ? "Available" : "Sold"}
                     </span>
                   </div>
-                  <ol className="panel-scrollbar mt-5 max-h-[37rem] min-h-[31.5rem] space-y-2 overflow-y-auto pr-2 text-[13px] leading-5 text-foreground/84">
-                    {product.skins.map((skin, index) => (
-                      <li
-                        key={skin}
-                        className="rounded-[1rem] border border-border/25 bg-background/28 px-4 py-2.5"
-                      >
-                        <span className="mr-2 font-display text-primary/86">
-                          {String(index + 1).padStart(2, "0")}.
-                        </span>
-                        {skin}
-                      </li>
-                    ))}
-                  </ol>
-                </div>
 
-                {isAvailable ? (
-                  <a
-                    href={buildWhatsAppLink(product)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex w-full items-center justify-center gap-3 rounded-[1.35rem] bg-primary px-6 py-4 font-display text-sm font-bold tracking-[0.16em] text-primary-foreground transition hover:box-glow-strong"
-                  >
-                    <WhatsAppGlyph />
-                    BELI AKUN
-                  </a>
-                ) : (
-                  <span className="inline-flex items-center justify-center rounded-[1.35rem] border border-border/35 bg-background/36 px-6 py-4 font-display text-sm tracking-[0.16em] text-muted-foreground">
-                    AKUN SUDAH SOLD
-                  </span>
-                )}
-              </section>
-            </div>
+                  <div className="hidden gap-3 sm:grid sm:grid-cols-3">
+                    {desktopTabs.map((item) => {
+                      const isActive = detailPanelMode === item.mode;
+
+                      return (
+                        <button
+                          key={item.label}
+                          type="button"
+                          onClick={() => setDetailPanelMode(item.mode)}
+                          className={`rounded-[1.15rem] border px-4 py-3 text-left transition ${
+                            isActive
+                              ? "border-primary/50 bg-[linear-gradient(145deg,hsl(var(--primary)/0.18),hsl(var(--primary)/0.06)_55%,transparent)] shadow-[0_0_18px_hsl(var(--primary)_/_0.14)]"
+                              : "border-border/30 bg-background/16 hover:border-primary/25 hover:bg-primary/6"
+                          }`}
+                        >
+                          <span className={`block text-xs font-semibold uppercase tracking-[0.16em] ${
+                            isActive ? "text-primary" : "text-muted-foreground/72"
+                          }`}>
+                            {item.label}
+                          </span>
+                          <p className="mt-1 text-base font-bold text-white sm:text-lg">
+                            {item.meta}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="h-px bg-border/35" />
+
+                  <div className="relative min-h-[22rem] rounded-[1.5rem] border border-border/30 bg-background/12 p-4 sm:p-5">
+                    <div className="pointer-events-none absolute inset-y-0 -left-8 -right-8 flex items-center justify-between sm:hidden">
+                      <button
+                        type="button"
+                        onClick={() => previousPanelMode && setDetailPanelMode(previousPanelMode)}
+                        disabled={!previousPanelMode}
+                        className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-background/45 text-white/88 backdrop-blur-md transition disabled:cursor-not-allowed disabled:opacity-30"
+                        aria-label={`Go to ${previousPanelMode ? getDetailPanelLabel(previousPanelMode) : "previous"} panel`}
+                      >
+                        <ChevronLeft size={18} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => nextPanelMode && setDetailPanelMode(nextPanelMode)}
+                        disabled={!nextPanelMode}
+                        className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-background/45 text-white/88 backdrop-blur-md transition disabled:cursor-not-allowed disabled:opacity-30"
+                        aria-label={`Go to ${nextPanelMode ? getDetailPanelLabel(nextPanelMode) : "next"} panel`}
+                      >
+                        <ChevronRight size={18} />
+                      </button>
+                    </div>
+
+                    {detailPanelMode !== "overview" ? (
+                      <div className="mb-4 flex items-center justify-between gap-3 border-b border-border/35 pb-4">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground/72">
+                            Detail Viewer
+                          </p>
+                          <p className="mt-1 text-sm text-white/84">
+                            Showing {detailPanelMode === "heroes" ? "hero info" : "skin list"}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setDetailPanelMode("overview")}
+                          className="hidden rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:inline-flex"
+                        >
+                          Kembali ke Deskripsi
+                        </button>
+                      </div>
+                    ) : null}
+
+                    {detailPanelMode === "overview" ? (
+                      <div className="space-y-5">
+                        <div className="space-y-2 text-sm leading-6 text-white/90 sm:text-lg sm:leading-7">
+                          <p><span className="font-bold text-white">Minus:</span> {minusSummary}</p>
+                          <p><span className="font-bold text-white">Emblem:</span> {product.premier || "-"}</p>
+                          <p><span className="font-bold text-white">Region:</span> {product.region}</p>
+                          <p><span className="font-bold text-white">Agent:</span> {getHeroCount(product)}</p>
+                        </div>
+
+                        <div className="rounded-[1.35rem] border border-primary/30 bg-primary/20 px-4 py-4 shadow-[0_0_24px_hsl(var(--primary)_/_0.14)]">
+                          <div className="flex items-start gap-3">
+                            <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-primary/35 bg-primary/16 text-primary">
+                              <ShieldCheck size={18} />
+                            </div>
+                            <div>
+                              <p className="font-display text-[10px] tracking-[0.26em] text-primary/78">
+                                GUARANTEE
+                              </p>
+                              <p className="mt-1 text-xs font-bold uppercase tracking-[0.06em] text-white sm:text-base">
+                                Lifetime Warranty, No Hackback, Best Price
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-5 border-t border-border/35 pt-5">
+                          <div>
+                            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
+                              Contact Admin For More Info
+                            </p>
+                          </div>
+
+                          <div>
+                            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
+                              Details
+                            </p>
+                            <div className="mt-4 space-y-2 text-sm leading-6 text-white/90 sm:text-lg sm:leading-7">
+                              {detailsList.map((item) => (
+                                <p key={item.label}>
+                                  <span className="font-bold text-white">{item.label}:</span> {item.value}
+                                </p>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="border-t border-border/35 pt-5">
+                            <p className="font-display text-base font-black uppercase tracking-[0.04em] text-white sm:text-lg">
+                              Reminder
+                            </p>
+                            <div className="mt-3 space-y-2 text-sm leading-6 text-white/88 sm:text-lg sm:leading-7">
+                              <p>* Garansi akun selamanya & anti HB</p>
+                              <p>* Pembelian akun diproses aman via admin storefront</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : detailPanelMode === "heroes" ? (
+                      <div className="flex h-full flex-col">
+                        <div className="flex items-center justify-between gap-3 border-b border-border/35 pb-4">
+                          <div>
+                            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
+                              Hero Unlock
+                            </p>
+                            <p className="mt-1 text-sm text-muted-foreground/78">
+                              Detail unlock yang tersedia dari data akun saat ini.
+                            </p>
+                          </div>
+                          <span className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-sm font-bold text-primary">
+                            {getHeroCount(product)}
+                          </span>
+                        </div>
+                        <ol className="panel-scrollbar mt-4 max-h-[16rem] space-y-2 overflow-y-auto pr-2 text-sm leading-6 text-white/88 sm:max-h-[18rem] sm:text-base">
+                          {heroItems.slice(0, 10).map((item, index) => (
+                            <li
+                              key={`${item}-${index}`}
+                              className="rounded-[1rem] border border-border/25 bg-background/22 px-4 py-3"
+                            >
+                              <span className="mr-2 font-display text-primary/86">
+                                {String(index + 1).padStart(2, "0")}.
+                              </span>
+                              {item}
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    ) : (
+                      <div className="flex h-full flex-col">
+                        <div className="flex items-center justify-between gap-3 border-b border-border/35 pb-4">
+                          <div>
+                            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
+                              Skin List
+                            </p>
+                           
+                          </div>
+                          <span className="whitespace-nowrap rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-sm font-bold text-primary">
+                            {product.skins.length} skins
+                          </span>
+                        </div>
+                        <ol className="panel-scrollbar mt-4 max-h-[16rem] space-y-2 overflow-y-auto pr-2 text-sm leading-6 text-white/88 sm:max-h-[18rem] sm:text-base">
+                          {product.skins.slice(0, 10).map((skin, index) => (
+                            <li
+                              key={skin}
+                              className="rounded-[1rem] border border-border/25 bg-background/22 px-4 py-3"
+                            >
+                              <span className="mr-2 font-display text-primary/86">
+                                {String(index + 1).padStart(2, "0")}.
+                              </span>
+                              {skin}
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className={`rounded-[1.6rem] border border-border/40 px-4 py-5 sm:px-5 ${styles.pricePanel}`}>
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                      <div>
+                        <p className="font-display text-[2.6rem] font-black leading-none text-white sm:text-[3.15rem] xl:text-[3.75rem]">
+                          Rp {formatPrice(product.price)}
+                        </p>
+                      </div>
+                      <div className="inline-flex items-center gap-3 self-start sm:self-auto">
+                        <span className="text-base font-semibold text-white/82">Status:</span>
+                        <span className={`rounded-full px-4 py-2 text-sm font-bold lowercase ${
+                          isAvailable
+                            ? "border border-primary/35 bg-primary/18 text-primary"
+                            : "bg-zinc-700 text-white"
+                        }`}>
+                          {isAvailable ? "available" : "sold"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {isAvailable ? (
+                      <a
+                        href={buildWhatsAppLink(product)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-[1.2rem] bg-white px-5 py-4 text-center font-display text-base font-bold text-zinc-950 transition hover:bg-primary hover:text-primary-foreground"
+                      >
+                        <WhatsAppGlyph />
+                        Beli Sekarang
+                      </a>
+                    ) : (
+                      <span className="mt-5 flex items-center justify-center rounded-[1.2rem] border border-border/35 bg-background/28 px-5 py-4 text-center font-display text-base font-bold text-muted-foreground">
+                        Akun Sudah Sold
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+            </section>
+          </div>
         </div>
       </main>
 
