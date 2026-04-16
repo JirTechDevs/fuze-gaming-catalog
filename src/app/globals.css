@@ -98,6 +98,24 @@
     animation-play-state: paused;
   }
 
+  .testimoni-strip-mask {
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 3%,
+      black 97%,
+      transparent 100%
+    );
+  }
+
+  .testimoni-strip-track {
+    animation: testimoni-strip-marquee 30s linear infinite;
+  }
+
+  .testimoni-strip-track:hover {
+    animation-play-state: paused;
+  }
+
   .text-glow {
     text-shadow: 0 0 10px hsl(189 100% 72% / 0.55),
       0 0 30px hsl(189 100% 72% / 0.32);
@@ -199,5 +217,15 @@
 
   to {
     transform: translateX(calc(-50% - 1rem));
+  }
+}
+
+@keyframes testimoni-strip-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 0.625rem));
   }
 }
