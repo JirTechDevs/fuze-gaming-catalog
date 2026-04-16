@@ -131,11 +131,8 @@ export default function ProductCard({
             DAFTAR SKIN
           </span>
           <ol className="panel-scrollbar mt-2 flex-1 space-y-1 overflow-y-auto pr-1 text-[11px] leading-4 text-foreground/80 sm:mt-3 sm:space-y-1.5 sm:text-sm sm:leading-5">
-            {visibleSkins.map((skin, skinIndex) => (
+            {visibleSkins.map((skin) => (
               <li key={skin} className="rounded-lg border border-border/20 bg-background/20 px-2 py-1.5 sm:rounded-xl sm:px-3 sm:py-2">
-                <span className="mr-1.5 font-display text-primary/86 sm:mr-2">
-                  {String(skinIndex + 1).padStart(2, "0")}.
-                </span>
                 <span className="break-words">
                   {skin}
                 </span>
