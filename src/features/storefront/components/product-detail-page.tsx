@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
   ShieldCheck,
 } from "lucide-react";
 import {
@@ -21,6 +23,7 @@ interface ProductDetailPageProps {
 }
 
 type DetailPanelMode = "overview" | "heroes" | "skins";
+const detailPanelOrder: DetailPanelMode[] = ["overview", "skins", "heroes"];
 
 function getHeroCount(product: Product) {
   if (product.agent.toLowerCase() === "full unlock") {
@@ -87,6 +90,18 @@ function buildHeroItems(product: Product) {
   }
 
   return items;
+}
+
+function getDetailPanelLabel(mode: DetailPanelMode) {
+  if (mode === "overview") {
+    return "Description";
+  }
+
+  if (mode === "skins") {
+    return "Skins";
+  }
+
+  return "Heroes";
 }
 
 function GamepadDoodle() {
@@ -172,20 +187,26 @@ export default function ProductDetailPage({
     { label: "Notes", value: getAgentRankNote(product) },
   ];
   const heroItems = buildHeroItems(product);
-  const statCards = [
+  const currentPanelIndex = detailPanelOrder.indexOf(detailPanelMode);
+  const previousPanelMode = currentPanelIndex > 0 ? detailPanelOrder[currentPanelIndex - 1] : null;
+  const nextPanelMode = currentPanelIndex < detailPanelOrder.length - 1
+    ? detailPanelOrder[currentPanelIndex + 1]
+    : null;
+  const desktopTabs = [
     {
-      label: "Hero Count",
-      value: getHeroCount(product),
-      mode: "heroes" as const,
+      label: "Description",
+      mode: "overview" as const,
+      meta: `${product.code} info`,
     },
     {
-      label: "Skin Count",
-      value: `${product.skins.length}`,
+      label: "Skins",
       mode: "skins" as const,
+      meta: `${product.skins.length} skins`,
     },
     {
-      label: "Rank",
-      value: product.rank,
+      label: "Heroes",
+      mode: "heroes" as const,
+      meta: getHeroCount(product),
     },
   ];
 
@@ -238,62 +259,84 @@ export default function ProductDetailPage({
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
-                      <h1 className="break-words font-display text-2xl font-black tracking-[0.02em] text-white sm:text-3xl xl:text-[2.55rem]">
-                        Valorant Account {product.rank}
+                      <h1 className="break-words font-display text-xl font-black tracking-[0.02em] text-white sm:text-3xl xl:text-[2.55rem]">
+                        Valorant Account
                       </h1>
                     </div>
-                    <div className="font-display text-xl font-bold tracking-[0.08em] text-white/92 sm:pt-1 sm:text-2xl">
-                      {product.code}
+                    <div className="flex items-center gap-2 self-start font-display text-lg font-bold tracking-[0.08em] text-white/92 sm:pt-1 sm:text-2xl">
+                      <span>{product.code}</span>
+                      <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] tracking-[0.18em] text-primary sm:hidden">
+                        {product.rank}
+                      </span>
                     </div>
                   </div>
 
-                  <div className="h-px bg-border/35" />
+                  <div className="hidden items-center justify-between gap-4 rounded-[1.2rem] border border-border/30 bg-background/12 px-4 py-3 sm:flex">
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground/72">
+                        Rank
+                      </p>
+                      <p className="mt-1 font-display text-lg font-bold text-white sm:text-xl">
+                        {product.rank}
+                      </p>
+                    </div>
+                    <span className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-primary">
+                      {isAvailable ? "Available" : "Sold"}
+                    </span>
+                  </div>
 
-                  <div className="grid gap-3 sm:grid-cols-3">
-                    {statCards.map((item) => {
-                      const isActive = item.mode && detailPanelMode === item.mode;
-
-                      if (item.mode) {
-                        return (
-                          <button
-                            key={item.label}
-                            type="button"
-                            onClick={() => setDetailPanelMode(item.mode)}
-                            className={`rounded-[1.15rem] border px-3 py-3 text-left transition ${
-                              isActive
-                                ? "border-primary/45 bg-primary/12 shadow-[0_0_18px_hsl(var(--primary)_/_0.14)]"
-                                : "border-border/30 bg-background/16 hover:border-primary/25 hover:bg-primary/6"
-                            }`}
-                          >
-                            <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground/72">
-                              {item.label}
-                            </span>
-                            <p className="mt-1 text-lg font-bold text-white sm:text-xl">
-                              {item.value}
-                            </p>
-                          </button>
-                        );
-                      }
+                  <div className="hidden gap-3 sm:grid sm:grid-cols-3">
+                    {desktopTabs.map((item) => {
+                      const isActive = detailPanelMode === item.mode;
 
                       return (
-                        <div
+                        <button
                           key={item.label}
-                          className="rounded-[1.15rem] border border-border/30 bg-background/12 px-3 py-3"
+                          type="button"
+                          onClick={() => setDetailPanelMode(item.mode)}
+                          className={`rounded-[1.15rem] border px-4 py-3 text-left transition ${
+                            isActive
+                              ? "border-primary/50 bg-[linear-gradient(145deg,hsl(var(--primary)/0.18),hsl(var(--primary)/0.06)_55%,transparent)] shadow-[0_0_18px_hsl(var(--primary)_/_0.14)]"
+                              : "border-border/30 bg-background/16 hover:border-primary/25 hover:bg-primary/6"
+                          }`}
                         >
-                          <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground/72">
+                          <span className={`block text-xs font-semibold uppercase tracking-[0.16em] ${
+                            isActive ? "text-primary" : "text-muted-foreground/72"
+                          }`}>
                             {item.label}
                           </span>
-                          <p className="mt-1 text-lg font-bold text-white sm:text-xl">
-                            {item.value}
+                          <p className="mt-1 text-base font-bold text-white sm:text-lg">
+                            {item.meta}
                           </p>
-                        </div>
+                        </button>
                       );
                     })}
                   </div>
 
                   <div className="h-px bg-border/35" />
 
-                  <div className="min-h-[22rem] rounded-[1.5rem] border border-border/30 bg-background/12 p-4 sm:p-5">
+                  <div className="relative min-h-[22rem] rounded-[1.5rem] border border-border/30 bg-background/12 p-4 sm:p-5">
+                    <div className="pointer-events-none absolute inset-y-0 -left-8 -right-8 flex items-center justify-between sm:hidden">
+                      <button
+                        type="button"
+                        onClick={() => previousPanelMode && setDetailPanelMode(previousPanelMode)}
+                        disabled={!previousPanelMode}
+                        className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-background/45 text-white/88 backdrop-blur-md transition disabled:cursor-not-allowed disabled:opacity-30"
+                        aria-label={`Go to ${previousPanelMode ? getDetailPanelLabel(previousPanelMode) : "previous"} panel`}
+                      >
+                        <ChevronLeft size={18} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => nextPanelMode && setDetailPanelMode(nextPanelMode)}
+                        disabled={!nextPanelMode}
+                        className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-background/45 text-white/88 backdrop-blur-md transition disabled:cursor-not-allowed disabled:opacity-30"
+                        aria-label={`Go to ${nextPanelMode ? getDetailPanelLabel(nextPanelMode) : "next"} panel`}
+                      >
+                        <ChevronRight size={18} />
+                      </button>
+                    </div>
+
                     {detailPanelMode !== "overview" ? (
                       <div className="mb-4 flex items-center justify-between gap-3 border-b border-border/35 pb-4">
                         <div>
@@ -307,7 +350,7 @@ export default function ProductDetailPage({
                         <button
                           type="button"
                           onClick={() => setDetailPanelMode("overview")}
-                          className="rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-primary transition hover:bg-primary hover:text-primary-foreground"
+                          className="hidden rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:inline-flex"
                         >
                           Kembali ke Deskripsi
                         </button>
@@ -316,7 +359,7 @@ export default function ProductDetailPage({
 
                     {detailPanelMode === "overview" ? (
                       <div className="space-y-5">
-                        <div className="space-y-2 text-base leading-7 text-white/90 sm:text-lg">
+                        <div className="space-y-2 text-sm leading-6 text-white/90 sm:text-lg sm:leading-7">
                           <p><span className="font-bold text-white">Minus:</span> {minusSummary}</p>
                           <p><span className="font-bold text-white">Emblem:</span> {product.premier || "-"}</p>
                           <p><span className="font-bold text-white">Region:</span> {product.region}</p>
@@ -332,7 +375,7 @@ export default function ProductDetailPage({
                               <p className="font-display text-[10px] tracking-[0.26em] text-primary/78">
                                 GUARANTEE
                               </p>
-                              <p className="mt-1 text-sm font-bold uppercase tracking-[0.06em] text-white sm:text-base">
+                              <p className="mt-1 text-xs font-bold uppercase tracking-[0.06em] text-white sm:text-base">
                                 Lifetime Warranty, No Hackback, Best Price
                               </p>
                             </div>
@@ -341,16 +384,16 @@ export default function ProductDetailPage({
 
                         <div className="space-y-5 border-t border-border/35 pt-5">
                           <div>
-                            <p className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
+                            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
                               Contact Admin For More Info
                             </p>
                           </div>
 
                           <div>
-                            <p className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
+                            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
                               Details
                             </p>
-                            <div className="mt-4 space-y-2 text-base leading-7 text-white/90 sm:text-lg">
+                            <div className="mt-4 space-y-2 text-sm leading-6 text-white/90 sm:text-lg sm:leading-7">
                               {detailsList.map((item) => (
                                 <p key={item.label}>
                                   <span className="font-bold text-white">{item.label}:</span> {item.value}
@@ -360,10 +403,10 @@ export default function ProductDetailPage({
                           </div>
 
                           <div className="border-t border-border/35 pt-5">
-                            <p className="font-display text-lg font-black uppercase tracking-[0.04em] text-white">
+                            <p className="font-display text-base font-black uppercase tracking-[0.04em] text-white sm:text-lg">
                               Reminder
                             </p>
-                            <div className="mt-3 space-y-2 text-base leading-7 text-white/88 sm:text-lg">
+                            <div className="mt-3 space-y-2 text-sm leading-6 text-white/88 sm:text-lg sm:leading-7">
                               <p>* Garansi akun selamanya & anti HB</p>
                               <p>* Pembelian akun diproses aman via admin storefront</p>
                             </div>
@@ -374,7 +417,7 @@ export default function ProductDetailPage({
                       <div className="flex h-full flex-col">
                         <div className="flex items-center justify-between gap-3 border-b border-border/35 pb-4">
                           <div>
-                            <p className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white">
+                            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
                               Hero Unlock
                             </p>
                             <p className="mt-1 text-sm text-muted-foreground/78">
@@ -403,14 +446,12 @@ export default function ProductDetailPage({
                       <div className="flex h-full flex-col">
                         <div className="flex items-center justify-between gap-3 border-b border-border/35 pb-4">
                           <div>
-                            <p className="font-display text-lg font-bold uppercase tracking-[0.04em] text-white">
+                            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
                               Skin List
                             </p>
-                            <p className="mt-1 text-sm text-muted-foreground/78">
-                              Menampilkan hingga 10 skin pertama di panel ini.
-                            </p>
+                           
                           </div>
-                          <span className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-sm font-bold text-primary">
+                          <span className="whitespace-nowrap rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-sm font-bold text-primary">
                             {product.skins.length} skins
                           </span>
                         </div>
