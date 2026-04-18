@@ -23,33 +23,43 @@ const loopedTestimonials = [...testimonials, ...testimonials];
 
 export default function TestimoniSection() {
   return (
-    <section className="relative overflow-hidden py-14 sm:py-16">
-      <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 px-1 sm:mb-8">
-          <span className="font-display text-[11px] tracking-[0.4em] text-primary/60">
-            REAL BUYERS
-          </span>
-          <h2 className="font-display text-3xl font-bold tracking-[0.12em] text-foreground md:text-4xl">
-            TESTIMONI
-          </h2>
+    <section className="relative overflow-hidden py-12 sm:py-14">
+      <div className="pointer-events-none absolute inset-x-0 top-10 h-40 bg-[radial-gradient(circle_at_top,hsl(var(--primary)_/_0.18),transparent_62%)] blur-3xl" />
+
+      <div className="mx-auto w-full max-w-[1480px] px-4 sm:px-6 lg:px-8">
+        <div className="mb-5 px-1 sm:mb-6">
+          <div className="space-y-2">
+            <span className="font-display text-[11px] tracking-[0.4em] text-primary/60">
+              REAL BUYERS
+            </span>
+            <h2 className="font-display text-2xl font-bold tracking-[0.12em] text-foreground sm:text-[2rem]">
+              TESTIMONI
+            </h2>
+          </div>
         </div>
 
-        <div className="testimoni-strip-mask -mx-4 overflow-hidden px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-          <div className="testimoni-strip-track flex w-max gap-3 sm:gap-5 lg:gap-6">
-            {loopedTestimonials.map((item, index) => (
-              <div
-                key={`${item.alt}-${index}`}
-                className="shrink-0 overflow-hidden rounded-[1.5rem] border border-border/30 bg-card/60 shadow-[0_18px_60px_hsl(var(--background)_/_0.36)]"
-              >
-                <Image
-                  src={item.src}
-                  alt={item.alt}
-                  className="h-auto w-[190px] object-cover sm:w-[320px] lg:w-[380px] xl:w-[420px]"
-                  priority={index < testimonials.length}
-                />
+        <div className="relative overflow-hidden rounded-[2rem] border border-primary/15 bg-card/40 px-4 py-5 shadow-[0_24px_90px_hsl(var(--background)_/_0.42)] backdrop-blur-sm sm:px-6 sm:py-6 lg:px-7">
+          <div className="relative z-10">
+            <div className="testimoni-strip-mask -mx-4 overflow-hidden px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
+              <div className="testimoni-strip-track flex w-max gap-3 sm:gap-4">
+                {loopedTestimonials.map((item, index) => (
+                  <div
+                    key={`${item.alt}-${index}`}
+                    className="shrink-0 overflow-hidden rounded-[1.2rem] border border-primary/18 bg-background/78 p-1 shadow-[0_14px_38px_hsl(var(--background)_/_0.36)]"
+                  >
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      className="h-auto w-[138px] rounded-[0.95rem] object-cover sm:w-[176px] lg:w-[212px]"
+                      priority={index < testimonials.length}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
+
+          <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-40 bg-[radial-gradient(circle_at_center,hsl(var(--primary)_/_0.16),transparent_72%)] blur-2xl lg:block" />
         </div>
       </div>
     </section>

@@ -102,18 +102,23 @@
     mask-image: linear-gradient(
       to right,
       transparent 0%,
-      black 3%,
-      black 97%,
+      black 6%,
+      black 94%,
       transparent 100%
     );
   }
 
   .testimoni-strip-track {
-    animation: testimoni-strip-marquee 30s linear infinite;
+    animation: testimoni-strip-marquee 34s linear infinite;
   }
 
   .testimoni-strip-track:hover {
     animation-play-state: paused;
+  }
+
+  .testimoni-strip-track-reverse {
+    animation-direction: reverse;
+    animation-duration: 38s;
   }
 
   .text-glow {
@@ -198,6 +203,24 @@
   .box-glow-strong {
     box-shadow: 0 0 14px hsl(189 100% 72% / 0.22);
   }
+
+  .testimoni-strip-mask {
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 10%,
+      black 90%,
+      transparent 100%
+    );
+  }
+
+  .testimoni-strip-track {
+    animation-duration: 28s;
+  }
+
+  .testimoni-strip-track-reverse {
+    animation-duration: 32s;
+  }
 }
 
 @keyframes latest-strip-marquee {
@@ -226,6 +249,6 @@
   }
 
   to {
-    transform: translateX(calc(-50% - 0.625rem));
+    transform: translateX(calc(-50% - 0.5rem));
   }
 }
