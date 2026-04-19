@@ -102,18 +102,14 @@
     mask-image: linear-gradient(
       to right,
       transparent 0%,
-      black 6%,
-      black 94%,
+      black 2.5%,
+      black 97.5%,
       transparent 100%
     );
   }
 
   .testimoni-strip-track {
     animation: testimoni-strip-marquee 34s linear infinite;
-  }
-
-  .testimoni-strip-track:hover {
-    animation-play-state: paused;
   }
 
   .testimoni-strip-track-reverse {
@@ -208,8 +204,8 @@
     mask-image: linear-gradient(
       to right,
       transparent 0%,
-      black 10%,
-      black 90%,
+      black 5%,
+      black 95%,
       transparent 100%
     );
   }
