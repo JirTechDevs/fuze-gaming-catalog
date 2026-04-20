@@ -1,20 +1,27 @@
-import { Database, Lock, PanelLeftClose } from "lucide-react";
+import Link from "next/link";
+import { ChevronRight, PackagePlus, Search, Sparkles } from "lucide-react";
 
-const quickNotes = [
+const quickActions = [
   {
-    title: "Supabase Auth",
-    description: "Login dashboard sudah aktif menggunakan email + password dari Supabase.",
-    icon: Lock,
+    title: "Lihat Catalog",
+    description: "Buka daftar catalog untuk cek akun yang sudah aktif, sold, atau perlu diubah.",
+    href: "/dashboard/catalog",
+    icon: Search,
+    cta: "Open catalog",
   },
   {
-    title: "Dashboard Shell",
-    description: "Sidebar kiri sudah siap dan bisa di-collapse untuk navigasi admin.",
-    icon: PanelLeftClose,
+    title: "Tambah Catalog",
+    description: "Masukkan akun baru ke sistem dengan form admin yang sudah terhubung ke database.",
+    href: "/dashboard/catalog/new",
+    icon: PackagePlus,
+    cta: "Add new catalog",
   },
   {
-    title: "Database Ready",
-    description: "Fondasi tabel, RLS, dan storage bucket sudah disiapkan di Phase 1.",
-    icon: Database,
+    title: "Kelola Lebih Cepat",
+    description: "Edit data, ubah status jual, dan hapus item langsung dari modul catalog admin.",
+    href: "/dashboard/catalog",
+    icon: Sparkles,
+    cta: "Manage catalog",
   },
 ];
 
@@ -23,24 +30,25 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <section className="rounded-[1.8rem] border border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.88),hsl(var(--background)/0.92))] p-6 sm:p-7">
         <p className="font-display text-[11px] tracking-[0.38em] text-primary/62">
-          PHASE 2
+          DASHBOARD HOME
         </p>
         <h2 className="mt-3 font-display text-3xl font-bold tracking-[0.08em] text-foreground">
-          Dashboard Home
+          Hi Faza!
         </h2>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground/78 sm:text-base">
-          Auth dan dashboard shell sudah dipasang. Phase berikutnya bisa fokus ke
-          catalog CRUD tanpa perlu menyentuh fondasi login lagi.
+          Semua fondasi admin sudah siap. Dari sini kamu bisa langsung masuk ke
+          modul catalog untuk tambah, edit, atau rapikan akun yang tampil di storefront.
         </p>
       </section>
 
       <section className="grid gap-4 xl:grid-cols-3">
-        {quickNotes.map((item) => {
+        {quickActions.map((item) => {
           const Icon = item.icon;
 
           return (
-            <article
+            <Link
               key={item.title}
+              href={item.href}
               className="rounded-[1.5rem] border border-border/35 bg-card/72 p-5 backdrop-blur-sm"
             >
               <div className="flex h-11 w-11 items-center justify-center rounded-[1rem] border border-primary/18 bg-primary/8 text-primary">
@@ -52,7 +60,11 @@ export default function DashboardPage() {
               <p className="mt-2 text-sm leading-6 text-muted-foreground/76">
                 {item.description}
               </p>
-            </article>
+              <div className="mt-5 inline-flex items-center gap-2 font-display text-xs tracking-[0.18em] text-primary">
+                {item.cta}
+                <ChevronRight className="size-4" />
+              </div>
+            </Link>
           );
         })}
       </section>
