@@ -2,10 +2,10 @@ import type {
   Product,
   ProductRepository,
 } from "@/features/catalog/domain/product";
-import { inMemoryProductRepository } from "@/features/catalog/infrastructure/in-memory-product-repository";
+import { supabaseProductRepository } from "@/features/catalog/infrastructure/supabase-product-repository";
 
 export async function listCatalogProducts(
-  repository: ProductRepository = inMemoryProductRepository,
+  repository: ProductRepository = supabaseProductRepository,
 ): Promise<Product[]> {
   return repository.list();
 }

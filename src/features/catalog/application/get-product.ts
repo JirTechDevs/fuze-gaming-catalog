@@ -2,11 +2,11 @@ import type {
   Product,
   ProductRepository,
 } from "@/features/catalog/domain/product";
-import { inMemoryProductRepository } from "@/features/catalog/infrastructure/in-memory-product-repository";
+import { supabaseProductRepository } from "@/features/catalog/infrastructure/supabase-product-repository";
 
 export async function getCatalogProductById(
   id: string,
-  repository: ProductRepository = inMemoryProductRepository,
+  repository: ProductRepository = supabaseProductRepository,
 ): Promise<Product | null> {
   return repository.getById(id);
 }

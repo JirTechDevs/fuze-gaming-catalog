@@ -1,21 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCatalogProductById } from "@/features/catalog/application/get-product";
-import { listCatalogProducts } from "@/features/catalog/application/list-products";
 import ProductDetailPage from "@/features/storefront/components/product-detail-page";
 
 interface ProductDetailRouteProps {
   params: Promise<{
     id: string;
   }>;
-}
-
-export async function generateStaticParams() {
-  const products = await listCatalogProducts();
-
-  return products.map((product) => ({
-    id: product.id,
-  }));
 }
 
 export async function generateMetadata({
