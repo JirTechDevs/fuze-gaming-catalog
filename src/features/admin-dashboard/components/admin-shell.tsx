@@ -1,10 +1,11 @@
 "use client";
 
+import { useActionState } from "react";
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Cog, LayoutDashboard, LogOut, Package2 } from "lucide-react";
+import { Cog, ImagePlus, LayoutDashboard, LogOut, Package2 } from "lucide-react";
 import { signOutAction } from "@/features/admin-auth/actions";
 import {
   AlertDialog,
@@ -17,6 +18,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useActionToast } from "@/hooks/use-action-toast";
+import { initialActionResult } from "@/lib/action-result";
 import {
   Sidebar,
   SidebarContent,
@@ -41,11 +44,18 @@ interface AdminShellProps {
 const menuItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/catalog", label: "Catalog", icon: Package2 },
+  { href: "/dashboard/banner", label: "Banner", icon: ImagePlus },
   { href: "/dashboard/settings", label: "Settings", icon: Cog },
 ];
 
 export default function AdminShell({ children }: AdminShellProps) {
   const pathname = usePathname();
+  const [signOutState, signOutFormAction] = useActionState(
+    signOutAction,
+    initialActionResult,
+  );
+
+  useActionToast(signOutState);
 
   return (
     <SidebarProvider>
@@ -155,7 +165,7 @@ export default function AdminShell({ children }: AdminShellProps) {
                     <AlertDialogCancel className="rounded-[0.95rem] border-border/45 bg-background/60">
                       Batal
                     </AlertDialogCancel>
-                    <form action={signOutAction}>
+                    <form action={signOutFormAction}>
                       <AlertDialogAction
                         type="submit"
                         className="rounded-[0.95rem] bg-destructive text-destructive-foreground hover:bg-destructive/90"
