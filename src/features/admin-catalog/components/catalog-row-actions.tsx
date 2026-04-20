@@ -1,5 +1,6 @@
 "use client";
 
+import { useActionState } from "react";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { Eye, EyeOff, Pencil, Trash2 } from "lucide-react";
@@ -19,6 +20,8 @@ import {
   toggleCatalogStatusAction,
 } from "@/features/admin-catalog/actions";
 import type { CatalogRecord } from "@/features/admin-catalog/types";
+import { useActionToast } from "@/hooks/use-action-toast";
+import { initialActionResult } from "@/lib/action-result";
 
 function StatusButton({ currentStatus }: { currentStatus: CatalogRecord["status"] }) {
   const { pending } = useFormStatus();
@@ -58,8 +61,19 @@ interface CatalogRowActionsProps {
 }
 
 export default function CatalogRowActions({ item }: CatalogRowActionsProps) {
-  const toggleAction = toggleCatalogStatusAction.bind(null, item.id, item.status);
-  const deleteAction = deleteCatalogAction.bind(null, item.id);
+  const toggleActionState = toggleCatalogStatusAction.bind(null, item.id, item.status);
+  const deleteActionState = deleteCatalogAction.bind(null, item.id);
+  const [toggleState, toggleAction] = useActionState(
+    toggleActionState,
+    initialActionResult,
+  );
+  const [deleteState, deleteAction] = useActionState(
+    deleteActionState,
+    initialActionResult,
+  );
+
+  useActionToast(toggleState, { refreshOnSuccess: true });
+  useActionToast(deleteState, { refreshOnSuccess: true });
 
   return (
     <div className="flex items-center gap-2">

@@ -4,13 +4,8 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import type { StorefrontBanner } from "@/features/storefront/server";
 import styles from "./hero-section.module.css";
-
-const banners = [
-  { src: "/images/banners/pink.webp", alt: "Fuzevalo banner pink edition" },
-  { src: "/images/banners/red.webp", alt: "Fuzevalo banner red edition" },
-  { src: "/images/banners/yellow.webp", alt: "Fuzevalo banner yellow edition" },
-];
 
 const particles = [
   { left: "6%", top: "22%", size: 4, delay: 0, duration: 4.2 },
@@ -187,7 +182,11 @@ const DPadPanel = () => (
   </svg>
 );
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  banners: StorefrontBanner[];
+}
+
+export default function HeroSection({ banners }: HeroSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
@@ -200,7 +199,7 @@ export default function HeroSection() {
     }, isLiteMode ? 5000 : 3500);
 
     return () => window.clearInterval(timer);
-  }, [isLiteMode]);
+  }, [banners.length, isLiteMode]);
 
   const scrollToCatalog = () => {
     document
@@ -353,7 +352,7 @@ export default function HeroSection() {
             <img
               src={banners[prevIndex].src}
               alt={banners[prevIndex].alt}
-              className="aspect-[1840/853] w-full bg-background/70 object-contain"
+              className="aspect-[1840/853] h-full w-full bg-background/70 object-cover"
             />
             <div className={`absolute inset-0 ${styles.bannerSideOverlayLeft}`} />
           </motion.div>
@@ -365,7 +364,7 @@ export default function HeroSection() {
                   key={banners[activeIndex].src}
                   src={banners[activeIndex].src}
                   alt={banners[activeIndex].alt}
-                  className="aspect-[1840/853] w-full bg-background/70 object-contain"
+                  className="aspect-[1840/853] h-full w-full bg-background/70 object-cover"
                   initial={{ opacity: 0, scale: 1.035, y: 12 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.985, y: -12 }}
@@ -421,7 +420,7 @@ export default function HeroSection() {
             <img
               src={banners[nextIndex].src}
               alt={banners[nextIndex].alt}
-              className="aspect-[1840/853] w-full bg-background/70 object-contain"
+              className="aspect-[1840/853] h-full w-full bg-background/70 object-cover"
             />
             <div className={`absolute inset-0 ${styles.bannerSideOverlayRight}`} />
           </motion.div>

@@ -22,8 +22,8 @@ interface ProductDetailPageProps {
   product: Product;
 }
 
-type DetailPanelMode = "overview" | "heroes" | "skins";
-const detailPanelOrder: DetailPanelMode[] = ["overview", "skins", "heroes"];
+type DetailPanelMode = "overview" | "skins";
+const detailPanelOrder: DetailPanelMode[] = ["overview", "skins"];
 
 function getHeroCount(product: Product) {
   if (product.agent.toLowerCase() === "full unlock") {
@@ -31,6 +31,16 @@ function getHeroCount(product: Product) {
   }
 
   return product.agent || "-";
+}
+
+function isPremierLocked(product: Product) {
+  const normalized = product.premier.toLowerCase();
+
+  return (
+    normalized === "cannot be changed" ||
+    normalized === "can't be changed" ||
+    normalized === "cant be changed"
+  );
 }
 
 function getAgentRankNote(product: Product) {
@@ -44,7 +54,7 @@ function getAgentRankNote(product: Product) {
     notes.push(`${product.sisaVP} VP`);
   }
 
-  if (product.premier && product.premier !== "Unranked") {
+  if (product.premier && product.premier !== "-") {
     notes.push(`Premier ${product.premier}`);
   }
 
@@ -62,8 +72,8 @@ function getMinusNotes(product: Product) {
     minusNotes.push(`Hero belum full unlock (${product.agent}).`);
   }
 
-  if (product.premier.toLowerCase() === "can't be changed") {
-    minusNotes.push("Premier/emblem tidak bisa diganti.");
+  if (isPremierLocked(product)) {
+    minusNotes.push("Premier tidak bisa diganti.");
   }
 
   if (product.status !== "available") {
@@ -73,35 +83,12 @@ function getMinusNotes(product: Product) {
   return minusNotes;
 }
 
-function buildHeroItems(product: Product) {
-  const heroCount = getHeroCount(product);
-  const items = [
-    `Status unlock agent: ${heroCount}`,
-    `Change nick: ${product.changeNick}`,
-    `Region account: ${product.region}`,
-  ];
-
-  if (product.premier) {
-    items.push(`Emblem / Premier: ${product.premier}`);
-  }
-
-  if (product.sisaVP && product.sisaVP !== "-") {
-    items.push(`Sisa VP: ${product.sisaVP}`);
-  }
-
-  return items;
-}
-
 function getDetailPanelLabel(mode: DetailPanelMode) {
   if (mode === "overview") {
     return "Description";
   }
 
-  if (mode === "skins") {
-    return "Skins";
-  }
-
-  return "Heroes";
+  return "Skins";
 }
 
 function GamepadDoodle() {
@@ -178,15 +165,12 @@ export default function ProductDetailPage({
 }: ProductDetailPageProps) {
   const isAvailable = product.status === "available";
   const [detailPanelMode, setDetailPanelMode] = useState<DetailPanelMode>("overview");
-  const minusNotes = getMinusNotes(product);
-  const minusSummary = minusNotes[0] || "-";
   const detailsList = [
     { label: "Kode Akun", value: product.code },
     { label: "Region", value: product.region },
-    { label: "Minus", value: minusSummary },
+    // { label: "Minus", value: minusSummary },
     { label: "Notes", value: getAgentRankNote(product) },
   ];
-  const heroItems = buildHeroItems(product);
   const currentPanelIndex = detailPanelOrder.indexOf(detailPanelMode);
   const previousPanelMode = currentPanelIndex > 0 ? detailPanelOrder[currentPanelIndex - 1] : null;
   const nextPanelMode = currentPanelIndex < detailPanelOrder.length - 1
@@ -202,11 +186,6 @@ export default function ProductDetailPage({
       label: "Skins",
       mode: "skins" as const,
       meta: `${product.skins.length} skins`,
-    },
-    {
-      label: "Heroes",
-      mode: "heroes" as const,
-      meta: getHeroCount(product),
     },
   ];
 
@@ -344,7 +323,7 @@ export default function ProductDetailPage({
                             Detail Viewer
                           </p>
                           <p className="mt-1 text-sm text-white/84">
-                            Showing {detailPanelMode === "heroes" ? "hero info" : "skin list"}
+                            Showing skin list
                           </p>
                         </div>
                         <button
@@ -360,8 +339,10 @@ export default function ProductDetailPage({
                     {detailPanelMode === "overview" ? (
                       <div className="space-y-5">
                         <div className="space-y-2 text-sm leading-6 text-white/90 sm:text-lg sm:leading-7">
-                          <p><span className="font-bold text-white">Minus:</span> {minusSummary}</p>
-                          <p><span className="font-bold text-white">Emblem:</span> {product.premier || "-"}</p>
+                          {/* <p><span className="font-bold text-white">Minus:</span> {minusSummary}</p> */}
+                          {product.premier && product.premier !== "-" ? (
+                            <p><span className="font-bold text-white">Premier:</span> {product.premier}</p>
+                          ) : null}
                           <p><span className="font-bold text-white">Region:</span> {product.region}</p>
                           <p><span className="font-bold text-white">Agent:</span> {getHeroCount(product)}</p>
                         </div>
@@ -412,35 +393,6 @@ export default function ProductDetailPage({
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ) : detailPanelMode === "heroes" ? (
-                      <div className="flex h-full flex-col">
-                        <div className="flex items-center justify-between gap-3 border-b border-border/35 pb-4">
-                          <div>
-                            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
-                              Hero Unlock
-                            </p>
-                            <p className="mt-1 text-sm text-muted-foreground/78">
-                              Detail unlock yang tersedia dari data akun saat ini.
-                            </p>
-                          </div>
-                          <span className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-sm font-bold text-primary">
-                            {getHeroCount(product)}
-                          </span>
-                        </div>
-                        <ol className="panel-scrollbar mt-4 max-h-[16rem] space-y-2 overflow-y-auto pr-2 text-sm leading-6 text-white/88 sm:max-h-[18rem] sm:text-base">
-                          {heroItems.slice(0, 10).map((item, index) => (
-                            <li
-                              key={`${item}-${index}`}
-                              className="rounded-[1rem] border border-border/25 bg-background/22 px-4 py-3"
-                            >
-                              <span className="mr-2 font-display text-primary/86">
-                                {String(index + 1).padStart(2, "0")}.
-                              </span>
-                              {item}
-                            </li>
-                          ))}
-                        </ol>
                       </div>
                     ) : (
                       <div className="flex h-full flex-col">

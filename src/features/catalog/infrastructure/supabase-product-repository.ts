@@ -43,6 +43,24 @@ function uniqueImages(images: Array<string | null | undefined>) {
   return [...new Set(images.filter(Boolean))] as string[];
 }
 
+function normalizePremierValue(value: string | null) {
+  const normalized = (value ?? "").trim().toLowerCase();
+
+  if (
+    normalized === "cannot be changed" ||
+    normalized === "can't be changed" ||
+    normalized === "cant be changed"
+  ) {
+    return "Cannot be changed";
+  }
+
+  if (normalized === "can be changed") {
+    return "Can be changed";
+  }
+
+  return value || "-";
+}
+
 function mapCatalogRowToProduct(row: CatalogProductRow): Product {
   const primaryImage = row.main_image_path || CATALOG_IMAGE_FALLBACK;
   const images = uniqueImages([primaryImage, ...(row.gallery_image_paths ?? [])]);
@@ -59,7 +77,7 @@ function mapCatalogRowToProduct(row: CatalogProductRow): Product {
     agent: row.agent_unlock || "-",
     changeNick: row.change_nick_status || "Not Ready",
     region: row.region || "IDN",
-    premier: row.premier || "-",
+    premier: normalizePremierValue(row.premier),
     status: row.status,
   };
 }

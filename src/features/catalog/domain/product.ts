@@ -29,8 +29,8 @@ export function formatPrice(price: number): string {
 
 export function buildWhatsAppLink(product: Product): string {
   const message = encodeURIComponent(
-    `Halo, saya tertarik membeli akun ${product.code} (${product.rank}) seharga Rp ${formatPrice(product.price)}. Apakah masih tersedia?`,
+    `Halo min! aku mau beli akun code {"${product.code}"}`,
   );
 
-  return `https://wa.me/6281234567890?text=${message}`;
+  return `https://wa.me/628881462675?text=${message}`;
 }

@@ -1,3 +1,5 @@
+import type { ActionResult } from "@/lib/action-result";
+
 export type CatalogStatus = "available" | "sold";
 export type ChangeNickStatus = "Ready" | "Not Ready";
 
@@ -33,9 +35,7 @@ export type CatalogRecord = {
   status: CatalogStatus;
 };
 
-export type CatalogFormState = {
-  error: string | null;
-};
+export type CatalogFormState = ActionResult;
 
 export function mapCatalogRow(row: CatalogRecordRow): CatalogRecord {
   return {

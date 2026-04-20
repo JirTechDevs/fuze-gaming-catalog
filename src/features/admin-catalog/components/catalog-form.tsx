@@ -16,6 +16,8 @@ import type {
   CatalogFormState,
   CatalogRecord,
 } from "@/features/admin-catalog/types";
+import { useActionToast } from "@/hooks/use-action-toast";
+import { initialActionResult } from "@/lib/action-result";
 
 interface CatalogFormProps {
   mode: "create" | "edit";
@@ -50,10 +52,12 @@ const valorantRanks = [
   "Immortal 3",
   "Radiant",
 ] as const;
+const premierOptions = [
+  "Can be changed",
+  "Cannot be changed",
+] as const;
 
-const initialState: CatalogFormState = {
-  error: null,
-};
+const initialState: CatalogFormState = initialActionResult;
 
 const rupiahFormatter = new Intl.NumberFormat("id-ID");
 
@@ -215,11 +219,35 @@ function formatRupiahValue(value: string) {
   return `Rp ${rupiahFormatter.format(Number(value))}`;
 }
 
+function getCodeNumberValue(code: string | undefined) {
+  if (!code) {
+    return "";
+  }
+
+  return code.replace(/^FZ/i, "");
+}
+
+function normalizePremierValue(value: string | undefined) {
+  const normalized = (value ?? "").trim().toLowerCase();
+
+  if (
+    normalized === "cannot be changed" ||
+    normalized === "can't be changed" ||
+    normalized === "cant be changed"
+  ) {
+    return "Cannot be changed";
+  }
+
+  return "Can be changed";
+}
+
 export default function CatalogForm({ mode, record }: CatalogFormProps) {
   const formAction = saveCatalogAction.bind(null, record?.id ?? null);
   const [state, action] = useActionState(formAction, initialState);
+  useActionToast(state);
   const mainInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
+  const [clientError, setClientError] = useState<string | null>(null);
   const [mainExistingPath] = useState(record?.mainImagePath ?? "");
   const [mainFile, setMainFile] = useState<File | null>(null);
   const [mainPreviewPath, setMainPreviewPath] = useState(record?.mainImagePath ?? "");
@@ -229,6 +257,9 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [galleryPreviewPaths, setGalleryPreviewPaths] = useState<string[]>([]);
   const [priceValue, setPriceValue] = useState(() => toPriceDigits(record?.price ?? 0));
+  const [premierValue, setPremierValue] = useState(() =>
+    normalizePremierValue(record?.premier),
+  );
   const totalGalleryCount = existingGalleryPaths.length + galleryFiles.length;
   const gallerySlotsLeft = MAX_GALLERY_IMAGES - totalGalleryCount;
 
@@ -272,6 +303,7 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
 
   function handleMainFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0] ?? null;
+    setClientError(null);
     setMainFile(file);
   }
 
@@ -282,6 +314,7 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
       return;
     }
 
+    setClientError(null);
     const mergedFiles = [...galleryFiles, ...incomingFiles].slice(
       0,
       MAX_GALLERY_IMAGES - existingGalleryPaths.length,
@@ -296,56 +329,76 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
       mainInputRef.current.value = "";
     }
 
+    setClientError(null);
     setMainFile(null);
   }
 
   function handleRemoveExistingGallery(index: number) {
+    setClientError(null);
     setExistingGalleryPaths((current) => current.filter((_, itemIndex) => itemIndex !== index));
   }
 
   function handleRemoveGalleryFile(index: number) {
     const nextFiles = galleryFiles.filter((_, itemIndex) => itemIndex !== index);
+    setClientError(null);
     setGalleryFiles(nextFiles);
     syncFileInputFiles(galleryInputRef, nextFiles);
   }
 
   function handlePriceChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setClientError(null);
     setPriceValue(toPriceDigits(event.target.value));
+  }
+
+  function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
+    setClientError(null);
+
+    if (!event.currentTarget.reportValidity()) {
+      event.preventDefault();
+      setClientError("Lengkapi semua field wajib dulu sebelum menyimpan catalog.");
+      return;
+    }
+
+    if (!mainFile && !mainExistingPath) {
+      event.preventDefault();
+      setClientError("Foto Utama (Thumbnail) wajib diisi sebelum menyimpan catalog.");
+    }
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="font-display text-[11px] tracking-[0.36em] text-primary/64">
-            {mode === "create" ? "NEW CATALOG" : "EDIT CATALOG"}
-          </p>
-          <h2 className="mt-2 font-display text-2xl font-bold tracking-[0.08em] text-foreground sm:text-3xl">
-            {mode === "create" ? "Tambah Catalog" : `Edit ${record?.code ?? "Catalog"}`}
-          </h2>
-        </div>
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <Link
-            href="/dashboard/catalog"
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-[1rem] border border-border/45 bg-card/72 px-4 text-sm text-foreground transition hover:bg-card/95"
-          >
-            <ChevronLeft className="size-4" />
-            Kembali ke Catalog
-          </Link>
-          <Link
-            href="/dashboard/catalog"
-            className="inline-flex h-11 items-center justify-center rounded-[1rem] border border-border/45 bg-background/55 px-5 text-sm text-foreground transition hover:bg-background/75"
-          >
-            Batal
-          </Link>
-          <SubmitButton mode={mode} />
-        </div>
-      </div>
-
       <form
         action={action}
+        onSubmit={handleFormSubmit}
         className="rounded-[1.8rem] border border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.88),hsl(var(--background)/0.92))] p-5 sm:p-7"
       >
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-display text-[11px] tracking-[0.36em] text-primary/64">
+              {mode === "create" ? "NEW CATALOG" : "EDIT CATALOG"}
+            </p>
+            <h2 className="mt-2 font-display text-2xl font-bold tracking-[0.08em] text-foreground sm:text-3xl">
+              {mode === "create" ? "Tambah Catalog" : `Edit ${record?.code ?? "Catalog"}`}
+            </h2>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Link
+              href="/dashboard/catalog"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-[1rem] border border-border/45 bg-card/72 px-4 text-sm text-foreground transition hover:bg-card/95"
+            >
+              <ChevronLeft className="size-4" />
+              Kembali ke Catalog
+            </Link>
+            <Link
+              href="/dashboard/catalog"
+              className="inline-flex h-11 items-center justify-center rounded-[1rem] border border-border/45 bg-background/55 px-5 text-sm text-foreground transition hover:bg-background/75"
+            >
+              Batal
+            </Link>
+            <SubmitButton mode={mode} />
+          </div>
+        </div>
+
         <HiddenFileInput
           inputRef={mainInputRef}
           name="mainImageFile"
@@ -374,17 +427,30 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <FieldLabel>KODE AKUN</FieldLabel>
-            <TextInput
-              name="code"
-              required
-              defaultValue={record?.code}
-              placeholder="FZ3067"
-            />
+            <div className="flex items-center overflow-hidden rounded-[1rem] border border-border/45 bg-background/55 focus-within:border-primary/45 focus-within:ring-2 focus-within:ring-primary/15">
+              <span className="inline-flex h-11 items-center border-r border-border/35 px-4 font-display text-sm tracking-[0.16em] text-primary">
+                FZ
+              </span>
+              <input
+                name="code"
+                required
+                inputMode="numeric"
+                defaultValue={getCodeNumberValue(record?.code)}
+                placeholder="3067"
+                onChange={() => setClientError(null)}
+                className="h-11 w-full bg-transparent px-4 text-sm text-foreground outline-none"
+              />
+            </div>
           </div>
 
           <div>
             <FieldLabel>RANK</FieldLabel>
-            <Select name="rank" required defaultValue={record?.rank ?? "Gold 1"}>
+            <Select
+              name="rank"
+              required
+              defaultValue={record?.rank ?? "Gold 1"}
+              onChange={() => setClientError(null)}
+            >
               {valorantRanks.map((rank) => (
                 <option key={rank} value={rank}>
                   {rank}
@@ -519,7 +585,26 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
               required
               defaultValue={record?.region ?? "IDN"}
               placeholder="IDN"
+              onChange={() => setClientError(null)}
             />
+          </div>
+
+          <div>
+            <FieldLabel>PREMIER</FieldLabel>
+            <Select
+              name="premier"
+              value={premierValue}
+              onChange={(event) => {
+                setClientError(null);
+                setPremierValue(event.target.value);
+              }}
+            >
+              {premierOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </Select>
           </div>
 
           <div>
@@ -527,6 +612,7 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
             <Select
               name="changeNickStatus"
               defaultValue={record?.changeNickStatus ?? "Ready"}
+              onChange={() => setClientError(null)}
             >
               <option value="Ready">Ready</option>
               <option value="Not Ready">Not Ready</option>
@@ -540,6 +626,7 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
               required
               defaultValue={record?.agentUnlock ?? "Full Unlock"}
               placeholder="Full Unlock"
+              onChange={() => setClientError(null)}
             />
           </div>
 
@@ -547,8 +634,10 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
             <FieldLabel>SISA VP</FieldLabel>
             <TextInput
               name="sisaVp"
+              required
               defaultValue={record?.sisaVp ?? "-"}
               placeholder="-"
+              onChange={() => setClientError(null)}
             />
           </div>
 
@@ -560,13 +649,14 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
               required
               defaultValue={record?.skins.join("\n")}
               placeholder={"Reaver Vandal\nPrime Phantom\nIon Sheriff"}
+              onChange={() => setClientError(null)}
             />
           </div>
         </div>
 
-        {state.error && (
+        {(clientError || (state.status === "error" ? state.message : null)) && (
           <div className="mt-5 rounded-[1rem] border border-destructive/28 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            {state.error}
+            {clientError || state.message}
           </div>
         )}
       </form>

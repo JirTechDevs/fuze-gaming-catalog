@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight, PackagePlus, Search, Sparkles } from "lucide-react";
+import { ChevronRight, ImagePlus, PackagePlus, Search, Sparkles } from "lucide-react";
 
 const quickActions = [
   {
@@ -23,6 +23,13 @@ const quickActions = [
     icon: Sparkles,
     cta: "Manage catalog",
   },
+  {
+    title: "Atur Banner",
+    description: "Ganti banner hero storefront langsung dari dashboard admin tanpa ubah file manual.",
+    href: "/dashboard/banner",
+    icon: ImagePlus,
+    cta: "Open banner",
+  },
 ];
 
 export default function DashboardPage() {
@@ -41,7 +48,7 @@ export default function DashboardPage() {
         </p>
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-3">
+      <section className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-4">
         {quickActions.map((item) => {
           const Icon = item.icon;
 
