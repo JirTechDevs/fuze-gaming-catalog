@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
+import type { StorefrontBanner } from "@/features/storefront/server";
 import CatalogSection from "@/features/storefront/components/catalog-section";
 import Footer from "@/features/storefront/components/footer";
 import HeroSection from "@/features/storefront/components/hero-section";
@@ -11,9 +12,10 @@ import TestimoniSection from "@/features/storefront/components/testimoni-section
 
 interface StorefrontPageProps {
   products: Product[];
+  banners: StorefrontBanner[];
 }
 
-export default function StorefrontPage({ products }: StorefrontPageProps) {
+export default function StorefrontPage({ products, banners }: StorefrontPageProps) {
   const [introComplete, setIntroComplete] = useState(false);
 
   useEffect(() => {
@@ -40,7 +42,7 @@ export default function StorefrontPage({ products }: StorefrontPageProps) {
         <div className="min-h-screen bg-background">
           <Navbar />
           <div className="pt-14 sm:pt-16">
-            <HeroSection />
+            <HeroSection banners={banners} />
             <CatalogSection products={products} />
             <TestimoniSection />
             <Footer />

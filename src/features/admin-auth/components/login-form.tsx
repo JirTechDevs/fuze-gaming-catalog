@@ -4,10 +4,10 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { LockKeyhole, Mail } from "lucide-react";
 import { signInAction, type LoginFormState } from "@/features/admin-auth/actions";
+import { useActionToast } from "@/hooks/use-action-toast";
+import { initialActionResult } from "@/lib/action-result";
 
-const initialLoginFormState: LoginFormState = {
-  error: null,
-};
+const initialLoginFormState: LoginFormState = initialActionResult;
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -25,6 +25,7 @@ function SubmitButton() {
 
 export default function LoginForm() {
   const [state, formAction] = useActionState(signInAction, initialLoginFormState);
+  useActionToast(state);
 
   return (
     <form action={formAction} className="space-y-4">
@@ -70,9 +71,9 @@ export default function LoginForm() {
         </div>
       </div>
 
-      {state.error && (
+      {state.status === "error" && state.message && (
         <div className="rounded-[1rem] border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-          {state.error}
+          {state.message}
         </div>
       )}
 

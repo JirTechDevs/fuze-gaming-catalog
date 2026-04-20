@@ -1,11 +1,13 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import {
+  createActionError,
+  createActionSuccess,
+  type ActionResult,
+} from "@/lib/action-result";
 
-export type LoginFormState = {
-  error: string | null;
-};
+export type LoginFormState = ActionResult;
 
 export async function signInAction(
   _previousState: LoginFormState,
@@ -15,9 +17,7 @@ export async function signInAction(
   const password = String(formData.get("password") ?? "");
 
   if (!email || !password) {
-    return {
-      error: "Email dan password wajib diisi.",
-    };
+    return createActionError("Email dan password wajib diisi.");
   }
 
   const supabase = await createClient();
@@ -27,17 +27,22 @@ export async function signInAction(
   });
 
   if (error) {
-    return {
-      error: "Login gagal. Cek email dan password kamu lagi.",
-    };
+    return createActionError("Login gagal. Cek email dan password kamu lagi.");
   }
 
-  redirect("/dashboard");
+  return createActionSuccess("Login berhasil.", "/dashboard");
 }
 
-export async function signOutAction() {
+export async function signOutAction(
+  _previousState: ActionResult,
+  _formData: FormData,
+): Promise<ActionResult> {
   const supabase = await createClient();
+  const { error } = await supabase.auth.signOut();
 
-  await supabase.auth.signOut();
-  redirect("/login");
+  if (error) {
+    return createActionError("Logout gagal. Coba ulang lagi.");
+  }
+
+  return createActionSuccess("Logout berhasil.", "/login");
 }
