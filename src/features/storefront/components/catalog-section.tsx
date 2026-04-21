@@ -351,38 +351,39 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
         </motion.div>
       ))}
 
+      <motion.div
+        className="pointer-events-none absolute -left-10 top-[36%] z-[5] hidden w-[200px] -translate-y-1/2 xl:block 2xl:-left-14 2xl:w-[260px]"
+        initial={{ opacity: 0, x: -16, y: "-50%" }}
+        whileInView={{ opacity: 0.88, x: 0, y: "-50%" }}
+        viewport={{ once: true }}
+        animate={
+          isLiteMode
+            ? { y: "-50%" }
+            : { y: ["-50%", "calc(-50% - 10px)", "-50%"] }
+        }
+        transition={
+          isLiteMode
+            ? { duration: 0.3 }
+            : {
+                opacity: { duration: 0.5, ease: "easeOut" },
+                x: { duration: 0.5, ease: "easeOut" },
+                y: {
+                  duration: 5.8,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                },
+              }
+        }
+      >
+        <Image
+          src={jettImage}
+          alt="Jett character art"
+          className="h-auto w-full object-contain drop-shadow-[0_18px_46px_hsl(var(--background)_/_0.55)]"
+          priority={false}
+        />
+      </motion.div>
+
       <div className="relative z-10 container mx-auto space-y-16 px-4 sm:space-y-20 lg:space-y-24">
-        <motion.div
-          className="pointer-events-none absolute left-[-22rem] top-[24rem] z-0 hidden w-[360px] xl:block 2xl:left-[-26rem] 2xl:top-[24rem] 2xl:w-[420px]"
-          initial={{ opacity: 0, x: -16, y: 0 }}
-          whileInView={{ opacity: 0.92, x: 0, y: 0 }}
-          viewport={{ once: true }}
-          animate={
-            isLiteMode
-              ? { y: 0 }
-              : { y: [0, -10, 0] }
-          }
-          transition={
-            isLiteMode
-              ? { duration: 0.3 }
-              : {
-                  opacity: { duration: 0.5, ease: "easeOut" },
-                  x: { duration: 0.5, ease: "easeOut" },
-                  y: {
-                    duration: 5.8,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                  },
-                }
-          }
-        >
-          <Image
-            src={jettImage}
-            alt="Jett character art"
-            className="h-auto w-full object-contain drop-shadow-[0_18px_46px_hsl(var(--background)_/_0.55)]"
-            priority={false}
-          />
-        </motion.div>
 
         <div>
           <motion.div

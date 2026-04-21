@@ -75,7 +75,7 @@ export default function ProductCard({
     >
       <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/0 to-transparent transition-all duration-500 group-hover:via-primary/50" />
 
-      <div className="relative aspect-[4/5] overflow-hidden bg-[radial-gradient(circle_at_top,_hsl(var(--primary)/0.24),_transparent_58%),linear-gradient(180deg,_hsl(var(--secondary)/0.9),_hsl(var(--card)))] p-2 sm:p-3">
+      <div className="relative aspect-[3/4] overflow-hidden bg-[radial-gradient(circle_at_top,_hsl(var(--primary)/0.24),_transparent_58%),linear-gradient(180deg,_hsl(var(--secondary)/0.9),_hsl(var(--card)))] p-1.5 sm:p-2">
         <div className="relative h-full w-full overflow-hidden rounded-[1.2rem] border border-white/10 bg-background/25 sm:rounded-[1.35rem]">
           <img
             src={product.image}
@@ -96,43 +96,43 @@ export default function ProductCard({
           </div>
         )}
 
-        <div className="absolute inset-x-2 top-2 flex flex-col items-start gap-1.5 sm:inset-x-6 sm:top-6 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-2">
-          <div className="relative flex max-w-full min-w-0 items-center gap-1.5 rounded-[0.85rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-2.5 py-2 shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-none sm:max-w-[68%] sm:gap-2 sm:rounded-[1.2rem] sm:px-4 sm:py-3 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)] sm:backdrop-blur-md">
+        <div className="absolute inset-x-2 top-2 flex flex-col items-start gap-1 sm:inset-x-4 sm:top-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-1.5">
+          <div className="relative flex max-w-full min-w-0 items-center gap-1 rounded-[0.7rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-2 py-1.5 shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-none sm:max-w-[68%] sm:gap-1.5 sm:rounded-[1rem] sm:px-3 sm:py-2 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)] sm:backdrop-blur-md">
             <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
             <Shield size={12} className="relative shrink-0 text-primary sm:h-[14px] sm:w-[14px]" />
-            <span className="relative truncate font-display text-[11px] font-bold leading-none tracking-[0.08em] text-primary drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)] sm:text-xl sm:tracking-[0.14em]">
+            <span className="relative truncate font-display text-[10px] font-bold leading-none tracking-[0.08em] text-primary drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)] sm:text-base sm:tracking-[0.14em]">
               {product.code}
             </span>
           </div>
 
-          <div className="relative rounded-[0.85rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-2.5 py-2 text-right shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-none sm:rounded-[1.2rem] sm:px-4 sm:py-3 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)] sm:backdrop-blur-md">
+          <div className="relative rounded-[0.7rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-2 py-1.5 text-right shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-none sm:rounded-[1rem] sm:px-3 sm:py-2 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)] sm:backdrop-blur-md">
             <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
             <p
-              className={`font-display text-[11px] font-bold leading-none tracking-[0.08em] drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)] sm:text-xl sm:tracking-normal ${getRankColor(product.rank)}`}
+              className={`font-display text-[10px] font-bold leading-none tracking-[0.08em] drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)] sm:text-base sm:tracking-normal ${getRankColor(product.rank)}`}
             >
               {product.rank}
             </p>
           </div>
         </div>
 
-        <div className="absolute inset-x-2 bottom-2 flex justify-start sm:inset-x-6 sm:bottom-6">
-          <div className="relative rounded-[0.95rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-3 py-2 text-right shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-none sm:rounded-[1.2rem] sm:px-4 sm:py-3 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)] sm:backdrop-blur-md">
+        <div className="absolute inset-x-2 bottom-2 flex justify-start sm:inset-x-4 sm:bottom-4">
+          <div className="relative rounded-[0.7rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-2.5 py-1.5 text-right shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-none sm:rounded-[1rem] sm:px-3 sm:py-2 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)] sm:backdrop-blur-md">
             <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
-            <p className="font-display text-[11px] font-bold leading-none text-primary drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)] sm:text-xl">
+            <p className="font-display text-[10px] font-bold leading-none text-primary drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)] sm:text-base">
               Rp {formatPrice(product.price)}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="relative flex flex-1 flex-col gap-3 p-3 sm:gap-4 sm:p-5">
-        <div className="flex min-h-[8rem] max-h-[9rem] flex-col rounded-[1.1rem] border border-border/35 bg-background/35 p-3 sm:min-h-[10rem] sm:max-h-[11.5rem] sm:rounded-[1.5rem] sm:p-4">
-          <span className="font-display text-[10px] font-bold tracking-[0.12em] text-foreground sm:text-xs sm:tracking-[0.16em]">
+      <div className="relative flex flex-1 flex-col gap-2.5 p-2.5 sm:gap-3 sm:p-4">
+        <div className="flex min-h-[6rem] max-h-[7rem] flex-col rounded-[0.9rem] border border-border/35 bg-background/35 p-2.5 sm:min-h-[7.5rem] sm:max-h-[9rem] sm:rounded-[1.2rem] sm:p-3">
+          <span className="font-display text-[9px] font-bold tracking-[0.12em] text-foreground sm:text-[11px] sm:tracking-[0.16em]">
             DAFTAR SKIN
           </span>
-          <ol className="panel-scrollbar mt-2 flex-1 space-y-1 overflow-y-auto pr-1 text-[11px] leading-4 text-foreground/80 sm:mt-3 sm:space-y-1.5 sm:text-sm sm:leading-5">
+          <ol className="panel-scrollbar mt-1.5 flex-1 space-y-0.5 overflow-y-auto pr-1 text-[10px] leading-3.5 text-foreground/80 sm:mt-2 sm:space-y-1 sm:text-xs sm:leading-4">
             {visibleSkins.map((skin) => (
-              <li key={skin} className="rounded-lg border border-border/20 bg-background/20 px-2 py-1.5 sm:rounded-xl sm:px-3 sm:py-2">
+              <li key={skin} className="rounded-md border border-border/20 bg-background/20 px-1.5 py-1 sm:rounded-lg sm:px-2.5 sm:py-1.5">
                 <span className="break-words">
                   {skin}
                 </span>
@@ -153,7 +153,7 @@ export default function ProductCard({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(event) => event.stopPropagation()}
-              className={`flex w-full items-center justify-center gap-1.5 rounded-[0.95rem] bg-primary px-2 py-2.5 text-center font-display text-[10px] font-bold tracking-[0.08em] text-primary-foreground transition-all duration-300 sm:gap-2 sm:rounded-[1.15rem] sm:px-4 sm:py-3.5 sm:text-sm sm:tracking-[0.16em] ${isLiteMode ? "" : "hover:box-glow-strong"}`}
+              className={`flex w-full items-center justify-center gap-1.5 rounded-[0.8rem] bg-primary px-2 py-2 text-center font-display text-[9px] font-bold tracking-[0.08em] text-primary-foreground transition-all duration-300 sm:gap-2 sm:rounded-[1rem] sm:px-3 sm:py-2.5 sm:text-xs sm:tracking-[0.16em] ${isLiteMode ? "" : "hover:box-glow-strong"}`}
             >
               <MessageCircle size={14} className="sm:h-4 sm:w-4" />
               BELI AKUN INI

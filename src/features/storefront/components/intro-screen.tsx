@@ -15,8 +15,8 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setShow(false);
-      window.setTimeout(onComplete, 600);
-    }, 1800);
+      window.setTimeout(onComplete, 400);
+    }, 1200);
 
     return () => window.clearTimeout(timer);
   }, [onComplete]);
@@ -27,7 +27,7 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
         <motion.div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-background"
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
         >
           <motion.div
             className={`absolute h-[280px] w-[280px] rounded-full sm:h-[400px] sm:w-[400px] ${styles.introRadialGlow}`}

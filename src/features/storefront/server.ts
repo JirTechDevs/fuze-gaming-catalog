@@ -1,5 +1,5 @@
-import { unstable_noStore as noStore } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { unstable_cache } from "next/cache";
+import { createPublicClient } from "@/lib/supabase/public";
 import { getSupabaseUrl } from "@/lib/supabase/env";
 
 export interface StorefrontBanner {
@@ -91,10 +91,8 @@ function extractBannerSources(settings: Record<string, unknown>) {
   return [];
 }
 
-export async function listStorefrontBanners(): Promise<StorefrontBanner[]> {
-  noStore();
-
-  const supabase = await createClient();
+async function fetchStorefrontBanners(): Promise<StorefrontBanner[]> {
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("store_settings")
     .select("*")
@@ -114,3 +112,9 @@ export async function listStorefrontBanners(): Promise<StorefrontBanner[]> {
 
   return toBannerItems(bannerSources);
 }
+
+export const listStorefrontBanners = unstable_cache(
+  fetchStorefrontBanners,
+  ["storefront-banners"],
+  { revalidate: 120, tags: ["storefront-banners"] },
+);
