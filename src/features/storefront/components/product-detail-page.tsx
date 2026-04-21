@@ -263,7 +263,7 @@ export default function ProductDetailPage({
                   <div className={`mt-auto rounded-[1.6rem] border border-border/40 px-4 py-5 sm:px-5 ${styles.pricePanel}`}>
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                       <div>
-                        <p className="font-display text-[2.6rem] font-black leading-none text-white sm:text-[3.15rem] xl:text-[3.75rem]">
+                        <p className="font-display text-3xl font-black leading-none text-white sm:text-4xl xl:text-5xl">
                           Rp {formatPrice(product.price)}
                         </p>
                       </div>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Rajdhani } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -10,11 +10,11 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const rajdhani = Rajdhani({
+const jakartasans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
-  variable: "--font-rajdhani",
+  variable: "--font-display",
 });
 
 export const metadata: Metadata = {
@@ -47,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${rajdhani.variable}`}>
+    <html lang="en" className={`${inter.variable} ${jakartasans.variable}`}>
       <body>
         {children}
         <Toaster />

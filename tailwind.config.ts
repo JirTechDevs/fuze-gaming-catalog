@@ -15,7 +15,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["var(--font-rajdhani)", "sans-serif"],
+        display: ["var(--font-display)", "sans-serif"],
         body: ["var(--font-inter)", "sans-serif"],
       },
       colors: {

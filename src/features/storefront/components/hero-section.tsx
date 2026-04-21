@@ -335,7 +335,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
         />
       ))}
 
-      <div className="relative z-10 container mx-auto px-4 pb-10 pt-10 sm:pb-14 sm:pt-12 md:pb-20 md:pt-16 lg:pb-24 lg:pt-20">
+      <div className="relative z-10 container mx-auto px-4 pb-10 pt-2 sm:pb-14 sm:pt-4 md:pb-20 md:pt-6 lg:pb-24 lg:pt-8">
         <motion.div
           className="relative mx-auto flex w-full max-w-[1400px] flex-col items-center justify-center overflow-visible py-4 sm:py-8 md:py-12"
           initial={{ opacity: 0, y: 28 }}
