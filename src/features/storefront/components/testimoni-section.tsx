@@ -108,12 +108,6 @@ export default function TestimoniSection() {
 
         <div className="mb-5 px-1 sm:mb-6">
           <div className="flex flex-col items-center gap-3">
-            <div className="mx-auto w-max relative rounded-[0.7rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-3 py-1.5 text-center shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-md sm:rounded-[1rem] sm:px-4 sm:py-2 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)]">
-              <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
-              <span className="font-display text-[10px] sm:text-[12px] font-bold tracking-widest text-primary drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)]">
-                REAL BUYERS
-              </span>
-            </div>
             <h2 className="font-display text-3xl font-bold tracking-wide text-foreground md:text-4xl text-center">
               TESTIMONIAL <span className="text-primary">CUSTOMER</span>
             </h2>

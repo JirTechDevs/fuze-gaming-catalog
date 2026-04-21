@@ -402,7 +402,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
               </h2>
             </div>
 
-            <div className="rounded-xl border border-border/40 bg-card p-4 sm:p-5 lg:p-6 shadow-xl backdrop-blur-md">
+            <div className="rounded-[2rem] border border-border/40 bg-card p-4 shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-md sm:p-5 lg:p-6">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
                 <label className="block">
                   <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-wider text-primary">
@@ -413,7 +413,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                     placeholder="Contoh: VIL..."
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
-                    className="w-full rounded border border-border/50 bg-background/50 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 transition-all focus:border-primary/40 focus:outline-none"
+                    className="w-full rounded-full border border-border/40 bg-background/50 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/40 transition-all focus:border-primary/40 focus:outline-none"
                   />
                 </label>
 
@@ -424,7 +424,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                   <select
                     value={rankFilter}
                     onChange={(event) => setRankFilter(event.target.value)}
-                    className="w-full rounded border border-border/50 bg-background/50 px-3 py-2 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
+                    className="w-full rounded-full border border-border/40 bg-background/50 px-4 py-2.5 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
                   >
                     <option value="all">Semua Rank</option>
                     {rankOptions.map((rank) => (
@@ -440,7 +440,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                   <select
                     value={regionFilter}
                     onChange={(event) => setRegionFilter(event.target.value)}
-                    className="w-full rounded border border-border/50 bg-background/50 px-3 py-2 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
+                    className="w-full rounded-full border border-border/40 bg-background/50 px-4 py-2.5 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
                   >
                     <option value="all">Semua Region</option>
                     {regionOptions.map((region) => (
@@ -456,7 +456,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                   <select
                     value={nickFilter}
                     onChange={(event) => setNickFilter(event.target.value)}
-                    className="w-full rounded border border-border/50 bg-background/50 px-3 py-2 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
+                    className="w-full rounded-full border border-border/40 bg-background/50 px-4 py-2.5 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
                   >
                     <option value="all">Semua Status</option>
                     {nickOptions.map((option) => (
@@ -472,7 +472,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                   <select
                     value={sortBy}
                     onChange={(event) => setSortBy(event.target.value)}
-                    className="w-full rounded border border-border/50 bg-background/50 px-3 py-2 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
+                    className="w-full rounded-full border border-border/40 bg-background/50 px-4 py-2.5 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
                   >
                     <option value="default">Terbaru (Default)</option>
                     <option value="price-asc">Harga: Terendah</option>
@@ -485,7 +485,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="rounded border border-primary/30 bg-primary/5 px-5 py-1.5 font-display text-[11px] font-bold tracking-wider text-primary transition hover:bg-primary hover:text-primary-foreground"
+                  className="rounded-full border border-primary/30 bg-primary/5 px-6 py-2 font-display text-[11px] font-bold tracking-wider text-primary shadow-sm transition hover:scale-105 hover:bg-primary hover:text-primary-foreground active:scale-95"
                 >
                   Reset Filter
                 </button>

@@ -54,8 +54,8 @@ export default function ProductCard({
         duration: isLiteMode ? 0.24 : 0.5,
         ease: [0.16, 1, 0.3, 1],
       }}
-      whileHover={isLiteMode ? undefined : { y: -6, transition: { duration: 0.25 } }}
-      className={`group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-[1.2rem] border border-border/40 bg-card/95 backdrop-blur-none transition-all duration-300 sm:bg-card/85 sm:backdrop-blur-sm hover:border-primary/40 ${isLiteMode ? "" : "hover:box-glow"} sm:rounded-[1.75rem] ${
+      whileHover={isLiteMode ? undefined : { y: -6, scale: 1.02, transition: { type: "spring", stiffness: 350, damping: 15 } }}
+      className={`group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-[1.75rem] border border-border/40 bg-card/95 shadow-xl transition-all duration-300 sm:rounded-[2.25rem] sm:bg-card/85 sm:shadow-2xl hover:shadow-3xl hover:border-primary/40 ${
         isSold ? "pointer-events-none opacity-50" : ""
       }`}
       style={{ contentVisibility: "auto", containIntrinsicSize: "320px 520px" }}
@@ -76,7 +76,7 @@ export default function ProductCard({
       <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/0 to-transparent transition-all duration-500 group-hover:via-primary/50" />
 
       <div className="relative aspect-[3/4] overflow-hidden bg-[radial-gradient(circle_at_top,_hsl(var(--primary)/0.24),_transparent_58%),linear-gradient(180deg,_hsl(var(--secondary)/0.9),_hsl(var(--card)))] p-1.5 sm:p-2">
-        <div className="relative h-full w-full overflow-hidden rounded-[1.2rem] border border-white/10 bg-background/25 sm:rounded-[1.35rem]">
+        <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/10 bg-background/25 sm:rounded-3xl">
           <img
             src={product.image}
             alt={product.code}
@@ -126,7 +126,7 @@ export default function ProductCard({
       </div>
 
       <div className="relative flex flex-1 flex-col gap-2.5 p-2.5 sm:gap-3 sm:p-4">
-        <div className="flex min-h-[6rem] max-h-[7rem] flex-col rounded-[0.9rem] border border-border/35 bg-background/35 p-2.5 sm:min-h-[7.5rem] sm:max-h-[9rem] sm:rounded-[1.2rem] sm:p-3">
+        <div className="flex min-h-[6rem] max-h-[7rem] flex-col rounded-[1.25rem] border border-border/35 bg-background/35 p-2.5 sm:min-h-[7.5rem] sm:max-h-[9rem] sm:rounded-3xl sm:p-3">
           <span className="font-display text-[9px] font-bold tracking-[0.12em] text-foreground sm:text-[11px] sm:tracking-[0.16em]">
             DAFTAR SKIN
           </span>
@@ -153,7 +153,7 @@ export default function ProductCard({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(event) => event.stopPropagation()}
-              className={`flex w-full items-center justify-center gap-1.5 rounded-[0.8rem] bg-primary px-2 py-2 text-center font-display text-[9px] font-bold tracking-[0.08em] text-primary-foreground transition-all duration-300 sm:gap-2 sm:rounded-[1rem] sm:px-3 sm:py-2.5 sm:text-xs sm:tracking-[0.16em] ${isLiteMode ? "" : "hover:box-glow-strong"}`}
+              className={`flex w-full items-center justify-center gap-1.5 rounded-full bg-primary px-3 py-2.5 text-center font-display text-[9px] font-bold tracking-[0.08em] text-primary-foreground shadow-lg transition-transform hover:scale-105 sm:gap-2 sm:px-4 sm:py-3 sm:text-xs sm:tracking-[0.16em]`}
             >
               <MessageCircle size={14} className="sm:h-4 sm:w-4" />
               BELI AKUN INI

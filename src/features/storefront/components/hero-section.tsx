@@ -344,8 +344,9 @@ export default function HeroSection({ banners }: HeroSectionProps) {
         >
           <motion.div
             key={`prev-${prevIndex}`}
-            className={`absolute left-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 backdrop-blur-md lg:block ${styles.bannerSideCard}`}
+            className={`absolute left-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[2.5rem] border border-white/12 bg-white/6 backdrop-blur-md lg:block ${styles.bannerSideCard}`}
             animate={{ x: "-7%", scale: 0.94, opacity: 0.66, rotate: -4 }}
+            whileHover={{ scale: 0.97, opacity: 0.85, rotate: -2, transition: { type: "spring", stiffness: 350, damping: 15 } }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             onClick={goToPrevious}
           >
@@ -357,8 +358,8 @@ export default function HeroSection({ banners }: HeroSectionProps) {
             <div className={`absolute inset-0 ${styles.bannerSideOverlayLeft}`} />
           </motion.div>
 
-          <div className={`relative z-20 w-full max-w-[920px] overflow-hidden rounded-[22px] border border-primary/25 bg-white/8 backdrop-blur-xl sm:rounded-[28px] ${styles.bannerStage}`}>
-            <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-background/30 sm:rounded-[28px]">
+          <div className={`relative z-20 w-full max-w-[920px] overflow-hidden rounded-[2rem] border border-primary/25 bg-white/8 shadow-2xl backdrop-blur-xl sm:rounded-[2.5rem] ${styles.bannerStage}`}>
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-background/30 sm:rounded-[2.5rem]">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={banners[activeIndex].src}
@@ -389,13 +390,13 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 </div>
               </div>
 
-              <div className="pointer-events-none absolute inset-0 rounded-[22px] ring-1 ring-white/10 sm:rounded-[28px]" />
+              <div className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-white/10 sm:rounded-[2.5rem]" />
 
               <button
                 type="button"
                 onClick={goToPrevious}
                 aria-label="Show previous banner"
-                className="absolute left-2.5 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-background/55 text-foreground transition hover:bg-primary hover:text-primary-foreground sm:left-3 sm:h-10 sm:w-10 md:left-5 md:h-11 md:w-11"
+                className="absolute left-2.5 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-background/55 text-foreground transition-all hover:scale-110 hover:bg-primary hover:text-primary-foreground focus:outline-none active:scale-95 sm:left-3 sm:h-10 sm:w-10 md:left-5 md:h-11 md:w-11"
               >
                 <ChevronLeft size={18} className="sm:h-5 sm:w-5" />
               </button>
@@ -403,7 +404,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 type="button"
                 onClick={goToNext}
                 aria-label="Show next banner"
-                className="absolute right-2.5 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-background/55 text-foreground transition hover:bg-primary hover:text-primary-foreground sm:right-3 sm:h-10 sm:w-10 md:right-5 md:h-11 md:w-11"
+                className="absolute right-2.5 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-background/55 text-foreground transition-all hover:scale-110 hover:bg-primary hover:text-primary-foreground focus:outline-none active:scale-95 sm:right-3 sm:h-10 sm:w-10 md:right-5 md:h-11 md:w-11"
               >
                 <ChevronRight size={18} className="sm:h-5 sm:w-5" />
               </button>
@@ -412,8 +413,9 @@ export default function HeroSection({ banners }: HeroSectionProps) {
 
           <motion.div
             key={`next-${nextIndex}`}
-            className={`absolute right-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 backdrop-blur-md lg:block ${styles.bannerSideCard}`}
+            className={`absolute right-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[2.5rem] border border-white/12 bg-white/6 backdrop-blur-md lg:block ${styles.bannerSideCard}`}
             animate={{ x: "7%", scale: 0.94, opacity: 0.66, rotate: 4 }}
+            whileHover={{ scale: 0.97, opacity: 0.85, rotate: 2, transition: { type: "spring", stiffness: 350, damping: 15 } }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             onClick={goToNext}
           >
