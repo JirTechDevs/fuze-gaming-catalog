@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import heroIcon from "@/assets/hero-icon.webp";
 import testi1 from "@/assets/testi/testi-1.webp";
 import testi2 from "@/assets/testi/testi-2.webp";
 import testi3 from "@/assets/testi/testi-3.webp";
@@ -28,7 +29,16 @@ export default function TestimoniSection() {
     <section className="relative overflow-hidden py-12 sm:py-14">
       <div className="pointer-events-none absolute inset-x-0 top-10 h-40 bg-[radial-gradient(circle_at_top,hsl(var(--primary)_/_0.18),transparent_62%)] blur-3xl" />
 
-      <div className="mx-auto w-full max-w-[1480px] px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto w-full max-w-[1480px] px-4 sm:px-6 lg:px-8">
+        <div className="pointer-events-none absolute right-[-14rem] top-[58%] z-20 hidden -translate-y-1/2 xl:block 2xl:right-[-16rem]">
+          <Image
+            src={heroIcon}
+            alt="Hero icon"
+            className="h-auto w-[220px] object-contain opacity-90 drop-shadow-[0_18px_46px_hsl(var(--background)_/_0.48)] 2xl:w-[260px]"
+            priority={false}
+          />
+        </div>
+
         <div className="mb-5 px-1 sm:mb-6">
           <div className="space-y-2">
             <span className="font-display text-[11px] tracking-[0.4em] text-primary/60">

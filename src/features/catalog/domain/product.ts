@@ -29,7 +29,7 @@ export function formatPrice(price: number): string {
 
 export function buildWhatsAppLink(product: Product): string {
   const message = encodeURIComponent(
-    `Halo min! aku mau beli akun code {"${product.code}"}`,
+    `Halo min! aku mau beli akun code "${product.code}"`,
   );
 
   return `https://wa.me/628881462675?text=${message}`;

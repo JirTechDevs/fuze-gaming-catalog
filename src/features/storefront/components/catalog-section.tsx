@@ -1,9 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Archive, ChevronDown, Search, SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import jettImage from "@/assets/jett.png";
 import type { Product } from "@/features/catalog/domain/product";
+import { valorantRanks } from "@/features/catalog/domain/valorant-ranks";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ProductCard from "@/features/storefront/components/product-card";
 import styles from "./catalog-section.module.css";
@@ -152,7 +155,15 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   );
 
   const rankOptions = useMemo(
-    () => [...new Set(availableProducts.map((product) => product.rank))],
+    () => {
+      const availableRankSet = new Set(availableProducts.map((product) => product.rank));
+      const orderedKnownRanks = valorantRanks.filter((rank) => availableRankSet.has(rank));
+      const unknownRanks = [...availableRankSet].filter(
+        (rank) => !valorantRanks.includes(rank as (typeof valorantRanks)[number]),
+      );
+
+      return [...orderedKnownRanks, ...unknownRanks];
+    },
     [availableProducts],
   );
 
@@ -341,6 +352,38 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
       ))}
 
       <div className="relative z-10 container mx-auto space-y-16 px-4 sm:space-y-20 lg:space-y-24">
+        <motion.div
+          className="pointer-events-none absolute left-[-22rem] top-[24rem] z-0 hidden w-[360px] xl:block 2xl:left-[-26rem] 2xl:top-[24rem] 2xl:w-[420px]"
+          initial={{ opacity: 0, x: -16, y: 0 }}
+          whileInView={{ opacity: 0.92, x: 0, y: 0 }}
+          viewport={{ once: true }}
+          animate={
+            isLiteMode
+              ? { y: 0 }
+              : { y: [0, -10, 0] }
+          }
+          transition={
+            isLiteMode
+              ? { duration: 0.3 }
+              : {
+                  opacity: { duration: 0.5, ease: "easeOut" },
+                  x: { duration: 0.5, ease: "easeOut" },
+                  y: {
+                    duration: 5.8,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "easeInOut",
+                  },
+                }
+          }
+        >
+          <Image
+            src={jettImage}
+            alt="Jett character art"
+            className="h-auto w-full object-contain drop-shadow-[0_18px_46px_hsl(var(--background)_/_0.55)]"
+            priority={false}
+          />
+        </motion.div>
+
         <div>
           <motion.div
             className="mb-8 flex flex-col gap-6 sm:mb-10"
@@ -498,7 +541,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-5 lg:gap-6 xl:grid-cols-3">
+          <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">
             {visibleProducts.map((product, index) => (
               <ProductCard
                 key={product.id}
