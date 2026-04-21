@@ -67,7 +67,7 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
             >
-              FUZE<span className="text-primary text-glow">VALO</span>
+              FUZE<span className="text-primary">VALO</span>
             </motion.span>
 
             <motion.div

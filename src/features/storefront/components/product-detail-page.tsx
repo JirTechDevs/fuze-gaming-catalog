@@ -196,12 +196,12 @@ export default function ProductDetailPage({
                   <div className="flex h-full flex-col gap-4">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div className="min-w-0">
-                      <h1 className="break-words font-display text-xl font-black tracking-[0.02em] text-white sm:text-3xl xl:text-[2.55rem]">
+                      <h1 className="break-words font-display text-xl font-bold tracking-tight text-white sm:text-3xl xl:text-[2.55rem]">
                         {product.code}
                       </h1>
                       </div>
-                    <div className="flex items-center gap-2 self-start font-display text-lg font-bold tracking-[0.08em] text-white/92 sm:pt-1 sm:text-2xl">
-                      <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] tracking-[0.18em] text-primary sm:hidden">
+                    <div className="flex items-center gap-2 self-start font-display text-lg font-semibold tracking-wide text-white/92 sm:pt-1 sm:text-2xl">
+                      <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] tracking-widest text-primary sm:hidden">
                         {product.rank}
                       </span>
                     </div>
@@ -263,7 +263,7 @@ export default function ProductDetailPage({
                   <div className={`mt-auto rounded-[1.6rem] border border-border/40 px-4 py-5 sm:px-5 ${styles.pricePanel}`}>
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                       <div>
-                        <p className="font-display text-3xl font-black leading-none text-white sm:text-4xl xl:text-5xl">
+                        <p className="font-display text-3xl font-bold leading-none text-white sm:text-4xl xl:text-5xl">
                           Rp {formatPrice(product.price)}
                         </p>
                       </div>

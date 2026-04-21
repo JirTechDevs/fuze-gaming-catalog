@@ -101,7 +101,7 @@ export default function ProductModal({
             <div className="absolute left-4 right-4 top-4 flex flex-wrap items-start justify-between gap-2 sm:left-7 sm:right-7 sm:top-7">
               <div className="flex min-w-0 items-center gap-2 rounded-full border border-primary/25 bg-background/88 px-3 py-2 backdrop-blur-sm sm:px-4">
                 <Shield size={13} className="shrink-0 text-primary" />
-                <span className="truncate font-display text-xs font-bold tracking-[0.16em] text-primary text-glow sm:text-sm sm:tracking-[0.2em]">
+                <span className="truncate font-display text-xs font-bold tracking-widest text-primary sm:text-sm">
                   {product.code}
                 </span>
               </div>
@@ -122,7 +122,7 @@ export default function ProductModal({
                 <span className="font-display text-[10px] tracking-[0.24em] text-muted-foreground/55">
                   PRICE
                 </span>
-                <p className="mt-1 font-display text-xl font-bold text-primary text-glow sm:text-2xl">
+                <p className="mt-1 font-display text-xl font-bold text-primary sm:text-2xl">
                   Rp {formatPrice(product.price)}
                 </p>
               </div>

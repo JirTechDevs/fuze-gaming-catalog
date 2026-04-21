@@ -436,7 +436,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
         >
-          <span className={`font-display text-[10px] tracking-[0.26em] text-primary/70 ${styles.scrollLabel}`}>
+          <span className={`font-display text-[10px] tracking-widest text-primary/70 ${styles.scrollLabel}`}>
             SCROLL FOR CATALOG
           </span>
           <ChevronDown size={18} className="animate-bounce text-primary" />

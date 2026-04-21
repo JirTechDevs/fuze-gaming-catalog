@@ -26,7 +26,7 @@ export default function ProductImageGallery({
           </div>
 
           <div className="rounded-[1rem] border border-primary/40 bg-background/88 px-3 py-2 text-right shadow-[0_0_18px_hsl(var(--primary)_/_0.16)] backdrop-blur-md sm:rounded-[1.2rem] sm:px-4 sm:py-2.5">
-            <p className="font-display text-base font-bold leading-none text-primary text-glow sm:text-xl">
+            <p className="font-display text-base font-bold leading-none text-primary sm:text-xl">
               Rp {formatPrice(product.price)}
             </p>
           </div>

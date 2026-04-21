@@ -100,7 +100,7 @@ export default function ProductCard({
           <div className="relative flex max-w-full min-w-0 items-center gap-1 rounded-[0.7rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-2 py-1.5 shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-none sm:max-w-[68%] sm:gap-1.5 sm:rounded-[1rem] sm:px-3 sm:py-2 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)] sm:backdrop-blur-md">
             <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
             <Shield size={12} className="relative shrink-0 text-primary sm:h-[14px] sm:w-[14px]" />
-            <span className="relative truncate font-display text-[10px] font-bold leading-none tracking-[0.08em] text-primary drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)] sm:text-base sm:tracking-[0.14em]">
+            <span className="relative truncate font-display text-[10px] font-bold leading-none tracking-wider text-primary sm:text-base sm:tracking-widest">
               {product.code}
             </span>
           </div>
@@ -108,7 +108,7 @@ export default function ProductCard({
           <div className="relative rounded-[0.7rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-2 py-1.5 text-right shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-none sm:rounded-[1rem] sm:px-3 sm:py-2 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)] sm:backdrop-blur-md">
             <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
             <p
-              className={`font-display text-[10px] font-bold leading-none tracking-[0.08em] drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)] sm:text-base sm:tracking-normal ${getRankColor(product.rank)}`}
+              className={`font-display text-[10px] font-bold leading-none tracking-wider sm:text-base sm:tracking-normal ${getRankColor(product.rank)}`}
             >
               {product.rank}
             </p>
@@ -118,7 +118,7 @@ export default function ProductCard({
         <div className="absolute inset-x-2 bottom-2 flex justify-start sm:inset-x-4 sm:bottom-4">
           <div className="relative rounded-[0.7rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-2.5 py-1.5 text-right shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-none sm:rounded-[1rem] sm:px-3 sm:py-2 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)] sm:backdrop-blur-md">
             <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
-            <p className="font-display text-[10px] font-bold leading-none text-primary drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)] sm:text-base">
+            <p className="font-display text-[10px] font-bold leading-none text-primary sm:text-base">
               Rp {formatPrice(product.price)}
             </p>
           </div>

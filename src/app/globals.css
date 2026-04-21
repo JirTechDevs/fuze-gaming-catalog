@@ -6,20 +6,20 @@
 
 @layer base {
   :root {
-    --background: 226 48% 6%;
-    --foreground: 194 100% 96%;
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    --card: 225 36% 10%;
-    --card-foreground: 194 100% 96%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 225 36% 10%;
-    --popover-foreground: 194 100% 96%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
 
     --primary: 189 100% 72%;
-    --primary-foreground: 226 48% 6%;
+    --primary-foreground: 222 47% 11%;
 
-    --secondary: 220 28% 15%;
-    --secondary-foreground: 194 100% 92%;
+    --secondary: 217 32% 17%;
+    --secondary-foreground: 210 40% 98%;
 
     --muted: 221 24% 14%;
     --muted-foreground: 214 18% 62%;
@@ -117,10 +117,6 @@
     animation-duration: 38s;
   }
 
-  .text-glow {
-    text-shadow: 0 0 10px hsl(189 100% 72% / 0.55),
-      0 0 30px hsl(189 100% 72% / 0.32);
-  }
 
   .box-glow {
     box-shadow: 0 0 15px hsl(189 100% 72% / 0.24),
@@ -188,9 +184,6 @@
 }
 
 @media (max-width: 767px) {
-  .text-glow {
-    text-shadow: 0 0 6px hsl(189 100% 72% / 0.32);
-  }
 
   .box-glow {
     box-shadow: 0 0 10px hsl(189 100% 72% / 0.14);

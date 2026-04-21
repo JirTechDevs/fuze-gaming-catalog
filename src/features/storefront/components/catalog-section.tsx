@@ -394,151 +394,102 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             transition={{ duration: 0.5 }}
           >
             <div className="flex flex-col gap-2">
-              <span className="font-display text-[11px] tracking-[0.4em] text-primary/60">
+              <span className="font-display text-[11px] tracking-widest text-primary/80">
                 BROWSE OUR COLLECTION
               </span>
-              <h2 className="font-display text-3xl font-bold tracking-[0.12em] text-foreground md:text-4xl">
-                ACCOUNT <span className="text-primary text-glow">CATALOG</span>
+              <h2 className="font-display text-3xl font-bold tracking-wide text-foreground md:text-4xl">
+                ACCOUNT <span className="text-primary">CATALOG</span>
               </h2>
             </div>
 
-            <div className="rounded-[1.5rem] border border-border/40 bg-card/75 p-4 backdrop-blur-none sm:bg-card/50 sm:backdrop-blur-md sm:p-5 lg:p-6">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-2">
-                  <SlidersHorizontal size={14} className="text-muted-foreground/50" />
-                  <span className="font-display text-[11px] tracking-[0.28em] text-muted-foreground/60">
-                    FILTER CATALOG
+            <div className="rounded-xl border border-border/40 bg-card p-4 sm:p-5 lg:p-6 shadow-xl backdrop-blur-md">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                <label className="block">
+                  <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-wider text-primary">
+                    Cari Kode / Skin
                   </span>
-                </div>
-                <div className="flex items-center justify-between gap-2 sm:justify-end">
-                  <span className="rounded bg-secondary/50 px-2 py-0.5 font-display text-[10px] tracking-wider text-muted-foreground/50">
-                    {available.length} {available.length === 1 ? "ACCOUNT" : "ACCOUNTS"}
+                  <input
+                    type="text"
+                    placeholder="Contoh: VIL..."
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    className="w-full rounded border border-border/50 bg-background/50 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 transition-all focus:border-primary/40 focus:outline-none"
+                  />
+                </label>
+
+                <label className="block">
+                  <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-wider text-primary">
+                    Cari Rank
                   </span>
-                  <button
-                    type="button"
-                    onClick={() => setFiltersOpen((current) => !current)}
-                    aria-expanded={filtersOpen}
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-3 py-2 font-display text-[10px] tracking-[0.18em] text-primary transition hover:bg-primary hover:text-primary-foreground"
+                  <select
+                    value={rankFilter}
+                    onChange={(event) => setRankFilter(event.target.value)}
+                    className="w-full rounded border border-border/50 bg-background/50 px-3 py-2 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
                   >
-                    {filtersOpen ? "COLLAPSE" : "FILTERS"}
-                    <ChevronDown
-                      size={14}
-                      className={`transition-transform ${filtersOpen ? "rotate-180" : ""}`}
-                    />
-                  </button>
-                </div>
+                    <option value="all">Semua Rank</option>
+                    {rankOptions.map((rank) => (
+                      <option key={rank} value={rank}>{rank}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="block">
+                  <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-wider text-primary">
+                    Region
+                  </span>
+                  <select
+                    value={regionFilter}
+                    onChange={(event) => setRegionFilter(event.target.value)}
+                    className="w-full rounded border border-border/50 bg-background/50 px-3 py-2 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
+                  >
+                    <option value="all">Semua Region</option>
+                    {regionOptions.map((region) => (
+                      <option key={region} value={region}>{region}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="block">
+                  <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-wider text-primary">
+                    Ganti Nick
+                  </span>
+                  <select
+                    value={nickFilter}
+                    onChange={(event) => setNickFilter(event.target.value)}
+                    className="w-full rounded border border-border/50 bg-background/50 px-3 py-2 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
+                  >
+                    <option value="all">Semua Status</option>
+                    {nickOptions.map((option) => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="block">
+                  <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-wider text-primary">
+                    Urutkan Harga
+                  </span>
+                  <select
+                    value={sortBy}
+                    onChange={(event) => setSortBy(event.target.value)}
+                    className="w-full rounded border border-border/50 bg-background/50 px-3 py-2 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
+                  >
+                    <option value="default">Terbaru (Default)</option>
+                    <option value="price-asc">Harga: Terendah</option>
+                    <option value="price-desc">Harga: Tertinggi</option>
+                  </select>
+                </label>
               </div>
 
-              <AnimatePresence initial={false}>
-                {filtersOpen && (
-                  <motion.div
-                    key="catalog-filters"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
-                    className="overflow-hidden"
-                  >
-                    <div className="mt-4 grid grid-cols-1 gap-3 border-t border-white/5 pt-4 sm:grid-cols-2 xl:grid-cols-5">
-                      <label className="block sm:col-span-2 xl:col-span-1">
-                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                          SEARCH
-                        </span>
-                        <div className="relative">
-                          <Search
-                            size={15}
-                            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/40"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Code or rank..."
-                            value={search}
-                            onChange={(event) => setSearch(event.target.value)}
-                            className="w-full rounded-lg border border-border/50 bg-background/40 py-2.5 pl-9 pr-4 text-sm text-foreground backdrop-blur-sm placeholder:text-muted-foreground/40 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                          />
-                        </div>
-                      </label>
-
-                      <label className="block">
-                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                          RANK
-                        </span>
-                        <select
-                          value={rankFilter}
-                          onChange={(event) => setRankFilter(event.target.value)}
-                          className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                        >
-                          <option value="all">All ranks</option>
-                          {rankOptions.map((rank) => (
-                            <option key={rank} value={rank}>
-                              {rank}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-
-                      <label className="block">
-                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                          REGION
-                        </span>
-                        <select
-                          value={regionFilter}
-                          onChange={(event) => setRegionFilter(event.target.value)}
-                          className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                        >
-                          <option value="all">All regions</option>
-                          {regionOptions.map((region) => (
-                            <option key={region} value={region}>
-                              {region}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-
-                      <label className="block">
-                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                          CHANGE NICK
-                        </span>
-                        <select
-                          value={nickFilter}
-                          onChange={(event) => setNickFilter(event.target.value)}
-                          className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                        >
-                          <option value="all">All status</option>
-                          {nickOptions.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-
-                      <label className="block">
-                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                          SORT
-                        </span>
-                        <select
-                          value={sortBy}
-                          onChange={(event) => setSortBy(event.target.value)}
-                          className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                        >
-                          <option value="default">Recommended</option>
-                          <option value="price-asc">Price: Low to High</option>
-                          <option value="price-desc">Price: High to Low</option>
-                        </select>
-                      </label>
-
-                      <button
-                        type="button"
-                        onClick={resetFilters}
-                        className="rounded-full border border-primary/20 bg-primary/8 px-3 py-2 font-display text-[10px] tracking-[0.18em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:col-span-2 xl:col-span-5 xl:justify-self-end"
-                      >
-                        RESET
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div className="mt-5 flex justify-end">
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="rounded border border-primary/30 bg-primary/5 px-5 py-1.5 font-display text-[11px] font-bold tracking-wider text-primary transition hover:bg-primary hover:text-primary-foreground"
+                >
+                  Reset Filter
+                </button>
+              </div>
             </div>
           </motion.div>
 
