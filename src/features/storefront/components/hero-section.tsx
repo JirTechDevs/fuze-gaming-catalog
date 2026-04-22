@@ -27,7 +27,7 @@ type TickerIconName = (typeof trustTicker)[number]["icon"];
 
 function WhatsAppGlyph() {
   return (
-    <svg viewBox="0 0 32 32" className="h-5 w-5" aria-hidden="true">
+    <svg viewBox="0 0 32 32" className="h-[18px] w-[18px] shrink-0" aria-hidden="true">
       <path
         fill="currentColor"
         d="M27.2 15.4c0 6.2-5 11.3-11.3 11.3-2 0-4-.5-5.7-1.5l-6.1 1.9 2-5.9a11.2 11.2 0 0 1-1.8-5.9C4.3 9.1 9.4 4 15.7 4S27.2 9.1 27.2 15.4Zm-11.5-9.5c-5.2 0-9.4 4.2-9.4 9.4 0 1.9.6 3.7 1.6 5.2l.2.2-1.2 3.7 3.8-1.2.2.1c1.5.9 3.2 1.4 4.9 1.4 5.2 0 9.4-4.2 9.4-9.4 0-5.2-4.2-9.4-9.5-9.4Zm5.4 12c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.7-1.7-2-.2-.3 0-.4.1-.6l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6 0-.2-.7-1.7-.9-2.3-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.6s1.1 3 1.3 3.2c.2.2 2.2 3.5 5.4 4.8 3.2 1.2 3.2.8 3.8.7.6-.1 1.8-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.1-.3-.2-.6-.4Z"
@@ -101,14 +101,14 @@ export default function HeroSection({ banners }: HeroSectionProps) {
       <div className={`pointer-events-none absolute -left-16 top-20 hidden h-56 w-56 lg:block ${styles.heroReticleLeft}`} />
       <div className={`pointer-events-none absolute right-10 top-10 hidden h-40 w-40 xl:block ${styles.heroReticleRight}`} />
 
-      <div className="relative z-10 mx-auto flex max-w-[1512px] flex-col gap-10 px-4 pb-8 pt-6 sm:px-6 sm:pb-10 sm:pt-8 lg:flex-row lg:items-center lg:gap-8 xl:px-8">
+      <div className={`relative z-10 mx-auto max-w-[1512px] px-4 pb-8 pt-6 sm:px-6 sm:pb-10 sm:pt-8 xl:px-8 ${styles.heroLayout}`}>
 
         {/* LEFT: Copy panel */}
         <motion.div
           initial={prefersReducedMotion ? false : { opacity: 0, x: -28 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.65, ease: [0.16, 1, 0.3, 1] }}
-          className={`relative flex w-full flex-col gap-6 rounded-[2rem] border border-[#14345a] bg-[linear-gradient(180deg,rgba(6,18,39,0.92),rgba(4,14,31,0.78))] px-5 py-6 shadow-[0_28px_70px_rgba(1,8,22,0.4)] sm:px-6 lg:max-w-[410px] lg:border-transparent lg:bg-transparent lg:px-0 lg:py-0 lg:shadow-none ${styles.heroCopyPanel}`}
+          className={`relative flex w-full min-w-0 flex-col gap-6 rounded-[2rem] border border-[#14345a] bg-[linear-gradient(180deg,rgba(6,18,39,0.92),rgba(4,14,31,0.78))] px-5 py-6 shadow-[0_28px_70px_rgba(1,8,22,0.4)] sm:px-6 lg:max-w-none lg:border-transparent lg:bg-none lg:px-0 lg:py-0 lg:shadow-none ${styles.heroCopyPanel}`}
         >
           <div className="flex">
             <span className="inline-flex items-center gap-2 rounded-full border border-[#255886] bg-[#0b2345]/82 px-4 py-2 font-display text-[10px] font-bold tracking-[0.14em] text-[#60e3ff] shadow-[0_0_20px_rgba(78,209,255,0.12)] sm:text-[11px]">
@@ -150,23 +150,23 @@ export default function HeroSection({ banners }: HeroSectionProps) {
             ))}
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <div className={styles.heroActions}>
+            <button
+              type="button"
+              onClick={scrollToCatalog}
+              className={`${styles.heroActionButton} inline-flex min-h-[54px] items-center justify-center rounded-[1.1rem] border border-[#244e7e] bg-[linear-gradient(180deg,rgba(10,27,53,0.94),rgba(6,18,39,0.92))] px-6 py-3.5 text-center font-display text-[13px] font-semibold tracking-[0.02em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_24px_rgba(76,213,255,0.12)] transition hover:border-[#57ddff] hover:text-[#7de8ff]`}
+            >
+              Lihat Katalog
+            </button>
             <a
               href="https://wa.me/628881462675"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-[54px] items-center justify-center gap-2.5 rounded-[1.1rem] border border-[#43f399]/25 bg-[linear-gradient(180deg,#2fe26e,#1ccb59)] px-6 py-3.5 font-display text-[13px] font-bold tracking-[0.02em] text-white shadow-[0_0_0_1px_rgba(110,255,173,0.14),0_16px_32px_rgba(24,185,85,0.35),0_0_30px_rgba(46,225,109,0.24)] transition hover:brightness-105 sm:min-w-[254px]"
+              className={`${styles.heroActionButton} inline-flex min-h-[54px] items-center justify-center gap-2 rounded-[1.1rem] border border-[#43f399]/25 bg-[linear-gradient(180deg,#2fe26e,#1ccb59)] px-5 py-3.5 text-center font-display text-[13px] font-semibold leading-none whitespace-nowrap tracking-[0.02em] text-white shadow-[0_0_0_1px_rgba(110,255,173,0.14),0_16px_32px_rgba(24,185,85,0.35),0_0_30px_rgba(46,225,109,0.24)] transition hover:brightness-105`}
             >
               <WhatsAppGlyph />
-              Chat WhatsApp Sekarang
+              Chat WhatsApp
             </a>
-            <button
-              type="button"
-              onClick={scrollToCatalog}
-              className="inline-flex min-h-[54px] items-center justify-center rounded-[1.1rem] border border-[#244e7e] bg-[linear-gradient(180deg,rgba(10,27,53,0.94),rgba(6,18,39,0.92))] px-6 py-3.5 font-display text-[13px] font-semibold tracking-[0.02em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_24px_rgba(76,213,255,0.12)] transition hover:border-[#57ddff] hover:text-[#7de8ff] sm:min-w-[168px]"
-            >
-              Lihat Katalog
-            </button>
           </div>
         </motion.div>
 
@@ -175,16 +175,15 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           initial={prefersReducedMotion ? false : { opacity: 0, x: 32 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.72, ease: [0.16, 1, 0.3, 1], delay: prefersReducedMotion ? 0 : 0.08 }}
-          className="relative flex min-w-0 flex-1 items-center justify-center lg:justify-end"
+          className={`relative flex min-w-0 items-center ${styles.heroVisualPanel}`}
         >
           {/*
-            bannerStack: sized to the front card.
-            Card 3 and Card 2 are positioned absolute, sticking out to the right
-            via translateX, scaled down to create the depth/stack illusion.
+            The front card defines the visible size.
+            Card 2 and card 3 then sit to the right as preview layers.
           */}
           <div className={styles.bannerStack}>
 
-            {/* Card 3 — furthest back, smallest, most to the right */}
+            {/* Card 3 — furthest back, right-most preview */}
             {heroBanners.length > 2 && (
               <button
                 type="button"
@@ -197,7 +196,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
               </button>
             )}
 
-            {/* Card 2 — middle */}
+            {/* Card 2 — middle preview */}
             {heroBanners.length > 1 && (
               <button
                 type="button"
@@ -260,7 +259,6 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 ))}
               </div>
             </div>
-
           </div>
         </motion.div>
       </div>
