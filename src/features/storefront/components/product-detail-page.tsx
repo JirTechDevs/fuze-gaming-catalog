@@ -193,13 +193,13 @@ export default function ProductDetailPage({
 
             <section className="flex flex-col gap-4">
               <div className="rounded-[1.8rem] border border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.88),hsl(var(--background)/0.92))] p-5 backdrop-blur-md sm:p-6 xl:p-7">
-                  <div className="flex h-full flex-col gap-4">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div className="min-w-0">
+                <div className="flex h-full flex-col gap-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
                       <h1 className="break-words font-display text-xl font-bold tracking-tight text-white sm:text-3xl xl:text-[2.55rem]">
                         {product.code}
                       </h1>
-                      </div>
+                    </div>
                     <div className="flex items-center gap-2 self-start font-display text-lg font-semibold tracking-wide text-white/92 sm:pt-1 sm:text-2xl">
                       <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] tracking-widest text-primary sm:hidden">
                         {product.rank}
@@ -244,21 +244,19 @@ export default function ProductDetailPage({
                     ))}
                   </div>
 
-                  {/*
-                  <div className="hidden gap-3 sm:grid sm:grid-cols-3">
-                    Tabbed detail viewer removed for the simplified section layout.
+                  <div className="rounded-[1.5rem] border border-border/30 bg-background/12 p-4 sm:p-5">
+                    <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
+                      Catatan Akun
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-white/78 sm:text-base sm:leading-7">
+                      {getAgentRankNote(product)}
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-white/78 sm:text-base sm:leading-7">
+                      {isPremierLocked(product)
+                        ? "Premier account locked and cannot be changed."
+                        : "Account ready for login and immediate purchase."}
+                    </p>
                   </div>
-
-                  <div className="relative min-h-[22rem] rounded-[1.5rem] border border-border/30 bg-background/12 p-4 sm:p-5">
-                    Old description/details panel intentionally commented out.
-                    Previous content included:
-                    - premier, region, and agent overview
-                    - guarantee card
-                    - detail metadata
-                    - reminder copy
-                    - separate skin-tab layout
-                  </div>
-                  */}
 
                   <div className={`mt-auto rounded-[1.6rem] border border-border/40 px-4 py-5 sm:px-5 ${styles.pricePanel}`}>
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -297,7 +295,6 @@ export default function ProductDetailPage({
                   </div>
                 </div>
               </div>
-
             </section>
           </div>
         </div>

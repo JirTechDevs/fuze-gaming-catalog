@@ -84,3 +84,36 @@
 .techLine {
   background: linear-gradient(90deg, hsl(var(--primary) / 0.42), transparent);
 }
+
+.filtersPanel {
+  position: relative;
+  isolation: isolate;
+  border-color: hsl(212 54% 18% / 0.95);
+  background:
+    linear-gradient(180deg, hsl(222 58% 9% / 0.9), hsl(224 62% 8% / 0.86));
+  box-shadow:
+    inset 0 1px 0 hsl(193 100% 74% / 0.05),
+    0 18px 50px hsl(224 76% 4% / 0.28);
+}
+
+.filtersPanel::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: calc(1.5rem - 1px);
+  border: 1px solid hsl(193 100% 74% / 0.04);
+  pointer-events: none;
+}
+
+.filterField {
+  border-color: hsl(210 54% 18% / 0.98);
+  background:
+    linear-gradient(180deg, hsl(221 52% 10% / 0.88), hsl(224 62% 8% / 0.94));
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.03),
+    0 0 0 1px hsl(221 59% 8% / 0.18);
+}
+
+.selectField {
+  color-scheme: dark;
+}

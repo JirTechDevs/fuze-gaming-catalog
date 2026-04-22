@@ -1,108 +1,213 @@
 .heroShell {
   background:
-    linear-gradient(180deg, hsl(226 50% 6%) 0%, hsl(228 45% 8%) 100%);
+    linear-gradient(180deg, hsl(224 71% 7%) 0%, hsl(223 68% 9%) 48%, hsl(226 70% 7%) 100%);
 }
 
-.heroSideFade {
-  background: linear-gradient(
-    90deg,
-    hsl(var(--background) / 0.95),
-    transparent,
-    hsl(var(--background) / 0.95)
-  );
-}
-
-.heroHalo {
+.heroAurora {
   background-image:
-    radial-gradient(circle at 50% 50%, hsl(var(--primary) / 0.38) 0%, transparent 21%),
-    radial-gradient(circle at 50% 50%, hsl(193 100% 85% / 0.2) 0%, transparent 44%),
-    radial-gradient(circle at 14% 20%, hsl(185 100% 68% / 0.15) 0%, transparent 18%),
-    radial-gradient(circle at 86% 32%, hsl(190 100% 76% / 0.14) 0%, transparent 18%);
+    radial-gradient(circle at 14% 18%, hsl(191 100% 70% / 0.14) 0%, transparent 24%),
+    radial-gradient(circle at 77% 22%, hsl(198 100% 78% / 0.1) 0%, transparent 20%),
+    radial-gradient(circle at 34% 78%, hsl(190 100% 72% / 0.08) 0%, transparent 18%),
+    radial-gradient(circle at 88% 64%, hsl(197 100% 72% / 0.07) 0%, transparent 20%),
+    linear-gradient(180deg, hsl(224 78% 9% / 0.16), transparent 36%, hsl(224 78% 5% / 0.24) 100%);
 }
 
-.heroCenterGlow {
-  background: radial-gradient(
-    ellipse at center,
-    hsl(189 100% 72% / 0.22) 0%,
-    hsl(189 100% 72% / 0.12) 35%,
-    transparent 72%
-  );
+.heroTechLines {
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 10%,
+      hsl(193 100% 74% / 0.08) 10.1%,
+      transparent 10.2%,
+      transparent 88%,
+      hsl(193 100% 74% / 0.08) 88.1%,
+      transparent 88.2%
+    ),
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 18%,
+      hsl(193 100% 74% / 0.08) 18.1%,
+      transparent 18.2%,
+      transparent 76%,
+      hsl(193 100% 74% / 0.08) 76.1%,
+      transparent 76.2%
+    ),
+    linear-gradient(hsl(193 100% 74% / 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(193 100% 74% / 0.03) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    72px 72px,
+    72px 72px;
+  mask-image: linear-gradient(180deg, transparent 0%, black 10%, black 92%, transparent 100%);
 }
 
-.heroGridMask {
-  mask-image: radial-gradient(circle at center, black, transparent 86%);
+.heroCopyGlow {
+  background:
+    radial-gradient(circle at left center, hsl(190 100% 72% / 0.16) 0%, transparent 66%);
 }
 
 .heroBottomFade {
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    transparent 74%,
-    hsl(var(--background)) 100%
-  );
+  background: linear-gradient(180deg, transparent 0%, hsl(224 72% 5% / 0.9) 100%);
 }
 
-.orbTopLeft {
-  left: -10%;
-  top: 14%;
+.heroReticleLeft,
+.heroReticleRight {
+  border-radius: 9999px;
+  border: 1px solid hsl(193 100% 74% / 0.14);
+  box-shadow:
+    inset 0 0 0 22px hsl(224 65% 12% / 0.22),
+    0 0 50px hsl(193 100% 74% / 0.08);
 }
 
-.orbTopRight {
-  right: -8%;
-  top: 18%;
+.heroReticleLeft::before,
+.heroReticleLeft::after,
+.heroReticleRight::before,
+.heroReticleRight::after {
+  content: "";
+  position: absolute;
+  inset: 50%;
+  background: hsl(193 100% 74% / 0.16);
 }
 
-.orbBottomLeft {
-  bottom: -18%;
-  left: 14%;
+.heroReticleLeft::before,
+.heroReticleRight::before {
+  height: 1px;
+  transform: translate(-50%, -50%);
+  width: calc(100% + 28px);
 }
 
-.orbBottomRight {
-  bottom: -14%;
-  right: 12%;
+.heroReticleLeft::after,
+.heroReticleRight::after {
+  height: calc(100% + 28px);
+  transform: translate(-50%, -50%);
+  width: 1px;
 }
 
-.bannerSideCard {
-  box-shadow: 0 30px 90px hsl(225 60% 3% / 0.42);
+.heroCopyPanel {
+  isolation: isolate;
+  position: relative;
 }
 
-.bannerSideOverlayLeft {
-  background: linear-gradient(
-    90deg,
-    hsl(var(--background) / 0.12),
-    hsl(var(--background) / 0.52)
-  );
+.heroCopyPanel::before {
+  content: "";
+  position: absolute;
+  inset: auto auto -12% -10%;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, hsl(193 100% 74% / 0.16) 0%, transparent 68%);
+  filter: blur(18px);
+  pointer-events: none;
+  z-index: -1;
 }
 
-.bannerSideOverlayRight {
-  background: linear-gradient(
-    270deg,
-    hsl(var(--background) / 0.12),
-    hsl(var(--background) / 0.52)
-  );
+.heroCopyPanel::after {
+  content: "";
+  position: absolute;
+  left: -2.25rem;
+  top: 1.5rem;
+  width: 8rem;
+  height: 8rem;
+  border-left: 1px solid hsl(193 100% 74% / 0.12);
+  border-top: 1px solid hsl(193 100% 74% / 0.12);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .bannerStage {
-  box-shadow: 0 0 60px hsl(var(--primary) / 0.24);
+  isolation: isolate;
+  position: relative;
+  box-shadow:
+    0 40px 120px hsl(224 76% 4% / 0.6),
+    0 0 40px hsl(193 100% 74% / 0.12);
 }
 
-.bannerStageTop {
-  background: linear-gradient(
-    180deg,
-    hsl(var(--background) / 0.02),
-    transparent 32%,
-    hsl(var(--background) / 0.64) 100%
-  );
+.bannerStage::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: calc(2rem - 1px);
+  border: 1px solid hsl(0 0% 100% / 0.08);
+  pointer-events: none;
+  z-index: 5;
 }
 
-.ornamentDot {
-  box-shadow: 0 0 16px hsl(var(--primary) / 0.85);
+.bannerStage::after {
+  content: "";
+  position: absolute;
+  inset: auto auto -36% 10%;
+  width: 20rem;
+  height: 20rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, hsl(193 100% 74% / 0.16) 0%, transparent 68%);
+  pointer-events: none;
+  z-index: -1;
 }
 
-.particle {
-  box-shadow: 0 0 18px hsl(var(--primary) / 0.7);
+.bannerScreenGlow {
+  background-image:
+    radial-gradient(circle at 35% 46%, hsl(192 100% 72% / 0.1) 0%, transparent 30%),
+    linear-gradient(180deg, hsl(0 0% 100% / 0.06), transparent 20%, hsl(225 80% 4% / 0.18) 100%);
 }
 
-.scrollLabel {
-  padding-top: 16px;
+.bannerOverlay {
+  background:
+    linear-gradient(
+      90deg,
+      hsl(224 78% 5% / 0.02) 0%,
+      transparent 26%,
+      hsl(224 78% 5% / 0.14) 46%,
+      hsl(224 78% 5% / 0.52) 66%,
+      hsl(224 78% 5% / 0.94) 100%
+    );
+}
+
+.previewPrimary {
+  height: 68%;
+  top: 16%;
+  transform: translateX(10%);
+  width: 208px;
+}
+
+.previewSecondary {
+  height: 52%;
+  opacity: 0.94;
+  top: 27%;
+  transform: translateX(44%);
+  width: 156px;
+}
+
+.previewShade {
+  background:
+    linear-gradient(90deg, hsl(224 78% 5% / 0.14), hsl(224 78% 5% / 0.56));
+}
+
+.tickerBar {
+  background:
+    linear-gradient(180deg, hsl(223 63% 11% / 0.9), hsl(223 70% 9% / 0.88));
+  box-shadow:
+    inset 0 1px 0 hsl(193 100% 74% / 0.12),
+    inset 0 -1px 0 hsl(193 100% 74% / 0.08);
+}
+
+@media (max-width: 1023px) {
+  .heroCopyPanel::before,
+  .heroCopyPanel::after {
+    display: none;
+  }
+}
+
+@media (min-width: 1536px) {
+  .previewPrimary {
+    width: 228px;
+  }
+
+  .previewSecondary {
+    transform: translateX(48%);
+    width: 168px;
+  }
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Archive, ChevronDown, Search, SlidersHorizontal } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ChevronDown, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import jettImage from "@/assets/jett.png";
 import type { Product } from "@/features/catalog/domain/product";
@@ -137,7 +137,6 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   const [regionFilter, setRegionFilter] = useState("all");
   const [nickFilter, setNickFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
-  const [filtersOpen, setFiltersOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   // Keep this block commented so we can quickly restore the extra demo section later.
@@ -237,11 +236,6 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
 
     return items;
   }, [currentPageSafe, totalPages]);
-
-  const sold = useMemo(
-    () => products.filter((product) => product.status === "sold"),
-    [products],
-  );
 
   useEffect(() => {
     setCurrentPage(1);
@@ -402,90 +396,102 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
               </h2>
             </div>
 
-            <div className="rounded-[2rem] border border-border/40 bg-card p-4 shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-md sm:p-5 lg:p-6">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            <div className={`rounded-[1.5rem] border p-5 sm:p-6 ${styles.filtersPanel}`}>
+              <div className="grid gap-4 xl:grid-cols-[1.15fr_repeat(4,minmax(0,1fr))_auto] xl:items-end">
                 <label className="block">
-                  <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-wider text-primary">
+                  <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#5de6ff]">
                     Cari Kode / Skin
                   </span>
-                  <input
-                    type="text"
-                    placeholder="Contoh: VIL..."
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    className="w-full rounded-full border border-border/40 bg-background/50 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/40 transition-all focus:border-primary/40 focus:outline-none"
-                  />
+                  <span className={`flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                    <input
+                      type="text"
+                      placeholder="Contoh: Vandal, Oni..."
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                      className="h-full w-full bg-transparent text-[14px] text-white outline-none placeholder:text-white/34"
+                    />
+                  </span>
                 </label>
 
                 <label className="block">
-                  <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-wider text-primary">
+                  <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#5de6ff]">
                     Cari Rank
                   </span>
-                  <select
-                    value={rankFilter}
-                    onChange={(event) => setRankFilter(event.target.value)}
-                    className="w-full rounded-full border border-border/40 bg-background/50 px-4 py-2.5 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
-                  >
-                    <option value="all">Semua Rank</option>
-                    {rankOptions.map((rank) => (
-                      <option key={rank} value={rank}>{rank}</option>
-                    ))}
-                  </select>
+                  <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                    <select
+                      value={rankFilter}
+                      onChange={(event) => setRankFilter(event.target.value)}
+                      className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
+                    >
+                      <option value="all">Semua Rank</option>
+                      {rankOptions.map((rank) => (
+                        <option key={rank} value={rank}>{rank}</option>
+                      ))}
+                    </select>
+                    <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/42" />
+                  </span>
                 </label>
 
                 <label className="block">
-                  <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-wider text-primary">
+                  <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#5de6ff]">
                     Region
                   </span>
-                  <select
-                    value={regionFilter}
-                    onChange={(event) => setRegionFilter(event.target.value)}
-                    className="w-full rounded-full border border-border/40 bg-background/50 px-4 py-2.5 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
-                  >
-                    <option value="all">Semua Region</option>
-                    {regionOptions.map((region) => (
-                      <option key={region} value={region}>{region}</option>
-                    ))}
-                  </select>
+                  <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                    <select
+                      value={regionFilter}
+                      onChange={(event) => setRegionFilter(event.target.value)}
+                      className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
+                    >
+                      <option value="all">Semua Region</option>
+                      {regionOptions.map((region) => (
+                        <option key={region} value={region}>{region}</option>
+                      ))}
+                    </select>
+                    <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/42" />
+                  </span>
                 </label>
 
                 <label className="block">
-                  <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-wider text-primary">
+                  <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#5de6ff]">
                     Ganti Nick
                   </span>
-                  <select
-                    value={nickFilter}
-                    onChange={(event) => setNickFilter(event.target.value)}
-                    className="w-full rounded-full border border-border/40 bg-background/50 px-4 py-2.5 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
-                  >
-                    <option value="all">Semua Status</option>
-                    {nickOptions.map((option) => (
-                      <option key={option} value={option}>{option}</option>
-                    ))}
-                  </select>
+                  <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                    <select
+                      value={nickFilter}
+                      onChange={(event) => setNickFilter(event.target.value)}
+                      className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
+                    >
+                      <option value="all">Semua Status</option>
+                      {nickOptions.map((option) => (
+                        <option key={option} value={option}>{option}</option>
+                      ))}
+                    </select>
+                    <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/42" />
+                  </span>
                 </label>
 
                 <label className="block">
-                  <span className="mb-1.5 block font-display text-[10px] font-bold uppercase tracking-wider text-primary">
+                  <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#5de6ff]">
                     Urutkan Harga
                   </span>
-                  <select
-                    value={sortBy}
-                    onChange={(event) => setSortBy(event.target.value)}
-                    className="w-full rounded-full border border-border/40 bg-background/50 px-4 py-2.5 text-sm text-foreground transition-all focus:border-primary/40 focus:outline-none"
-                  >
-                    <option value="default">Terbaru (Default)</option>
-                    <option value="price-asc">Harga: Terendah</option>
-                    <option value="price-desc">Harga: Tertinggi</option>
-                  </select>
+                  <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                    <select
+                      value={sortBy}
+                      onChange={(event) => setSortBy(event.target.value)}
+                      className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
+                    >
+                      <option value="default">Terbaru (Default)</option>
+                      <option value="price-asc">Harga Termurah</option>
+                      <option value="price-desc">Harga Termahal</option>
+                    </select>
+                    <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/42" />
+                  </span>
                 </label>
-              </div>
 
-              <div className="mt-5 flex justify-end">
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="rounded-full border border-primary/30 bg-primary/5 px-6 py-2 font-display text-[11px] font-bold tracking-wider text-primary shadow-sm transition hover:scale-105 hover:border-transparent hover:bg-gradient-to-r hover:from-primary hover:to-aurora hover:text-primary-foreground active:scale-95"
+                  className="inline-flex h-[3.25rem] items-center justify-center rounded-full border border-[#244f7e] bg-[linear-gradient(180deg,rgba(10,27,53,0.94),rgba(6,18,39,0.92))] px-6 font-display text-[14px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_24px_rgba(76,213,255,0.12)] transition hover:border-[#57ddff] hover:text-[#7de8ff]"
                 >
                   Reset Filter
                 </button>

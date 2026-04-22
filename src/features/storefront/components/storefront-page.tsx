@@ -42,7 +42,7 @@ export default function StorefrontPage({ products, banners }: StorefrontPageProp
       {introComplete && (
         <div className="min-h-screen bg-background">
           <Navbar />
-          <div className="pt-14 sm:pt-16">
+          <div className="pt-16 sm:pt-20">
             <HeroSection banners={banners} />
             <CatalogSection products={products} />
             <div className="mx-auto h-[2px] w-[90%] max-w-[1480px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
