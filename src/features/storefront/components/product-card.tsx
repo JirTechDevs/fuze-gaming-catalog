@@ -122,21 +122,21 @@ export default function ProductCard({
         }
       }}
     >
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <span className="inline-flex items-center gap-2 rounded-full border border-[#0EA5E9]/24 bg-[#041C32]/88 px-3 py-1.5 font-display text-[12px] font-bold tracking-[0.04em] text-[#22D3EE]">
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+        <span className="inline-flex min-w-0 max-w-full items-center gap-2 rounded-full border border-[#0EA5E9]/24 bg-[#041C32]/88 px-3 py-1.5 font-display text-[12px] font-bold tracking-[0.04em] text-[#22D3EE]">
           <span className="h-2 w-2 rounded-full bg-[#00E5FF] shadow-[0_0_12px_rgba(0,229,255,0.82)]" />
-          {product.code}
+          <span className="break-all">{product.code}</span>
         </span>
 
         <span
-          className={`inline-flex rounded-full border bg-[#0b1328]/94 px-3 py-1.5 font-display text-[12px] font-semibold ${getRankBadgeClasses(product.rank)}`}
+          className={`inline-flex shrink-0 rounded-full border bg-[#0b1328]/94 px-3 py-1.5 font-display text-[12px] font-semibold ${getRankBadgeClasses(product.rank)}`}
         >
           {product.rank}
         </span>
       </div>
 
-      <div className="relative flex items-start gap-4">
-        <div className="relative w-[44%] max-w-[142px] shrink-0 overflow-hidden rounded-[0.95rem] border border-[#0EA5E9]/18 bg-[linear-gradient(180deg,rgba(10,37,64,0.88),rgba(2,6,23,0.96))]">
+      <div className="relative flex items-start gap-3 sm:gap-4">
+        <div className="relative w-[42%] max-w-[128px] shrink-0 overflow-hidden rounded-[0.95rem] border border-[#0EA5E9]/18 bg-[linear-gradient(180deg,rgba(10,37,64,0.88),rgba(2,6,23,0.96))] sm:max-w-[142px]">
           <img
             src={product.image}
             alt={product.code}
@@ -161,9 +161,9 @@ export default function ProductCard({
           </p>
           <ul className="mt-3 space-y-2 text-[12px] leading-5 text-white/74">
             {visibleSkins.map((skin) => (
-              <li key={skin} className="flex gap-2">
+              <li key={skin} className="flex items-start gap-2">
                 <span className="mt-[0.55rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#00E5FF]" />
-                <span className="min-w-0 truncate">{skin}</span>
+                <span className="min-w-0 break-words">{skin}</span>
               </li>
             ))}
           </ul>

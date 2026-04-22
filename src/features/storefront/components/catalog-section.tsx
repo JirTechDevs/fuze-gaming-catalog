@@ -389,7 +389,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
               </div>
 
               <div id="catalog-filters-content" className={styles.filtersBody}>
-                <div className="grid gap-4 pt-5 xl:grid-cols-[1.15fr_repeat(4,minmax(0,1fr))_auto] xl:items-end">
+                <div className="grid gap-4 pt-5 sm:grid-cols-2 xl:grid-cols-[1.15fr_repeat(4,minmax(0,1fr))_auto] xl:items-end">
                   <label className="block">
                     <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
                       Cari Kode / Skin
@@ -483,7 +483,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                   <button
                     type="button"
                     onClick={resetFilters}
-                    className="inline-flex h-[3.25rem] items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.92))] px-6 font-display text-[14px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_24px_rgba(34,211,238,0.12)] transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
+                    className="inline-flex h-[3.25rem] w-full items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.92))] px-6 font-display text-[14px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_24px_rgba(34,211,238,0.12)] transition hover:border-[#22D3EE] hover:text-[#00E5FF] sm:w-auto"
                   >
                     Reset Filter
                   </button>
@@ -492,7 +492,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">
+          <div className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:gap-6">
             {visibleProducts.map((product, index) => (
               <ProductCard
                 key={product.id}

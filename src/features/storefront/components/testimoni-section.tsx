@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import heroIcon from "@/assets/hero-icon.webp";
 import testi1 from "@/assets/testi/testi-1.webp";
 import testi2 from "@/assets/testi/testi-2.webp";
 import testi3 from "@/assets/testi/testi-3.webp";
@@ -97,13 +96,13 @@ export default function TestimoniSection() {
 
         <div className="mb-5 px-1 sm:mb-6">
           <div className="flex flex-col items-center gap-3">
-            <h2 className="font-display text-3xl font-bold tracking-wide text-foreground md:text-4xl text-center">
+            <h2 className="text-center font-display text-2xl font-bold tracking-wide text-foreground sm:text-3xl md:text-4xl">
               TESTIMONIAL <span className="text-primary">CUSTOMER</span>
             </h2>
           </div>
         </div>
 
-        <div className="relative mx-auto w-[75%] overflow-hidden rounded-[1.5rem] border border-primary/15 bg-card/40 py-4 backdrop-blur-sm sm:py-5">
+        <div className="relative mx-auto w-full max-w-6xl overflow-hidden rounded-[1.5rem] border border-primary/15 bg-card/40 py-4 backdrop-blur-sm sm:py-5">
           <div className="relative z-10">
             <div className="overflow-hidden">
               <div className="testimoni-strip-track flex w-max gap-2.5 px-2.5 sm:gap-3 sm:px-3">

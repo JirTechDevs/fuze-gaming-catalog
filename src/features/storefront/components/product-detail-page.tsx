@@ -152,7 +152,7 @@ export default function ProductDetailPage({
     <div className={`${themeStyles.storefrontTheme} min-h-screen bg-background`}>
       <Navbar />
 
-      <main className="relative isolate overflow-hidden pt-20">
+      <main className="relative isolate overflow-hidden pt-16 sm:pt-20">
         <div className={`absolute inset-0 ${styles.detailShell}`} />
         <div className={`absolute inset-0 ${styles.detailAura}`} />
         <div className={`absolute inset-0 ${styles.detailMesh}`} />
@@ -173,7 +173,7 @@ export default function ProductDetailPage({
           <TacticalMarkDoodle />
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 pb-16 pt-8 sm:pb-20 sm:pt-10">
+        <div className="relative z-10 container mx-auto px-4 pb-16 pt-6 sm:pb-20 sm:pt-10">
           <div className="mb-6 flex flex-wrap items-center gap-2 sm:mb-8 sm:gap-3">
             <Link
               href="/#catalog"
@@ -182,7 +182,7 @@ export default function ProductDetailPage({
               <ArrowLeft size={14} />
               KEMBALI KE KATALOG
             </Link>
-            <span className="rounded-full border border-border/40 bg-background/35 px-3 py-1.5 font-display text-[10px] tracking-[0.22em] text-muted-foreground">
+            <span className="w-full rounded-full border border-border/40 bg-background/35 px-3 py-1.5 text-center font-display text-[10px] tracking-[0.22em] text-muted-foreground sm:w-auto">
               ACCOUNT DETAIL
             </span>
           </div>
@@ -211,13 +211,13 @@ export default function ProductDetailPage({
                   <div className="h-px bg-border/35" />
 
                   <div className="rounded-[1.5rem] border border-border/30 bg-background/12 p-4 sm:p-5">
-                    <div className="flex items-center justify-between gap-3 border-b border-border/35 pb-4">
+                    <div className="flex flex-col items-start gap-3 border-b border-border/35 pb-4 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
                           Daftar Skin
                         </p>
                       </div>
-                      <span className="whitespace-nowrap rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-sm font-bold text-primary">
+                      <span className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-xs font-bold text-primary sm:whitespace-nowrap sm:text-sm">
                         {product.skins.length} skins
                       </span>
                     </div>
@@ -283,13 +283,13 @@ export default function ProductDetailPage({
                         href={buildWhatsAppLink(product)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-[#22D3EE]/35 bg-[linear-gradient(180deg,#22D3EE,#0EA5E9)] px-5 py-4 text-center font-display text-base font-bold text-[#020617] shadow-[0_16px_34px_rgba(14,165,233,0.22)] transition hover:brightness-105"
+                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-[#22D3EE]/35 bg-[linear-gradient(180deg,#22D3EE,#0EA5E9)] px-5 py-4 text-center font-display text-sm font-bold text-[#020617] shadow-[0_16px_34px_rgba(14,165,233,0.22)] transition hover:brightness-105 sm:text-base"
                       >
                         <WhatsAppGlyph />
                         Beli Sekarang
                       </a>
                     ) : (
-                      <span className="mt-5 flex items-center justify-center rounded-[1.2rem] border border-border/35 bg-background/28 px-5 py-4 text-center font-display text-base font-bold text-muted-foreground">
+                      <span className="mt-5 flex items-center justify-center rounded-[1.2rem] border border-border/35 bg-background/28 px-5 py-4 text-center font-display text-sm font-bold text-muted-foreground sm:text-base">
                         Akun Sudah Sold
                       </span>
                     )}

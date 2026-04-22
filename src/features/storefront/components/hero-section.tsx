@@ -118,7 +118,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           </div>
 
           <div className="space-y-3">
-            <h1 className="font-display text-[2.9rem] font-extrabold leading-[0.92] tracking-[-0.055em] text-white sm:text-[4rem] xl:text-[4.85rem]">
+            <h1 className={`${styles.heroHeadline} font-display font-extrabold tracking-[-0.055em] text-white`}>
               JUAL AKUN
               <br />
               <span className="bg-[linear-gradient(180deg,#00E5FF_0%,#22D3EE_36%,#38BDF8_72%,#0EA5E9_100%)] bg-clip-text text-transparent">
@@ -127,13 +127,13 @@ export default function HeroSection({ banners }: HeroSectionProps) {
             </h1>
           </div>
 
-          <div className="flex items-start gap-4 sm:gap-0">
+          <div className={styles.heroStats}>
             {featureBadges.map((badge, index) => (
               <div
                 key={badge.label}
-                className={`relative flex-1 pr-4 sm:pr-5 ${
+                className={`${styles.heroStat} relative pr-2 sm:flex-1 sm:pr-5 ${
                   index < featureBadges.length - 1
-                    ? "after:absolute after:right-0 after:top-1 after:h-12 after:w-px after:bg-white/10 sm:after:h-14"
+                    ? "sm:after:absolute sm:after:right-0 sm:after:top-1 sm:after:h-14 sm:after:w-px sm:after:bg-white/10"
                     : ""
                 }`}
               >
@@ -143,7 +143,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                     {badge.value}
                   </p>
                 </div>
-                <p className="mt-1.5 text-[11px] leading-tight text-white/64 sm:text-[12px]">
+                <p className="mt-1.5 break-words text-[11px] leading-tight text-white/64 sm:text-[12px]">
                   {badge.label}
                 </p>
               </div>
@@ -229,7 +229,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 type="button"
                 onClick={() => setActiveIndex(prevIndex)}
                 aria-label="Show previous banner"
-                className="absolute left-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[#041C32]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
+                className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[#041C32]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22D3EE] hover:text-[#00E5FF] sm:left-4 sm:h-10 sm:w-10"
               >
                 <ChevronLeft size={18} />
               </button>
@@ -238,12 +238,12 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 type="button"
                 onClick={() => setActiveIndex(nextIndex)}
                 aria-label="Show next banner"
-                className="absolute right-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[#041C32]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
+                className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[#041C32]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22D3EE] hover:text-[#00E5FF] sm:right-4 sm:h-10 sm:w-10"
               >
                 <ChevronRight size={18} />
               </button>
 
-              <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-[#0EA5E9]/16 bg-[#041C32]/68 px-3 py-2 backdrop-blur-md">
+              <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-[#0EA5E9]/16 bg-[#041C32]/68 px-2.5 py-1.5 backdrop-blur-md sm:bottom-4 sm:px-3 sm:py-2">
                 {heroBanners.map((banner, index) => (
                   <button
                     key={banner.src}
