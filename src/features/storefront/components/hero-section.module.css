@@ -16,37 +16,26 @@
   background-image:
     linear-gradient(
       90deg,
-      transparent 0%,
-      transparent 10%,
-      hsl(193 100% 74% / 0.08) 10.1%,
-      transparent 10.2%,
+      transparent 0%, transparent 10%,
+      hsl(193 100% 74% / 0.08) 10.1%, transparent 10.2%,
       transparent 88%,
-      hsl(193 100% 74% / 0.08) 88.1%,
-      transparent 88.2%
+      hsl(193 100% 74% / 0.08) 88.1%, transparent 88.2%
     ),
     linear-gradient(
       180deg,
-      transparent 0%,
-      transparent 18%,
-      hsl(193 100% 74% / 0.08) 18.1%,
-      transparent 18.2%,
+      transparent 0%, transparent 18%,
+      hsl(193 100% 74% / 0.08) 18.1%, transparent 18.2%,
       transparent 76%,
-      hsl(193 100% 74% / 0.08) 76.1%,
-      transparent 76.2%
+      hsl(193 100% 74% / 0.08) 76.1%, transparent 76.2%
     ),
     linear-gradient(hsl(193 100% 74% / 0.03) 1px, transparent 1px),
     linear-gradient(90deg, hsl(193 100% 74% / 0.03) 1px, transparent 1px);
-  background-size:
-    100% 100%,
-    100% 100%,
-    72px 72px,
-    72px 72px;
+  background-size: 100% 100%, 100% 100%, 72px 72px, 72px 72px;
   mask-image: linear-gradient(180deg, transparent 0%, black 10%, black 92%, transparent 100%);
 }
 
 .heroCopyGlow {
-  background:
-    radial-gradient(circle at left center, hsl(190 100% 72% / 0.16) 0%, transparent 66%);
+  background: radial-gradient(circle at left center, hsl(190 100% 72% / 0.16) 0%, transparent 66%);
 }
 
 .heroBottomFade {
@@ -57,9 +46,7 @@
 .heroReticleRight {
   border-radius: 9999px;
   border: 1px solid hsl(193 100% 74% / 0.14);
-  box-shadow:
-    inset 0 0 0 22px hsl(224 65% 12% / 0.22),
-    0 0 50px hsl(193 100% 74% / 0.08);
+  box-shadow: inset 0 0 0 22px hsl(224 65% 12% / 0.22), 0 0 50px hsl(193 100% 74% / 0.08);
 }
 
 .heroReticleLeft::before,
@@ -118,34 +105,110 @@
   z-index: -1;
 }
 
-.bannerStage {
-  isolation: isolate;
+@media (max-width: 1023px) {
+  .heroCopyPanel::before,
+  .heroCopyPanel::after {
+    display: none;
+  }
+}
+
+/* ─────────────────────────────────────────
+   BANNER STACK
+   The trick: bannerStack is sized to card1.
+   Card2 and card3 are absolute, translated
+   to the right with decreasing scale.
+   z-index: card1 > card2 > card3.
+───────────────────────────────────────── */
+
+.bannerStack {
   position: relative;
+  width: 100%;
+  max-width: 680px;
+  /* Extra right margin so the peeking cards don't clip against the viewport */
+  margin-right: 0;
+}
+
+@media (min-width: 1280px) {
+  .bannerStack {
+    max-width: 740px;
+  }
+}
+
+/* Card 1 — front, active banner */
+.bannerCard1 {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  border: 1px solid #173c64;
+  background: #07142b;
   box-shadow:
     0 40px 120px hsl(224 76% 4% / 0.6),
     0 0 40px hsl(193 100% 74% / 0.12);
 }
 
-.bannerStage::before {
-  content: "";
+/* Card 2 — middle, peeks to the right */
+.bannerCard2 {
   position: absolute;
-  inset: 1px;
-  border-radius: calc(2rem - 1px);
-  border: 1px solid hsl(0 0% 100% / 0.08);
-  pointer-events: none;
-  z-index: 5;
+  z-index: 2;
+  /* vertically centered relative to card1 */
+  top: 50%;
+  /* sits just beyond card1's right edge */
+  left: 100%;
+  transform: translateY(-50%) translateX(14px) scale(0.82);
+  transform-origin: left center;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  border: 1px solid #173c64;
+  background: #07142b;
+  box-shadow: 0 24px 80px hsl(224 76% 4% / 0.5);
+  transition: opacity 0.2s, border-color 0.2s;
+  cursor: pointer;
 }
 
-.bannerStage::after {
-  content: "";
+.bannerCard2:hover {
+  border-color: #53dcff;
+  opacity: 0.95;
+}
+
+/* Card 3 — furthest back, smaller, more to the right */
+.bannerCard3 {
   position: absolute;
-  inset: auto auto -36% 10%;
-  width: 20rem;
-  height: 20rem;
-  border-radius: 9999px;
-  background: radial-gradient(circle, hsl(193 100% 74% / 0.16) 0%, transparent 68%);
-  pointer-events: none;
-  z-index: -1;
+  z-index: 1;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%) translateX(14px) scale(0.66);
+  transform-origin: left center;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 1.35rem;
+  border: 1px solid #173c64;
+  background: #07142b;
+  box-shadow: 0 16px 60px hsl(224 76% 4% / 0.4);
+  opacity: 0.82;
+  transition: opacity 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+
+.bannerCard3:hover {
+  border-color: #53dcff;
+  opacity: 0.92;
+}
+
+/* Shade overlay on preview cards */
+.cardShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    hsl(224 78% 5% / 0.08) 0%,
+    hsl(224 78% 5% / 0.42) 100%
+  );
 }
 
 .bannerScreenGlow {
@@ -154,60 +217,10 @@
     linear-gradient(180deg, hsl(0 0% 100% / 0.06), transparent 20%, hsl(225 80% 4% / 0.18) 100%);
 }
 
-.bannerOverlay {
-  background:
-    linear-gradient(
-      90deg,
-      hsl(224 78% 5% / 0.02) 0%,
-      transparent 26%,
-      hsl(224 78% 5% / 0.14) 46%,
-      hsl(224 78% 5% / 0.52) 66%,
-      hsl(224 78% 5% / 0.94) 100%
-    );
-}
-
-.previewPrimary {
-  height: 68%;
-  top: 16%;
-  transform: translateX(10%);
-  width: 208px;
-}
-
-.previewSecondary {
-  height: 52%;
-  opacity: 0.94;
-  top: 27%;
-  transform: translateX(44%);
-  width: 156px;
-}
-
-.previewShade {
-  background:
-    linear-gradient(90deg, hsl(224 78% 5% / 0.14), hsl(224 78% 5% / 0.56));
-}
-
+/* ── Ticker bar ── */
 .tickerBar {
-  background:
-    linear-gradient(180deg, hsl(223 63% 11% / 0.9), hsl(223 70% 9% / 0.88));
+  background: linear-gradient(180deg, hsl(223 63% 11% / 0.9), hsl(223 70% 9% / 0.88));
   box-shadow:
     inset 0 1px 0 hsl(193 100% 74% / 0.12),
     inset 0 -1px 0 hsl(193 100% 74% / 0.08);
-}
-
-@media (max-width: 1023px) {
-  .heroCopyPanel::before,
-  .heroCopyPanel::after {
-    display: none;
-  }
-}
-
-@media (min-width: 1536px) {
-  .previewPrimary {
-    width: 228px;
-  }
-
-  .previewSecondary {
-    transform: translateX(48%);
-    width: 168px;
-  }
 }

@@ -23,30 +23,6 @@ const featureBadges = [
   { icon: Headphones, value: "24/7", label: "Fast Response" },
 ] as const;
 
-const showcaseSlides = [
-  {
-    eyebrow: "AKUN READY",
-    title: "IMMORTAL 1",
-    detailTop: "FULL SKIN • PRIME VANDAL",
-    detailBottom: "REAVER • RGX • 20+ SKIN",
-    price: "Rp 2.500.000",
-  },
-  {
-    eyebrow: "STOK PREMIUM",
-    title: "ASCENDANT 3",
-    detailTop: "FULL AGENT • SKIN PILIHAN",
-    detailBottom: "ONI • CHAMPIONS • 18+ SKIN",
-    price: "Rp 1.950.000",
-  },
-  {
-    eyebrow: "LIMITED DROP",
-    title: "RADIANT",
-    detailTop: "EMAIL AMAN • SIAP MAIN",
-    detailBottom: "PRELUDE • XEROFANG • 25+ SKIN",
-    price: "Rp 3.200.000",
-  },
-] as const;
-
 type TickerIconName = (typeof trustTicker)[number]["icon"];
 
 function WhatsAppGlyph() {
@@ -64,42 +40,27 @@ function TickerItemIcon({ icon }: { icon: TickerIconName }) {
   if (icon === "shield") {
     return (
       <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#6de4ff]" aria-hidden="true">
-        <path
-          fill="currentColor"
-          d="M10 2.1 16.4 4v5.2c0 4-2.5 6.7-6.4 8.7-3.9-2-6.4-4.7-6.4-8.7V4L10 2.1Zm0 3.1a1 1 0 0 0-1 1v3.2l-1.2 1.2a1 1 0 0 0 1.4 1.4l1.5-1.5c.2-.2.3-.4.3-.7V6.2a1 1 0 0 0-1-1Z"
-        />
+        <path fill="currentColor" d="M10 2.1 16.4 4v5.2c0 4-2.5 6.7-6.4 8.7-3.9-2-6.4-4.7-6.4-8.7V4L10 2.1Zm0 3.1a1 1 0 0 0-1 1v3.2l-1.2 1.2a1 1 0 0 0 1.4 1.4l1.5-1.5c.2-.2.3-.4.3-.7V6.2a1 1 0 0 0-1-1Z" />
       </svg>
     );
   }
-
   if (icon === "zap") {
     return (
       <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#6de4ff]" aria-hidden="true">
-        <path
-          fill="currentColor"
-          d="M11.5 1.8 4.6 10h3.8l-1.3 8.2 8-9.6h-4L11.5 1.8Z"
-        />
+        <path fill="currentColor" d="M11.5 1.8 4.6 10h3.8l-1.3 8.2 8-9.6h-4L11.5 1.8Z" />
       </svg>
     );
   }
-
   if (icon === "headphones") {
     return (
       <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#6de4ff]" aria-hidden="true">
-        <path
-          fill="currentColor"
-          d="M10 3a7 7 0 0 0-7 7v2.6A2.4 2.4 0 0 0 5.4 15H7a1 1 0 0 0 1-1V9.8a1 1 0 0 0-1-1H5.2a4.8 4.8 0 0 1 9.6 0H13a1 1 0 0 0-1 1V14a1 1 0 0 0 1 1h1.6a2.4 2.4 0 0 0 2.4-2.4V10a7 7 0 0 0-7-7Z"
-        />
+        <path fill="currentColor" d="M10 3a7 7 0 0 0-7 7v2.6A2.4 2.4 0 0 0 5.4 15H7a1 1 0 0 0 1-1V9.8a1 1 0 0 0-1-1H5.2a4.8 4.8 0 0 1 9.6 0H13a1 1 0 0 0-1 1V14a1 1 0 0 0 1 1h1.6a2.4 2.4 0 0 0 2.4-2.4V10a7 7 0 0 0-7-7Z" />
       </svg>
     );
   }
-
   return (
     <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#6de4ff]" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M6.7 2.7a1 1 0 0 1 1.4 0l9.2 9.2a1 1 0 0 1 0 1.4l-3 3a1 1 0 0 1-1.4 0L3.7 7.1a1 1 0 0 1 0-1.4l3-3Zm.7 2.1L5.8 6.4l7.8 7.8 1.6-1.6-7.8-7.8ZM6 8.9a1.1 1.1 0 1 0 0-2.2 1.1 1.1 0 0 0 0 2.2Z"
-      />
+      <path fill="currentColor" d="M6.7 2.7a1 1 0 0 1 1.4 0l9.2 9.2a1 1 0 0 1 0 1.4l-3 3a1 1 0 0 1-1.4 0L3.7 7.1a1 1 0 0 1 0-1.4l3-3Zm.7 2.1L5.8 6.4l7.8 7.8 1.6-1.6-7.8-7.8ZM6 8.9a1.1 1.1 0 1 0 0-2.2 1.1 1.1 0 0 0 0 2.2Z" />
     </svg>
   );
 }
@@ -114,33 +75,20 @@ export default function HeroSection({ banners }: HeroSectionProps) {
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (heroBanners.length < 2) {
-      return;
-    }
-
+    if (heroBanners.length < 2) return;
     const timer = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % heroBanners.length);
     }, prefersReducedMotion ? 5600 : 4200);
-
     return () => window.clearInterval(timer);
   }, [heroBanners.length, prefersReducedMotion]);
 
   const scrollToCatalog = () => {
-    document
-      .getElementById("catalog")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const prevIndex = (activeIndex - 1 + heroBanners.length) % heroBanners.length;
   const nextIndex = (activeIndex + 1) % heroBanners.length;
   const secondNextIndex = (activeIndex + 2) % heroBanners.length;
-  const showcase = showcaseSlides[activeIndex % showcaseSlides.length];
-  const previewIndices =
-    heroBanners.length > 2
-      ? [nextIndex, secondNextIndex]
-      : heroBanners.length > 1
-        ? [nextIndex]
-        : [];
   const tickerItems = [...trustTicker, ...trustTicker, ...trustTicker, ...trustTicker];
 
   return (
@@ -154,6 +102,8 @@ export default function HeroSection({ banners }: HeroSectionProps) {
       <div className={`pointer-events-none absolute right-10 top-10 hidden h-40 w-40 xl:block ${styles.heroReticleRight}`} />
 
       <div className="relative z-10 mx-auto flex max-w-[1512px] flex-col gap-10 px-4 pb-8 pt-6 sm:px-6 sm:pb-10 sm:pt-8 lg:flex-row lg:items-center lg:gap-8 xl:px-8">
+
+        {/* LEFT: Copy panel */}
         <motion.div
           initial={prefersReducedMotion ? false : { opacity: 0, x: -28 }}
           animate={{ opacity: 1, x: 0 }}
@@ -188,11 +138,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <badge.icon
-                    size={16}
-                    strokeWidth={2.1}
-                    className="shrink-0 text-[#66e4ff]"
-                  />
+                  <badge.icon size={16} strokeWidth={2.1} className="shrink-0 text-[#66e4ff]" />
                   <p className="font-display text-base font-bold leading-none text-white sm:text-[1.15rem]">
                     {badge.value}
                   </p>
@@ -224,105 +170,102 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           </div>
         </motion.div>
 
+        {/* RIGHT: Stacked banners */}
         <motion.div
           initial={prefersReducedMotion ? false : { opacity: 0, x: 32 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.72, ease: [0.16, 1, 0.3, 1], delay: prefersReducedMotion ? 0 : 0.08 }}
           className="relative flex min-w-0 flex-1 items-center justify-center lg:justify-end"
         >
-          <div className="relative w-full max-w-[1120px] lg:pr-[210px] xl:pr-[280px]">
-            <div className={`relative overflow-hidden rounded-[2rem] border border-[#173c64] bg-[#07142b]/92 ${styles.bannerStage}`}>
-              <div className="relative aspect-[16/10.5] overflow-hidden sm:aspect-[16/8.8] lg:aspect-[16/7.8]">
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={heroBanners[activeIndex].src}
-                    src={heroBanners[activeIndex].src}
-                    alt={heroBanners[activeIndex].alt}
-                    className="h-full w-full object-cover"
-                    initial={prefersReducedMotion ? false : { opacity: 0, scale: 1.04, x: 10 }}
-                    animate={{ opacity: 1, scale: 1, x: 0 }}
-                    exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98, x: -10 }}
-                    transition={{ duration: prefersReducedMotion ? 0.2 : 0.6, ease: [0.16, 1, 0.3, 1] }}
+          {/*
+            bannerStack: sized to the front card.
+            Card 3 and Card 2 are positioned absolute, sticking out to the right
+            via translateX, scaled down to create the depth/stack illusion.
+          */}
+          <div className={styles.bannerStack}>
+
+            {/* Card 3 — furthest back, smallest, most to the right */}
+            {heroBanners.length > 2 && (
+              <button
+                type="button"
+                onClick={() => setActiveIndex(secondNextIndex)}
+                aria-label="Go to banner 3"
+                className={styles.bannerCard3}
+              >
+                <img src={heroBanners[secondNextIndex].src} alt={heroBanners[secondNextIndex].alt} className="h-full w-full object-cover" />
+                <div className={styles.cardShade} />
+              </button>
+            )}
+
+            {/* Card 2 — middle */}
+            {heroBanners.length > 1 && (
+              <button
+                type="button"
+                onClick={() => setActiveIndex(nextIndex)}
+                aria-label="Go to banner 2"
+                className={styles.bannerCard2}
+              >
+                <img src={heroBanners[nextIndex].src} alt={heroBanners[nextIndex].alt} className="h-full w-full object-cover" />
+                <div className={styles.cardShade} />
+              </button>
+            )}
+
+            {/* Card 1 — front, full size, active */}
+            <div className={styles.bannerCard1}>
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={heroBanners[activeIndex].src}
+                  src={heroBanners[activeIndex].src}
+                  alt={heroBanners[activeIndex].alt}
+                  className="absolute inset-0 h-full w-full object-cover object-center"
+                  initial={prefersReducedMotion ? false : { opacity: 0, scale: 1.04 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
+                  transition={{ duration: prefersReducedMotion ? 0.2 : 0.55, ease: [0.16, 1, 0.3, 1] }}
+                />
+              </AnimatePresence>
+              <div className={`absolute inset-0 ${styles.bannerScreenGlow}`} />
+
+              <button
+                type="button"
+                onClick={() => setActiveIndex(prevIndex)}
+                aria-label="Show previous banner"
+                className="absolute left-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#214a79] bg-[#07152d]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#59dfff] hover:text-[#7ee9ff]"
+              >
+                <ChevronLeft size={18} />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveIndex(nextIndex)}
+                aria-label="Show next banner"
+                className="absolute right-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#214a79] bg-[#07152d]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#59dfff] hover:text-[#7ee9ff]"
+              >
+                <ChevronRight size={18} />
+              </button>
+
+              <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-[#06152d]/68 px-3 py-2 backdrop-blur-md">
+                {heroBanners.map((banner, index) => (
+                  <button
+                    key={banner.src}
+                    type="button"
+                    onClick={() => setActiveIndex(index)}
+                    aria-label={`Show banner ${index + 1}`}
+                    className={`h-2 rounded-full transition-all ${
+                      index === activeIndex
+                        ? "w-7 bg-[#67e3ff] shadow-[0_0_12px_rgba(103,227,255,0.8)]"
+                        : "w-2 bg-white/28"
+                    }`}
                   />
-                </AnimatePresence>
-
-                <div className={`absolute inset-0 ${styles.bannerScreenGlow}`} />
-                <div className={`absolute inset-0 ${styles.bannerOverlay}`} />
-
-                <div className="absolute inset-x-3 bottom-3 rounded-[1.25rem] border border-[#1f4c79]/85 bg-[#081a36]/88 p-4 shadow-[0_18px_46px_rgba(2,9,22,0.38)] backdrop-blur-md sm:inset-y-0 sm:left-auto sm:right-0 sm:bottom-auto sm:flex sm:w-[15.5rem] sm:flex-col sm:justify-center sm:rounded-none sm:border-y-0 sm:border-r-0 sm:border-l sm:bg-[linear-gradient(90deg,rgba(6,18,39,0.08),rgba(5,15,32,0.86)_18%,rgba(4,11,25,0.97)_100%)] sm:p-7 sm:shadow-none sm:backdrop-blur-none md:w-[18rem] lg:w-[20rem]">
-                  <p className="font-display text-[11px] font-bold tracking-[0.14em] text-[#65e4ff] sm:text-xs">
-                    {showcase.eyebrow}
-                  </p>
-                  <h2 className="mt-2 font-display text-[1.85rem] font-extrabold leading-none text-white sm:text-[2.4rem]">
-                    {showcase.title}
-                  </h2>
-                  <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-white/92 sm:text-[12px]">
-                    {showcase.detailTop}
-                  </p>
-                  <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#70dfff] sm:text-[12px]">
-                    {showcase.detailBottom}
-                  </p>
-                  <div className="mt-5 inline-flex w-fit rounded-[1rem] border border-[#2ccaff]/70 bg-[linear-gradient(180deg,rgba(10,31,61,0.96),rgba(6,19,40,0.94))] px-4 py-3 font-display text-lg font-bold text-[#74e8ff] shadow-[0_0_28px_rgba(57,207,255,0.26)] sm:px-5 sm:text-[1.35rem]">
-                    {showcase.price}
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveIndex(prevIndex)}
-                  aria-label="Show previous banner"
-                  className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#214a79] bg-[#07152d]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#59dfff] hover:text-[#7ee9ff] sm:left-4 sm:h-11 sm:w-11"
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveIndex(nextIndex)}
-                  aria-label="Show next banner"
-                  className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#214a79] bg-[#07152d]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#59dfff] hover:text-[#7ee9ff] sm:right-4 sm:h-11 sm:w-11"
-                >
-                  <ChevronRight size={18} />
-                </button>
-
-                <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-[#06152d]/68 px-3 py-2 backdrop-blur-md">
-                  {heroBanners.map((banner, index) => (
-                    <button
-                      key={banner.src}
-                      type="button"
-                      onClick={() => setActiveIndex(index)}
-                      aria-label={`Show banner ${index + 1}`}
-                      className={`h-2 rounded-full transition-all ${
-                        index === activeIndex
-                          ? "w-7 bg-[#67e3ff] shadow-[0_0_12px_rgba(103,227,255,0.8)]"
-                          : "w-2 bg-white/28"
-                      }`}
-                    />
-                  ))}
-                </div>
+                ))}
               </div>
             </div>
 
-            {previewIndices.map((previewIndex, index) => (
-              <button
-                key={`${heroBanners[previewIndex].src}-${index}`}
-                type="button"
-                onClick={() => setActiveIndex(previewIndex)}
-                className={`absolute right-0 hidden overflow-hidden rounded-[1.55rem] border border-[#173c64] bg-[#07142b]/80 shadow-[0_26px_70px_rgba(1,7,18,0.52)] transition hover:border-[#53dcff] xl:block ${
-                  index === 0 ? styles.previewPrimary : styles.previewSecondary
-                }`}
-              >
-                <img
-                  src={heroBanners[previewIndex].src}
-                  alt={heroBanners[previewIndex].alt}
-                  className="h-full w-full object-cover"
-                />
-                <div className={`absolute inset-0 ${styles.previewShade}`} />
-              </button>
-            ))}
           </div>
         </motion.div>
       </div>
 
+      {/* Ticker */}
       <div className={`relative z-10 border-y border-[#16385f] ${styles.tickerBar}`}>
         <div className="hero-shop-mask overflow-hidden py-3 sm:py-3.5">
           <div
@@ -330,10 +273,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
             style={prefersReducedMotion ? undefined : { animationDuration: "28s" }}
           >
             {tickerItems.map((item, index) => (
-              <span
-                key={`${item.label}-${index}`}
-                className="inline-flex items-center gap-3 px-5 sm:px-6"
-              >
+              <span key={`${item.label}-${index}`} className="inline-flex items-center gap-3 px-5 sm:px-6">
                 <TickerItemIcon icon={item.icon} />
                 <span className="font-display text-[11px] font-semibold tracking-[0.12em] text-white/84 sm:text-xs">
                   {item.label}
