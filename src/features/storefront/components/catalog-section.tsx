@@ -1,10 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import jettImage from "@/assets/jett.png";
 import type { Product } from "@/features/catalog/domain/product";
 import { valorantRanks } from "@/features/catalog/domain/valorant-ranks";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -138,7 +136,6 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   const [nickFilter, setNickFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
-  const [isFiltersExpanded, setIsFiltersExpanded] = useState(true);
 
   // Keep this block commented so we can quickly restore the extra demo section later.
   // const featured = useMemo(
@@ -357,38 +354,6 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
         </motion.div>
       ))}
 
-      <motion.div
-        className="pointer-events-none absolute -left-10 top-[36%] z-[5] hidden w-[200px] -translate-y-1/2 xl:block 2xl:-left-14 2xl:w-[260px]"
-        initial={{ opacity: 0, x: -16, y: "-50%" }}
-        whileInView={{ opacity: 0.88, x: 0, y: "-50%" }}
-        viewport={{ once: true }}
-        animate={
-          isLiteMode
-            ? { y: "-50%" }
-            : { y: ["-50%", "calc(-50% - 10px)", "-50%"] }
-        }
-        transition={
-          isLiteMode
-            ? { duration: 0.3 }
-            : {
-                opacity: { duration: 0.5, ease: "easeOut" },
-                x: { duration: 0.5, ease: "easeOut" },
-                y: {
-                  duration: 5.8,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                },
-              }
-        }
-      >
-        <Image
-          src={jettImage}
-          alt="Jett character art"
-          className="h-auto w-full object-contain drop-shadow-[0_18px_46px_hsl(var(--background)_/_0.55)]"
-          priority={false}
-        />
-      </motion.div>
-
       <div className="relative z-10 container mx-auto space-y-16 px-4 sm:space-y-20 lg:space-y-24">
 
         <div>
@@ -421,139 +386,109 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                     </span>
                   </div>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsFiltersExpanded((current) => !current)}
-                  aria-expanded={isFiltersExpanded}
-                  aria-controls="catalog-filters-content"
-                  className={styles.filtersToggle}
-                >
-                  <span>{isFiltersExpanded ? "Sembunyikan Filter" : "Tampilkan Filter"}</span>
-                  <ChevronDown
-                    size={16}
-                    className={`${styles.filtersToggleIcon} ${isFiltersExpanded ? styles.filtersToggleIconExpanded : ""}`}
-                  />
-                </button>
               </div>
 
-              <AnimatePresence initial={false}>
-                {isFiltersExpanded && (
-                  <motion.div
-                    key="catalog-filters-content"
-                    id="catalog-filters-content"
-                    className={styles.filtersBody}
-                    initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
-                    animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, height: "auto" }}
-                    exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
-                    transition={
-                      prefersReducedMotion
-                        ? { duration: 0.18 }
-                        : { duration: 0.28, ease: [0.16, 1, 0.3, 1] }
-                    }
-                  >
-                    <div className="grid gap-4 pt-5 xl:grid-cols-[1.15fr_repeat(4,minmax(0,1fr))_auto] xl:items-end">
-                      <label className="block">
-                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
-                          Cari Kode / Skin
-                        </span>
-                        <span className={`flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
-                          <input
-                            type="text"
-                            placeholder="Contoh: Vandal, Oni..."
-                            value={search}
-                            onChange={(event) => setSearch(event.target.value)}
-                            className="h-full w-full bg-transparent text-[14px] text-white outline-none placeholder:text-white/34"
-                          />
-                        </span>
-                      </label>
+              <div id="catalog-filters-content" className={styles.filtersBody}>
+                <div className="grid gap-4 pt-5 xl:grid-cols-[1.15fr_repeat(4,minmax(0,1fr))_auto] xl:items-end">
+                  <label className="block">
+                    <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
+                      Cari Kode / Skin
+                    </span>
+                    <span className={`flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                      <input
+                        type="text"
+                        placeholder="Contoh: Vandal, Oni..."
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                        className="h-full w-full bg-transparent text-[14px] text-white outline-none placeholder:text-white/34"
+                      />
+                    </span>
+                  </label>
 
-                      <label className="block">
-                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
-                          Cari Rank
-                        </span>
-                        <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
-                          <select
-                            value={rankFilter}
-                            onChange={(event) => setRankFilter(event.target.value)}
-                            className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
-                          >
-                            <option value="all">Semua Rank</option>
-                            {rankOptions.map((rank) => (
-                              <option key={rank} value={rank}>{rank}</option>
-                            ))}
-                          </select>
-                          <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
-                        </span>
-                      </label>
-
-                      <label className="block">
-                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
-                          Region
-                        </span>
-                        <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
-                          <select
-                            value={regionFilter}
-                            onChange={(event) => setRegionFilter(event.target.value)}
-                            className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
-                          >
-                            <option value="all">Semua Region</option>
-                            {regionOptions.map((region) => (
-                              <option key={region} value={region}>{region}</option>
-                            ))}
-                          </select>
-                          <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
-                        </span>
-                      </label>
-
-                      <label className="block">
-                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
-                          Ganti Nick
-                        </span>
-                        <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
-                          <select
-                            value={nickFilter}
-                            onChange={(event) => setNickFilter(event.target.value)}
-                            className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
-                          >
-                            <option value="all">Semua Status</option>
-                            {nickOptions.map((option) => (
-                              <option key={option} value={option}>{option}</option>
-                            ))}
-                          </select>
-                          <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
-                        </span>
-                      </label>
-
-                      <label className="block">
-                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
-                          Urutkan Harga
-                        </span>
-                        <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
-                          <select
-                            value={sortBy}
-                            onChange={(event) => setSortBy(event.target.value)}
-                            className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
-                          >
-                            <option value="default">Terbaru (Default)</option>
-                            <option value="price-asc">Harga Termurah</option>
-                            <option value="price-desc">Harga Termahal</option>
-                          </select>
-                          <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
-                        </span>
-                      </label>
-
-                      <button
-                        type="button"
-                        onClick={resetFilters}
-                        className="inline-flex h-[3.25rem] items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.92))] px-6 font-display text-[14px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_24px_rgba(34,211,238,0.12)] transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
+                  <label className="block">
+                    <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
+                      Cari Rank
+                    </span>
+                    <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                      <select
+                        value={rankFilter}
+                        onChange={(event) => setRankFilter(event.target.value)}
+                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
                       >
-                        Reset Filter
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                        <option value="all">Semua Rank</option>
+                        {rankOptions.map((rank) => (
+                          <option key={rank} value={rank}>{rank}</option>
+                        ))}
+                      </select>
+                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
+                    </span>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
+                      Region
+                    </span>
+                    <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                      <select
+                        value={regionFilter}
+                        onChange={(event) => setRegionFilter(event.target.value)}
+                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
+                      >
+                        <option value="all">Semua Region</option>
+                        {regionOptions.map((region) => (
+                          <option key={region} value={region}>{region}</option>
+                        ))}
+                      </select>
+                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
+                    </span>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
+                      Ganti Nick
+                    </span>
+                    <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                      <select
+                        value={nickFilter}
+                        onChange={(event) => setNickFilter(event.target.value)}
+                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
+                      >
+                        <option value="all">Semua Status</option>
+                        {nickOptions.map((option) => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
+                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
+                    </span>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
+                      Urutkan Harga
+                    </span>
+                    <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                      <select
+                        value={sortBy}
+                        onChange={(event) => setSortBy(event.target.value)}
+                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
+                      >
+                        <option value="default">Terbaru (Default)</option>
+                        <option value="price-asc">Harga Termurah</option>
+                        <option value="price-desc">Harga Termahal</option>
+                      </select>
+                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
+                    </span>
+                  </label>
+
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="inline-flex h-[3.25rem] items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.92))] px-6 font-display text-[14px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_24px_rgba(34,211,238,0.12)] transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
+                  >
+                    Reset Filter
+                  </button>
+                </div>
+              </div>
             </div>
           </motion.div>
 
