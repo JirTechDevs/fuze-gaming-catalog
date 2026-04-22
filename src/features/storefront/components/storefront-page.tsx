@@ -10,6 +10,7 @@ import IntroScreen from "@/features/storefront/components/intro-screen";
 import Navbar from "@/features/storefront/components/navbar";
 import TestimoniSection from "@/features/storefront/components/testimoni-section";
 import FAQSection from "@/features/storefront/components/faq-section";
+import themeStyles from "./storefront-theme.module.css";
 
 interface StorefrontPageProps {
   products: Product[];
@@ -40,7 +41,7 @@ export default function StorefrontPage({ products, banners }: StorefrontPageProp
     <>
       {!introComplete && <IntroScreen onComplete={() => setIntroComplete(true)} />}
       {introComplete && (
-        <div className="min-h-screen bg-background">
+        <div className={`${themeStyles.storefrontTheme} min-h-screen bg-background`}>
           <Navbar />
           <div className="pt-16 sm:pt-20">
             <HeroSection banners={banners} />

@@ -411,7 +411,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             <div className={`rounded-[1.5rem] border p-5 sm:p-6 ${styles.filtersPanel}`}>
               <div className={styles.filtersHeader}>
                 <div className={styles.filtersHeaderCopy}>
-                  <span className="font-display text-[11px] font-bold tracking-[0.16em] text-[#5de6ff]">
+                  <span className="font-display text-[11px] font-bold tracking-[0.16em] text-[#22D3EE]">
                     FILTER ACCOUNT
                   </span>
                   <div className={styles.filtersMeta}>
@@ -454,7 +454,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                   >
                     <div className="grid gap-4 pt-5 xl:grid-cols-[1.15fr_repeat(4,minmax(0,1fr))_auto] xl:items-end">
                       <label className="block">
-                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#5de6ff]">
+                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
                           Cari Kode / Skin
                         </span>
                         <span className={`flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
@@ -469,7 +469,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                       </label>
 
                       <label className="block">
-                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#5de6ff]">
+                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
                           Cari Rank
                         </span>
                         <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
@@ -483,12 +483,12 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                               <option key={rank} value={rank}>{rank}</option>
                             ))}
                           </select>
-                          <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/42" />
+                          <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
                         </span>
                       </label>
 
                       <label className="block">
-                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#5de6ff]">
+                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
                           Region
                         </span>
                         <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
@@ -502,12 +502,12 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                               <option key={region} value={region}>{region}</option>
                             ))}
                           </select>
-                          <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/42" />
+                          <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
                         </span>
                       </label>
 
                       <label className="block">
-                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#5de6ff]">
+                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
                           Ganti Nick
                         </span>
                         <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
@@ -521,12 +521,12 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                               <option key={option} value={option}>{option}</option>
                             ))}
                           </select>
-                          <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/42" />
+                          <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
                         </span>
                       </label>
 
                       <label className="block">
-                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#5de6ff]">
+                        <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
                           Urutkan Harga
                         </span>
                         <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
@@ -539,14 +539,14 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                             <option value="price-asc">Harga Termurah</option>
                             <option value="price-desc">Harga Termahal</option>
                           </select>
-                          <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/42" />
+                          <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
                         </span>
                       </label>
 
                       <button
                         type="button"
                         onClick={resetFilters}
-                        className="inline-flex h-[3.25rem] items-center justify-center rounded-full border border-[#244f7e] bg-[linear-gradient(180deg,rgba(10,27,53,0.94),rgba(6,18,39,0.92))] px-6 font-display text-[14px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_24px_rgba(76,213,255,0.12)] transition hover:border-[#57ddff] hover:text-[#7de8ff]"
+                        className="inline-flex h-[3.25rem] items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.92))] px-6 font-display text-[14px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_24px_rgba(34,211,238,0.12)] transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
                       >
                         Reset Filter
                       </button>

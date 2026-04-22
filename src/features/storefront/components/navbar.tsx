@@ -106,17 +106,17 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-[#143257]/95 bg-[rgba(2,9,24,0.84)] shadow-[0_20px_56px_rgba(1,6,18,0.52)] backdrop-blur-xl">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_-60%,rgba(80,215,255,0.18),transparent_28%),radial-gradient(circle_at_82%_-40%,rgba(80,215,255,0.12),transparent_24%),linear-gradient(180deg,rgba(5,16,40,0.98),rgba(3,12,30,0.94))]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent,rgba(90,217,255,0.48),transparent)]" />
+    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-[#0EA5E9]/18 bg-[rgba(2,6,23,0.84)] shadow-[0_20px_56px_rgba(1,6,18,0.52)] backdrop-blur-xl">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_-60%,rgba(0,229,255,0.16),transparent_28%),radial-gradient(circle_at_82%_-40%,rgba(56,189,248,0.12),transparent_24%),linear-gradient(180deg,rgba(4,28,50,0.98),rgba(2,6,23,0.94))]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent,rgba(34,211,238,0.48),transparent)]" />
 
       <div className="relative mx-auto flex h-16 max-w-[1512px] items-center justify-between gap-4 px-4 sm:h-20 sm:px-6 xl:px-8">
         <Link href="/" className="flex min-w-0 shrink-0 items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#21446f] bg-[linear-gradient(180deg,rgba(11,25,53,0.95),rgba(6,18,39,0.95))] shadow-[0_0_24px_rgba(79,209,255,0.16)]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#0EA5E9]/22 bg-[linear-gradient(180deg,rgba(4,28,50,0.95),rgba(2,6,23,0.95))] shadow-[0_0_24px_rgba(34,211,238,0.16)]">
             <img src="/images/logo.png" alt="Fuzevalo" className="h-7 w-7 object-contain" />
           </div>
           <span className="truncate font-display text-sm font-extrabold tracking-[0.22em] text-white sm:text-base">
-            FUZE<span className="text-[#52dbff]">VALO</span>
+            FUZE<span className="text-[#22D3EE]">VALO</span>
           </span>
         </Link>
 
@@ -131,13 +131,13 @@ export default function Navbar() {
                 onClick={() => scrollToSection(link.href)}
                 className={`relative flex h-full items-center px-4 font-display text-[14px] font-semibold transition-colors xl:px-5 ${
                   isActive
-                    ? "text-[#63e4ff]"
-                    : "text-white/88 hover:text-[#7ae8ff]"
+                    ? "text-[#22D3EE]"
+                    : "text-white/88 hover:text-[#38BDF8]"
                 }`}
               >
                 {link.label}
                 {isActive && (
-                  <span className="absolute bottom-[10px] left-1/2 h-[2px] w-14 -translate-x-1/2 rounded-full bg-[#63e4ff] shadow-[0_0_12px_rgba(99,228,255,0.7)]" />
+                  <span className="absolute bottom-[10px] left-1/2 h-[2px] w-14 -translate-x-1/2 rounded-full bg-[#22D3EE] shadow-[0_0_12px_rgba(0,229,255,0.68)]" />
                 )}
               </button>
             );
@@ -155,7 +155,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={item.label}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-[#244b79] bg-[linear-gradient(180deg,rgba(10,24,50,0.94),rgba(6,18,38,0.88))] text-white/88 shadow-[0_10px_30px_rgba(2,10,28,0.36)] transition hover:border-[#4bd6ff] hover:text-[#6ee5ff]"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[#0EA5E9]/24 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.88))] text-white/88 shadow-[0_10px_30px_rgba(2,10,28,0.36)] transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
               >
                 <Icon />
               </a>
@@ -176,7 +176,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((current) => !current)}
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-[#1f446e] bg-[linear-gradient(180deg,rgba(10,24,50,0.94),rgba(6,18,38,0.9))] text-white transition hover:border-[#54ddff] hover:text-[#7be8ff] lg:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-[#0EA5E9]/24 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.9))] text-white transition hover:border-[#22D3EE] hover:text-[#00E5FF] lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
         >
           {open ? <X size={22} /> : <Menu size={22} />}
@@ -189,7 +189,7 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-[#15345b] bg-[linear-gradient(180deg,rgba(5,16,40,0.98),rgba(3,12,30,0.98))] lg:hidden"
+            className="overflow-hidden border-t border-[#0EA5E9]/16 bg-[linear-gradient(180deg,rgba(4,28,50,0.98),rgba(2,6,23,0.98))] lg:hidden"
           >
             <div className="space-y-2 px-4 py-4">
               {navLinks.map((link) => {
@@ -205,12 +205,12 @@ export default function Navbar() {
                     }}
                     className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left font-display text-[12px] font-semibold tracking-[0.08em] transition ${
                       isActive
-                        ? "border-[#2e6396] bg-[#0b2345] text-[#66e3ff]"
-                        : "border-[#173a61] bg-[#081b36]/90 text-white/86 hover:border-[#2e6396] hover:text-[#66e3ff]"
+                        ? "border-[#0EA5E9]/28 bg-[#041C32] text-[#22D3EE]"
+                        : "border-[#0EA5E9]/18 bg-[#020617]/90 text-white/86 hover:border-[#0EA5E9]/28 hover:text-[#22D3EE]"
                     }`}
                   >
                     <span>{link.label}</span>
-                    {isActive && <span className="h-2 w-2 rounded-full bg-[#63e4ff]" />}
+                    {isActive && <span className="h-2 w-2 rounded-full bg-[#22D3EE]" />}
                   </button>
                 );
               })}
@@ -226,7 +226,7 @@ export default function Navbar() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setOpen(false)}
-                      className="flex h-12 items-center justify-center rounded-2xl border border-[#173a61] bg-[#081b36]/90 text-white/86 transition hover:border-[#4bd6ff] hover:text-[#6ee5ff]"
+                      className="flex h-12 items-center justify-center rounded-2xl border border-[#0EA5E9]/18 bg-[#020617]/90 text-white/86 transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
                     >
                       <Icon />
                     </a>

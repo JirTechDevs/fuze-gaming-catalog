@@ -1,0 +1,47 @@
+.storefrontTheme {
+  --background: 229 84% 5%;
+  --foreground: 210 40% 98%;
+
+  --card: 209 85% 11%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 210 73% 15%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 188 86% 53%;
+  --primary-foreground: 229 84% 5%;
+
+  --aurora: 199 89% 48%;
+
+  --secondary: 210 73% 15%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 222 47% 11%;
+  --muted-foreground: 205 23% 72%;
+
+  --accent: 198 93% 60%;
+  --accent-foreground: 229 84% 5%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 210 63% 22%;
+  --input: 210 63% 22%;
+  --ring: 186 100% 50%;
+
+  --glow-primary: 0 0 20px hsl(188 86% 53% / 0.34);
+  --glow-strong:
+    0 0 30px hsl(188 86% 53% / 0.48),
+    0 0 60px hsl(198 93% 60% / 0.22);
+
+  --sidebar-background: 229 84% 5%;
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-primary: 188 86% 53%;
+  --sidebar-primary-foreground: 229 84% 5%;
+  --sidebar-accent: 222 47% 11%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-border: 210 63% 22%;
+  --sidebar-ring: 186 100% 50%;
+
+  color-scheme: dark;
+}

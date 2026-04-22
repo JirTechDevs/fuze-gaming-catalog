@@ -39,27 +39,27 @@ function WhatsAppGlyph() {
 function TickerItemIcon({ icon }: { icon: TickerIconName }) {
   if (icon === "shield") {
     return (
-      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#6de4ff]" aria-hidden="true">
+      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#22D3EE]" aria-hidden="true">
         <path fill="currentColor" d="M10 2.1 16.4 4v5.2c0 4-2.5 6.7-6.4 8.7-3.9-2-6.4-4.7-6.4-8.7V4L10 2.1Zm0 3.1a1 1 0 0 0-1 1v3.2l-1.2 1.2a1 1 0 0 0 1.4 1.4l1.5-1.5c.2-.2.3-.4.3-.7V6.2a1 1 0 0 0-1-1Z" />
       </svg>
     );
   }
   if (icon === "zap") {
     return (
-      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#6de4ff]" aria-hidden="true">
+      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#22D3EE]" aria-hidden="true">
         <path fill="currentColor" d="M11.5 1.8 4.6 10h3.8l-1.3 8.2 8-9.6h-4L11.5 1.8Z" />
       </svg>
     );
   }
   if (icon === "headphones") {
     return (
-      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#6de4ff]" aria-hidden="true">
+      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#22D3EE]" aria-hidden="true">
         <path fill="currentColor" d="M10 3a7 7 0 0 0-7 7v2.6A2.4 2.4 0 0 0 5.4 15H7a1 1 0 0 0 1-1V9.8a1 1 0 0 0-1-1H5.2a4.8 4.8 0 0 1 9.6 0H13a1 1 0 0 0-1 1V14a1 1 0 0 0 1 1h1.6a2.4 2.4 0 0 0 2.4-2.4V10a7 7 0 0 0-7-7Z" />
       </svg>
     );
   }
   return (
-    <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#6de4ff]" aria-hidden="true">
+    <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#22D3EE]" aria-hidden="true">
       <path fill="currentColor" d="M6.7 2.7a1 1 0 0 1 1.4 0l9.2 9.2a1 1 0 0 1 0 1.4l-3 3a1 1 0 0 1-1.4 0L3.7 7.1a1 1 0 0 1 0-1.4l3-3Zm.7 2.1L5.8 6.4l7.8 7.8 1.6-1.6-7.8-7.8ZM6 8.9a1.1 1.1 0 1 0 0-2.2 1.1 1.1 0 0 0 0 2.2Z" />
     </svg>
   );
@@ -108,10 +108,10 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           initial={prefersReducedMotion ? false : { opacity: 0, x: -28 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.65, ease: [0.16, 1, 0.3, 1] }}
-          className={`relative flex w-full min-w-0 flex-col gap-6 rounded-[2rem] border border-[#14345a] bg-[linear-gradient(180deg,rgba(6,18,39,0.92),rgba(4,14,31,0.78))] px-5 py-6 shadow-[0_28px_70px_rgba(1,8,22,0.4)] sm:px-6 lg:max-w-none lg:border-transparent lg:bg-none lg:px-0 lg:py-0 lg:shadow-none ${styles.heroCopyPanel}`}
+          className={`relative flex w-full min-w-0 flex-col gap-6 rounded-[2rem] border border-[#0EA5E9]/18 bg-[linear-gradient(180deg,rgba(2,6,23,0.92),rgba(4,28,50,0.78))] px-5 py-6 shadow-[0_28px_70px_rgba(1,8,22,0.4)] sm:px-6 lg:max-w-none lg:border-transparent lg:bg-none lg:px-0 lg:py-0 lg:shadow-none ${styles.heroCopyPanel}`}
         >
           <div className="flex">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#255886] bg-[#0b2345]/82 px-4 py-2 font-display text-[10px] font-bold tracking-[0.14em] text-[#60e3ff] shadow-[0_0_20px_rgba(78,209,255,0.12)] sm:text-[11px]">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#0EA5E9]/28 bg-[#041C32]/82 px-4 py-2 font-display text-[10px] font-bold tracking-[0.14em] text-[#22D3EE] shadow-[0_0_20px_rgba(34,211,238,0.12)] sm:text-[11px]">
               <Shield size={13} />
               STORE RESMI & TERPERCAYA
             </span>
@@ -121,7 +121,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
             <h1 className="font-display text-[2.9rem] font-extrabold leading-[0.92] tracking-[-0.055em] text-white sm:text-[4rem] xl:text-[4.85rem]">
               JUAL AKUN
               <br />
-              <span className="bg-[linear-gradient(180deg,#8ff4ff_0%,#51d8ff_45%,#27b8ff_100%)] bg-clip-text text-transparent">
+              <span className="bg-[linear-gradient(180deg,#00E5FF_0%,#22D3EE_36%,#38BDF8_72%,#0EA5E9_100%)] bg-clip-text text-transparent">
                 VALORANT
               </span>
             </h1>
@@ -138,7 +138,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <badge.icon size={16} strokeWidth={2.1} className="shrink-0 text-[#66e4ff]" />
+                  <badge.icon size={16} strokeWidth={2.1} className="shrink-0 text-[#22D3EE]" />
                   <p className="font-display text-base font-bold leading-none text-white sm:text-[1.15rem]">
                     {badge.value}
                   </p>
@@ -154,7 +154,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
             <button
               type="button"
               onClick={scrollToCatalog}
-              className={`${styles.heroActionButton} inline-flex min-h-[54px] items-center justify-center rounded-[1.1rem] border border-[#244e7e] bg-[linear-gradient(180deg,rgba(10,27,53,0.94),rgba(6,18,39,0.92))] px-6 py-3.5 text-center font-display text-[13px] font-semibold tracking-[0.02em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_24px_rgba(76,213,255,0.12)] transition hover:border-[#57ddff] hover:text-[#7de8ff]`}
+              className={`${styles.heroActionButton} inline-flex min-h-[54px] items-center justify-center rounded-[1.1rem] border border-[#0EA5E9]/30 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.92))] px-6 py-3.5 text-center font-display text-[13px] font-semibold tracking-[0.02em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_24px_rgba(34,211,238,0.12)] transition hover:border-[#22D3EE] hover:text-[#00E5FF]`}
             >
               Lihat Katalog
             </button>
@@ -229,7 +229,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 type="button"
                 onClick={() => setActiveIndex(prevIndex)}
                 aria-label="Show previous banner"
-                className="absolute left-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#214a79] bg-[#07152d]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#59dfff] hover:text-[#7ee9ff]"
+                className="absolute left-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[#041C32]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
               >
                 <ChevronLeft size={18} />
               </button>
@@ -238,12 +238,12 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 type="button"
                 onClick={() => setActiveIndex(nextIndex)}
                 aria-label="Show next banner"
-                className="absolute right-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#214a79] bg-[#07152d]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#59dfff] hover:text-[#7ee9ff]"
+                className="absolute right-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[#041C32]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
               >
                 <ChevronRight size={18} />
               </button>
 
-              <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-[#06152d]/68 px-3 py-2 backdrop-blur-md">
+              <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-[#0EA5E9]/16 bg-[#041C32]/68 px-3 py-2 backdrop-blur-md">
                 {heroBanners.map((banner, index) => (
                   <button
                     key={banner.src}
@@ -252,7 +252,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                     aria-label={`Show banner ${index + 1}`}
                     className={`h-2 rounded-full transition-all ${
                       index === activeIndex
-                        ? "w-7 bg-[#67e3ff] shadow-[0_0_12px_rgba(103,227,255,0.8)]"
+                        ? "w-7 bg-[#22D3EE] shadow-[0_0_12px_rgba(0,229,255,0.72)]"
                         : "w-2 bg-white/28"
                     }`}
                   />
@@ -264,7 +264,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
       </div>
 
       {/* Ticker */}
-      <div className={`relative z-10 border-y border-[#16385f] ${styles.tickerBar}`}>
+      <div className={`relative z-10 border-y border-[#0EA5E9]/20 ${styles.tickerBar}`}>
         <div className="hero-shop-mask overflow-hidden py-3 sm:py-3.5">
           <div
             className={`${prefersReducedMotion ? "" : "hero-shop-track"} flex w-max items-center whitespace-nowrap`}

@@ -9,6 +9,7 @@ import Footer from "@/features/storefront/components/footer";
 import ProductImageGallery from "@/features/storefront/components/product-image-gallery";
 import Navbar from "@/features/storefront/components/navbar";
 import styles from "./product-detail-page.module.css";
+import themeStyles from "./storefront-theme.module.css";
 
 interface ProductDetailPageProps {
   product: Product;
@@ -148,7 +149,7 @@ export default function ProductDetailPage({
   const accountSpecs = getAccountSpecs(product);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={`${themeStyles.storefrontTheme} min-h-screen bg-background`}>
       <Navbar />
 
       <main className="relative isolate overflow-hidden pt-20">
@@ -282,7 +283,7 @@ export default function ProductDetailPage({
                         href={buildWhatsAppLink(product)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-[1.2rem] bg-white px-5 py-4 text-center font-display text-base font-bold text-zinc-950 transition hover:bg-primary hover:text-primary-foreground"
+                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-[#22D3EE]/35 bg-[linear-gradient(180deg,#22D3EE,#0EA5E9)] px-5 py-4 text-center font-display text-base font-bold text-[#020617] shadow-[0_16px_34px_rgba(14,165,233,0.22)] transition hover:brightness-105"
                       >
                         <WhatsAppGlyph />
                         Beli Sekarang

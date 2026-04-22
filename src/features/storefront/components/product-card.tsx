@@ -104,7 +104,7 @@ export default function ProductCard({
         ease: [0.16, 1, 0.3, 1],
       }}
       whileHover={isLiteMode ? undefined : { y: -4, transition: { type: "spring", stiffness: 350, damping: 18 } }}
-      className={`group relative flex h-full min-h-[20rem] cursor-pointer flex-col overflow-hidden rounded-[1.35rem] border border-[#153b5d] bg-[linear-gradient(180deg,rgba(8,22,45,0.98),rgba(5,15,32,0.96))] p-4 shadow-[0_18px_44px_rgba(2,9,22,0.28)] transition-all duration-300 hover:border-[#2f7faf] ${
+      className={`group relative flex h-full min-h-[20rem] cursor-pointer flex-col overflow-hidden rounded-[1.35rem] border border-[#0EA5E9]/20 bg-[linear-gradient(180deg,rgba(4,28,50,0.98),rgba(2,6,23,0.96))] p-4 shadow-[0_18px_44px_rgba(2,9,22,0.28)] transition-all duration-300 hover:border-[#22D3EE] ${
         isSold ? "pointer-events-none opacity-50" : ""
       }`}
       style={{ contentVisibility: "auto", containIntrinsicSize: "320px 360px" }}
@@ -123,8 +123,8 @@ export default function ProductCard({
       }}
     >
       <div className="mb-4 flex items-center justify-between gap-3">
-        <span className="inline-flex items-center gap-2 rounded-full border border-[#1d688d] bg-[#061e39]/88 px-3 py-1.5 font-display text-[12px] font-bold tracking-[0.04em] text-[#7be8ff]">
-          <span className="h-2 w-2 rounded-full bg-[#68e7ff] shadow-[0_0_12px_rgba(104,231,255,0.85)]" />
+        <span className="inline-flex items-center gap-2 rounded-full border border-[#0EA5E9]/24 bg-[#041C32]/88 px-3 py-1.5 font-display text-[12px] font-bold tracking-[0.04em] text-[#22D3EE]">
+          <span className="h-2 w-2 rounded-full bg-[#00E5FF] shadow-[0_0_12px_rgba(0,229,255,0.82)]" />
           {product.code}
         </span>
 
@@ -136,7 +136,7 @@ export default function ProductCard({
       </div>
 
       <div className="relative flex items-start gap-4">
-        <div className="relative w-[44%] max-w-[142px] shrink-0 overflow-hidden rounded-[0.95rem] border border-[#174363] bg-[linear-gradient(180deg,rgba(14,38,69,0.88),rgba(7,18,35,0.96))]">
+        <div className="relative w-[44%] max-w-[142px] shrink-0 overflow-hidden rounded-[0.95rem] border border-[#0EA5E9]/18 bg-[linear-gradient(180deg,rgba(10,37,64,0.88),rgba(2,6,23,0.96))]">
           <img
             src={product.image}
             alt={product.code}
@@ -156,13 +156,13 @@ export default function ProductCard({
         </div>
 
         <div className="min-w-0 flex-1 pt-1">
-          <p className="font-display text-[13px] font-bold tracking-[0.04em] text-[#79ecff]">
+          <p className="font-display text-[13px] font-bold tracking-[0.04em] text-[#22D3EE]">
             FULL SKIN
           </p>
           <ul className="mt-3 space-y-2 text-[12px] leading-5 text-white/74">
             {visibleSkins.map((skin) => (
               <li key={skin} className="flex gap-2">
-                <span className="mt-[0.55rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#67e7ff]" />
+                <span className="mt-[0.55rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#00E5FF]" />
                 <span className="min-w-0 truncate">{skin}</span>
               </li>
             ))}
@@ -171,7 +171,7 @@ export default function ProductCard({
       </div>
 
       <div className="mt-auto pt-5">
-        <p className="font-display text-[1.12rem] font-bold text-[#5ae8ff] sm:text-[1.22rem]">
+        <p className="font-display text-[1.12rem] font-bold text-[#38BDF8] sm:text-[1.22rem]">
           Rp {formatPrice(product.price)}
         </p>
 
