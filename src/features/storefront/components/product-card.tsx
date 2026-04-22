@@ -153,7 +153,7 @@ export default function ProductCard({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(event) => event.stopPropagation()}
-              className={`flex w-full items-center justify-center gap-1.5 rounded-full bg-primary px-3 py-2.5 text-center font-display text-[9px] font-bold tracking-[0.08em] text-primary-foreground shadow-lg transition-transform hover:scale-105 sm:gap-2 sm:px-4 sm:py-3 sm:text-xs sm:tracking-[0.16em]`}
+              className={`flex w-full items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-aurora px-3 py-2.5 text-center font-display text-[9px] font-bold tracking-[0.08em] text-primary-foreground shadow-[0_0_20px_hsl(var(--aurora)/0.25)] transition-transform hover:scale-105 sm:gap-2 sm:px-4 sm:py-3 sm:text-xs sm:tracking-[0.16em]`}
             >
               <MessageCircle size={14} className="sm:h-4 sm:w-4" />
               BELI AKUN INI

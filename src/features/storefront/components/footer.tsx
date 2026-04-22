@@ -14,9 +14,6 @@ export default function Footer({ compact = false }: FooterProps) {
         <p className="font-display text-[10px] tracking-[0.3em] text-muted-foreground/40">
           © 2026 FUZEVALO — ALL RIGHTS RESERVED
         </p>
-        <p className="max-w-xs text-[10px] leading-5 text-muted-foreground/25 sm:max-w-none">
-          Not affiliated with Riot Games.
-        </p>
       </div>
     </footer>
   );

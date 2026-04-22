@@ -90,19 +90,8 @@ export default function TestimoniSection() {
         />
       </div> */}
 
-      {/* Decorative doodles */}
-      <div className="pointer-events-none absolute left-[4%] top-[18%] hidden w-16 -rotate-12 text-primary/20 lg:block xl:w-20">
-        <ShieldDoodle />
-      </div>
-      <div className="pointer-events-none absolute right-[5%] top-[12%] hidden w-14 rotate-[15deg] text-primary/16 lg:block xl:w-18">
-        <StarDoodle />
-      </div>
-      <div className="pointer-events-none absolute left-[7%] bottom-[14%] hidden w-14 rotate-6 text-primary/14 lg:block xl:w-16">
-        <CrosshairDoodle />
-      </div>
-      <div className="pointer-events-none absolute right-[6%] bottom-[18%] hidden w-16 -rotate-[8deg] text-primary/18 lg:block xl:w-20">
-        <ChatBubbleDoodle />
-      </div>
+
+
 
       <div className="relative mx-auto w-full max-w-[1480px] px-4 sm:px-6 lg:px-8">
 
@@ -114,9 +103,9 @@ export default function TestimoniSection() {
           </div>
         </div>
 
-        <div className="relative mx-auto w-[75%] overflow-hidden rounded-[1.5rem] border border-primary/15 bg-card/40 py-4 shadow-[0_24px_90px_hsl(var(--background)_/_0.42)] backdrop-blur-sm sm:py-5">
+        <div className="relative mx-auto w-[75%] overflow-hidden rounded-[1.5rem] border border-primary/15 bg-card/40 py-4 backdrop-blur-sm sm:py-5">
           <div className="relative z-10">
-            <div className="testimoni-strip-mask overflow-hidden">
+            <div className="overflow-hidden">
               <div className="testimoni-strip-track flex w-max gap-2.5 px-2.5 sm:gap-3 sm:px-3">
                 {loopedTestimonials.map((item, index) => (
                   <div

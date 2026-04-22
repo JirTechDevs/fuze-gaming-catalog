@@ -9,6 +9,7 @@ import HeroSection from "@/features/storefront/components/hero-section";
 import IntroScreen from "@/features/storefront/components/intro-screen";
 import Navbar from "@/features/storefront/components/navbar";
 import TestimoniSection from "@/features/storefront/components/testimoni-section";
+import FAQSection from "@/features/storefront/components/faq-section";
 
 interface StorefrontPageProps {
   products: Product[];
@@ -44,7 +45,10 @@ export default function StorefrontPage({ products, banners }: StorefrontPageProp
           <div className="pt-14 sm:pt-16">
             <HeroSection banners={banners} />
             <CatalogSection products={products} />
+            <div className="mx-auto h-[2px] w-[90%] max-w-[1480px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
             <TestimoniSection />
+            <div className="mx-auto h-[2px] w-[90%] max-w-[1480px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+            <FAQSection />
             <Footer />
           </div>
         </div>

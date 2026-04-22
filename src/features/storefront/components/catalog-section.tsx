@@ -485,7 +485,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="rounded-full border border-primary/30 bg-primary/5 px-6 py-2 font-display text-[11px] font-bold tracking-wider text-primary shadow-sm transition hover:scale-105 hover:bg-primary hover:text-primary-foreground active:scale-95"
+                  className="rounded-full border border-primary/30 bg-primary/5 px-6 py-2 font-display text-[11px] font-bold tracking-wider text-primary shadow-sm transition hover:scale-105 hover:border-transparent hover:bg-gradient-to-r hover:from-primary hover:to-aurora hover:text-primary-foreground active:scale-95"
                 >
                   Reset Filter
                 </button>

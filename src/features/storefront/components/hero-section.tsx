@@ -243,20 +243,20 @@ export default function HeroSection({ banners }: HeroSectionProps) {
             isLiteMode
               ? { opacity: 0.24, y: 0, rotate: ornament.rotate }
               : {
-                  opacity: [0.2, 0.52, 0.24],
-                  y: [0, -10, 0],
-                  rotate: [ornament.rotate, ornament.rotate + 2, ornament.rotate],
-                }
+                opacity: [0.2, 0.52, 0.24],
+                y: [0, -10, 0],
+                rotate: [ornament.rotate, ornament.rotate + 2, ornament.rotate],
+              }
           }
           transition={
             isLiteMode
               ? { duration: 0.2 }
               : {
-                  duration: ornament.duration,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: ornament.delay,
-                }
+                duration: ornament.duration,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: ornament.delay,
+              }
           }
         >
           {ornament.type === "cluster" && <ConsoleCluster />}
@@ -275,11 +275,11 @@ export default function HeroSection({ banners }: HeroSectionProps) {
             isLiteMode
               ? { duration: 0.2 }
               : {
-                  duration: 4.8,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: line.delay,
-                }
+                duration: 4.8,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: line.delay,
+              }
           }
         >
           <span className={`h-1.5 w-1.5 rounded-full bg-primary/80 ${styles.ornamentDot}`} />
@@ -326,11 +326,11 @@ export default function HeroSection({ banners }: HeroSectionProps) {
             isLiteMode
               ? { duration: 0.2 }
               : {
-                  duration: particle.duration,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: particle.delay,
-                }
+                duration: particle.duration,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: particle.delay,
+              }
           }
         />
       ))}
@@ -382,9 +382,8 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                       type="button"
                       onClick={() => setActiveIndex(index)}
                       aria-label={`Show banner ${index + 1}`}
-                      className={`h-2 rounded-full transition-all ${
-                        index === activeIndex ? "w-6 bg-primary" : "w-2 bg-foreground/30"
-                      }`}
+                      className={`h-2 rounded-full transition-all ${index === activeIndex ? "w-6 bg-primary" : "w-2 bg-foreground/30"
+                        }`}
                     />
                   ))}
                 </div>

@@ -6,23 +6,25 @@
 
 @layer base {
   :root {
-    --background: 220 26% 16%;
-    --foreground: 210 20% 92%;
+    --background: 226 48% 6%;
+    --foreground: 210 40% 98%;
 
-    --card: 220 26% 18%;
-    --card-foreground: 210 20% 92%;
+    --card: 226 48% 6%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 220 26% 18%;
-    --popover-foreground: 210 20% 92%;
+    --popover: 226 48% 6%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 192 78% 74%;
-    --primary-foreground: 220 26% 14%;
+    --primary: 189 100% 72%;
+    --primary-foreground: 226 48% 6%;
 
-    --secondary: 218 20% 26%;
-    --secondary-foreground: 210 20% 100%;
+    --aurora: 265 85% 72%;
 
-    --muted: 218 20% 22%;
-    --muted-foreground: 214 18% 70%;
+    --secondary: 217 32% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 221 24% 14%;
+    --muted-foreground: 214 18% 62%;
 
     --accent: 185 88% 56%;
     --accent-foreground: 226 48% 6%;
@@ -30,9 +32,9 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 218 20% 26%;
-    --input: 218 20% 26%;
-    --ring: 192 78% 74%;
+    --border: 219 28% 18%;
+    --input: 219 28% 18%;
+    --ring: 189 100% 72%;
 
     --radius: 1.25rem;
 
@@ -94,9 +96,6 @@
     animation: hero-shop-marquee 22s linear infinite;
   }
 
-  .hero-shop-track:hover {
-    animation-play-state: paused;
-  }
 
   .testimoni-strip-mask {
     mask-image: linear-gradient(
