@@ -40,7 +40,7 @@ Detail akan diberikan saat di WhatsApp.`,
 
 export default function FAQSection() {
   return (
-    <section className="relative overflow-hidden py-12 sm:py-14">
+    <section id="faq" className="relative scroll-mt-24 overflow-hidden py-12 sm:scroll-mt-28 sm:py-14">
       <div className="relative mx-auto w-full max-w-[1480px] px-4 sm:px-6 lg:px-8">
         <div className="mb-8 px-1 sm:mb-10">
           <div className="flex flex-col items-center gap-3">

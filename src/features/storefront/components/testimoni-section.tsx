@@ -76,7 +76,7 @@ function ChatBubbleDoodle() {
 
 export default function TestimoniSection() {
   return (
-    <section className="relative overflow-hidden py-12 sm:py-14">
+    <section id="testimoni" className="relative scroll-mt-24 overflow-hidden py-12 sm:scroll-mt-28 sm:py-14">
       <div className="pointer-events-none absolute inset-x-0 top-10 h-40 bg-[radial-gradient(circle_at_top,hsl(var(--primary)_/_0.18),transparent_62%)] blur-3xl" />
 
       {/* Hero icon sticker — commented out, kept for future use */}

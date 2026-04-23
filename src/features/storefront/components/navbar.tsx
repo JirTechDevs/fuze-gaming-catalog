@@ -106,13 +106,13 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-[#0EA5E9]/18 bg-[rgba(2,6,23,0.84)] shadow-[0_20px_56px_rgba(1,6,18,0.52)] backdrop-blur-xl">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_-60%,rgba(0,229,255,0.16),transparent_28%),radial-gradient(circle_at_82%_-40%,rgba(56,189,248,0.12),transparent_24%),linear-gradient(180deg,rgba(4,28,50,0.98),rgba(2,6,23,0.94))]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent,rgba(34,211,238,0.48),transparent)]" />
+    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-[#0EA5E9]/18 bg-[rgba(2,6,23,0.92)] backdrop-blur-xl">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(4,28,50,0.96),rgba(2,6,23,0.94))]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[#0EA5E9]/18" />
 
       <div className="relative mx-auto flex h-16 max-w-[1512px] items-center justify-between gap-4 px-4 sm:h-20 sm:px-6 xl:px-8">
         <Link href="/" className="flex min-w-0 shrink-0 items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#0EA5E9]/22 bg-[linear-gradient(180deg,rgba(4,28,50,0.95),rgba(2,6,23,0.95))] shadow-[0_0_24px_rgba(34,211,238,0.16)]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#0EA5E9]/22 bg-[linear-gradient(180deg,rgba(4,28,50,0.95),rgba(2,6,23,0.95))]">
             <img src="/images/logo.png" alt="Fuzevalo" className="h-7 w-7 object-contain" />
           </div>
           <span className="truncate font-display text-sm font-extrabold tracking-[0.22em] text-white sm:text-base">
@@ -137,7 +137,7 @@ export default function Navbar() {
               >
                 {link.label}
                 {isActive && (
-                  <span className="absolute bottom-[10px] left-1/2 h-[2px] w-14 -translate-x-1/2 rounded-full bg-[#22D3EE] shadow-[0_0_12px_rgba(0,229,255,0.68)]" />
+                  <span className="absolute bottom-[10px] left-1/2 h-[2px] w-14 -translate-x-1/2 rounded-full bg-[#22D3EE]" />
                 )}
               </button>
             );
@@ -155,7 +155,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={item.label}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-[#0EA5E9]/24 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.88))] text-white/88 shadow-[0_10px_30px_rgba(2,10,28,0.36)] transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[#0EA5E9]/24 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.88))] text-white/88 transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
               >
                 <Icon />
               </a>
@@ -166,7 +166,7 @@ export default function Navbar() {
             href="https://wa.me/628881462675"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-3 inline-flex items-center gap-2.5 rounded-full border border-[#43f399]/25 bg-[linear-gradient(180deg,#2ee16d,#1cca59)] px-6 py-3 font-display text-[13px] font-bold tracking-[0.02em] text-white shadow-[0_0_0_1px_rgba(110,255,173,0.12),0_16px_32px_rgba(24,185,85,0.34),0_0_28px_rgba(46,225,109,0.24)] transition hover:brightness-105"
+            className="ml-3 inline-flex items-center gap-2.5 rounded-full border border-[#43f399]/25 bg-[linear-gradient(180deg,#2ee16d,#1cca59)] px-6 py-3 font-display text-[13px] font-bold tracking-[0.02em] text-white transition hover:brightness-105"
           >
             <WhatsAppGlyph />
             Chat WhatsApp
@@ -239,7 +239,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setOpen(false)}
-                className="mt-2 flex items-center justify-center gap-2.5 rounded-2xl border border-[#43f399]/25 bg-[linear-gradient(180deg,#2ee16d,#1cca59)] px-4 py-3.5 font-display text-[12px] font-bold tracking-[0.08em] text-white shadow-[0_14px_28px_rgba(24,185,85,0.28)]"
+                className="mt-2 flex items-center justify-center gap-2.5 rounded-2xl border border-[#43f399]/25 bg-[linear-gradient(180deg,#2ee16d,#1cca59)] px-4 py-3.5 font-display text-[12px] font-bold tracking-[0.08em] text-white"
               >
                 <WhatsAppGlyph />
                 Chat WhatsApp

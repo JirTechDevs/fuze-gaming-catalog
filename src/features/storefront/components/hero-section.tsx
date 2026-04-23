@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Headphones, Shield, Zap } from "lucide-react";
+import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import type { StorefrontBanner } from "@/features/storefront/server";
 import styles from "./hero-section.module.css";
@@ -21,6 +22,17 @@ const featureBadges = [
   { icon: Shield, value: "100%", label: "Garansi Hackback" },
   { icon: Zap, value: "<10 Menit", label: "Proses Cepat" },
   { icon: Headphones, value: "24/7", label: "Fast Response" },
+] as const;
+
+const heroParticles = [
+  { left: "6%", top: "18%", size: "0.42rem", duration: "8.5s", delay: "0s", opacity: 0.42 },
+  { left: "14%", top: "58%", size: "0.28rem", duration: "10s", delay: "1.2s", opacity: 0.26 },
+  { left: "28%", top: "32%", size: "0.52rem", duration: "7.8s", delay: "0.8s", opacity: 0.4 },
+  { left: "44%", top: "74%", size: "0.34rem", duration: "9.2s", delay: "2.1s", opacity: 0.24 },
+  { left: "61%", top: "22%", size: "0.46rem", duration: "8.8s", delay: "1.6s", opacity: 0.36 },
+  { left: "73%", top: "48%", size: "0.62rem", duration: "11s", delay: "0.4s", opacity: 0.3 },
+  { left: "86%", top: "16%", size: "0.32rem", duration: "9.6s", delay: "2.4s", opacity: 0.22 },
+  { left: "92%", top: "66%", size: "0.54rem", duration: "8.2s", delay: "1s", opacity: 0.28 },
 ] as const;
 
 type TickerIconName = (typeof trustTicker)[number]["icon"];
@@ -95,7 +107,23 @@ export default function HeroSection({ banners }: HeroSectionProps) {
     <section className="relative isolate overflow-hidden">
       <div className={`absolute inset-0 ${styles.heroShell}`} />
       <div className={`absolute inset-0 ${styles.heroAurora}`} />
+      <div className={`absolute inset-0 ${styles.heroAmbientGlow}`} />
       <div className={`absolute inset-0 ${styles.heroTechLines}`} />
+      <div className={`absolute inset-0 ${styles.heroParticlesLayer}`} aria-hidden="true">
+        {heroParticles.map((particle, index) => {
+          const particleStyle = {
+            left: particle.left,
+            top: particle.top,
+            width: particle.size,
+            height: particle.size,
+            opacity: particle.opacity,
+            animationDuration: prefersReducedMotion ? undefined : particle.duration,
+            animationDelay: prefersReducedMotion ? undefined : particle.delay,
+          } satisfies CSSProperties;
+
+          return <span key={index} className={styles.heroParticle} style={particleStyle} />;
+        })}
+      </div>
       <div className={`absolute inset-y-0 left-0 w-[42%] ${styles.heroCopyGlow}`} />
       <div className={`absolute inset-x-0 bottom-0 h-28 ${styles.heroBottomFade}`} />
       <div className={`pointer-events-none absolute -left-16 top-20 hidden h-56 w-56 lg:block ${styles.heroReticleLeft}`} />
@@ -110,8 +138,11 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           transition={{ duration: prefersReducedMotion ? 0 : 0.65, ease: [0.16, 1, 0.3, 1] }}
           className={`relative flex w-full min-w-0 flex-col gap-6 rounded-[2rem] border border-[#0EA5E9]/18 bg-[linear-gradient(180deg,rgba(2,6,23,0.92),rgba(4,28,50,0.78))] px-5 py-6 shadow-[0_28px_70px_rgba(1,8,22,0.4)] sm:px-6 lg:max-w-none lg:border-transparent lg:bg-none lg:px-0 lg:py-0 lg:shadow-none ${styles.heroCopyPanel}`}
         >
+          <div className={styles.heroCopyDetailTop} aria-hidden="true" />
+          <div className={styles.heroCopyDetailBottom} aria-hidden="true" />
+
           <div className="flex">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#0EA5E9]/28 bg-[#041C32]/82 px-4 py-2 font-display text-[10px] font-bold tracking-[0.14em] text-[#22D3EE] shadow-[0_0_20px_rgba(34,211,238,0.12)] sm:text-[11px]">
+            <span className={`${styles.heroTrustBadge} inline-flex items-center gap-2 rounded-full px-4 py-2 font-display text-[10px] font-bold tracking-[0.14em] text-[#67E8F9] sm:text-[11px]`}>
               <Shield size={13} />
               STORE RESMI & TERPERCAYA
             </span>
@@ -128,22 +159,18 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           </div>
 
           <div className={styles.heroStats}>
-            {featureBadges.map((badge, index) => (
+            {featureBadges.map((badge) => (
               <div
                 key={badge.label}
-                className={`${styles.heroStat} relative pr-2 sm:flex-1 sm:pr-5 ${
-                  index < featureBadges.length - 1
-                    ? "sm:after:absolute sm:after:right-0 sm:after:top-1 sm:after:h-14 sm:after:w-px sm:after:bg-white/10"
-                    : ""
-                }`}
+                className={styles.heroStat}
               >
-                <div className="flex items-center gap-2.5">
-                  <badge.icon size={16} strokeWidth={2.1} className="shrink-0 text-[#22D3EE]" />
-                  <p className="font-display text-base font-bold leading-none text-white sm:text-[1.15rem]">
+                <div className="flex items-start gap-1">
+                  <badge.icon size={11} strokeWidth={2.1} className="mt-0.5 shrink-0 text-[#22D3EE]" />
+                  <p className="font-display text-[0.84rem] font-bold leading-[0.92] text-white sm:text-[0.95rem] xl:text-[1.02rem]">
                     {badge.value}
                   </p>
                 </div>
-                <p className="mt-1.5 break-words text-[11px] leading-tight text-white/64 sm:text-[12px]">
+                <p className="mt-0.5 break-words text-[8px] leading-[1.15] tracking-[0.01em] text-white/64 sm:text-[8.5px] xl:text-[9px]">
                   {badge.label}
                 </p>
               </div>
