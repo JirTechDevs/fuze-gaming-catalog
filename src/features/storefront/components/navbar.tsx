@@ -106,13 +106,12 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-[#0EA5E9]/18 bg-[rgba(2,6,23,0.92)] backdrop-blur-xl">
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(4,28,50,0.96),rgba(2,6,23,0.94))]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[#0EA5E9]/18" />
+    <nav className="fixed left-0 right-0 top-0 z-50 bg-[rgba(0,9,28,0.96)] shadow-[0_10px_24px_rgba(0,0,0,0.14)] backdrop-blur-xl">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_-120%,rgba(0,20,68,0.34),transparent_34%),radial-gradient(circle_at_48%_0%,rgba(0,20,68,0.22),transparent_28%),linear-gradient(100deg,#000616_0%,#00091c_18%,#001444_45%,#00091c_72%,#000616_100%)]" />
 
       <div className="relative mx-auto flex h-16 max-w-[1512px] items-center justify-between gap-4 px-4 sm:h-20 sm:px-6 xl:px-8">
         <Link href="/" className="flex min-w-0 shrink-0 items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#0EA5E9]/22 bg-[linear-gradient(180deg,rgba(4,28,50,0.95),rgba(2,6,23,0.95))]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[rgba(28,83,147,0.72)] bg-[linear-gradient(180deg,#001444_0%,#000616_100%)]">
             <img src="/images/logo.png" alt="Fuzevalo" className="h-7 w-7 object-contain" />
           </div>
           <span className="truncate font-display text-sm font-extrabold tracking-[0.22em] text-white sm:text-base">
@@ -131,13 +130,13 @@ export default function Navbar() {
                 onClick={() => scrollToSection(link.href)}
                 className={`relative flex h-full items-center px-4 font-display text-[14px] font-semibold transition-colors xl:px-5 ${
                   isActive
-                    ? "text-[#22D3EE]"
-                    : "text-white/88 hover:text-[#38BDF8]"
+                    ? "text-[#29d8ff]"
+                    : "text-white/86 hover:text-[#67dcff]"
                 }`}
               >
                 {link.label}
                 {isActive && (
-                  <span className="absolute bottom-[10px] left-1/2 h-[2px] w-14 -translate-x-1/2 rounded-full bg-[#22D3EE]" />
+                  <span className="absolute bottom-[10px] left-1/2 h-[2px] w-16 -translate-x-1/2 rounded-full bg-[#29d8ff]" />
                 )}
               </button>
             );
@@ -155,7 +154,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={item.label}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-[#0EA5E9]/24 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.88))] text-white/88 transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(28,83,147,0.62)] bg-[linear-gradient(180deg,#001444_0%,#000616_100%)] text-white/86 transition hover:border-[#29d8ff] hover:text-[#67dcff]"
               >
                 <Icon />
               </a>
@@ -166,7 +165,7 @@ export default function Navbar() {
             href="https://wa.me/628881462675"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-3 inline-flex items-center gap-2.5 rounded-full border border-[#43f399]/25 bg-[linear-gradient(180deg,#2ee16d,#1cca59)] px-6 py-3 font-display text-[13px] font-bold tracking-[0.02em] text-white transition hover:brightness-105"
+            className="ml-3 inline-flex items-center gap-2.5 rounded-full border border-[rgba(109,246,154,0.28)] bg-[linear-gradient(180deg,#37df70_0%,#1fc85a_100%)] px-6 py-3 font-display text-[13px] font-bold tracking-[0.02em] text-white transition hover:brightness-105"
           >
             <WhatsAppGlyph />
             Chat WhatsApp
@@ -176,7 +175,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((current) => !current)}
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-[#0EA5E9]/24 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.9))] text-white transition hover:border-[#22D3EE] hover:text-[#00E5FF] lg:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(28,83,147,0.62)] bg-[linear-gradient(180deg,#001444_0%,#000616_100%)] text-white transition hover:border-[#29d8ff] hover:text-[#67dcff] lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
         >
           {open ? <X size={22} /> : <Menu size={22} />}
@@ -189,7 +188,7 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-[#0EA5E9]/16 bg-[linear-gradient(180deg,rgba(4,28,50,0.98),rgba(2,6,23,0.98))] lg:hidden"
+            className="overflow-hidden border-t border-[rgba(18,49,98,0.72)] bg-[linear-gradient(180deg,#001444_0%,#000616_100%)] lg:hidden"
           >
             <div className="space-y-2 px-4 py-4">
               {navLinks.map((link) => {
@@ -205,12 +204,12 @@ export default function Navbar() {
                     }}
                     className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left font-display text-[12px] font-semibold tracking-[0.08em] transition ${
                       isActive
-                        ? "border-[#0EA5E9]/28 bg-[#041C32] text-[#22D3EE]"
-                        : "border-[#0EA5E9]/18 bg-[#020617]/90 text-white/86 hover:border-[#0EA5E9]/28 hover:text-[#22D3EE]"
+                        ? "border-[rgba(41,216,255,0.28)] bg-[rgba(0,20,68,0.9)] text-[#29d8ff]"
+                        : "border-[rgba(18,49,98,0.7)] bg-[rgba(0,6,22,0.88)] text-white/86 hover:border-[rgba(41,216,255,0.28)] hover:text-[#67dcff]"
                     }`}
                   >
                     <span>{link.label}</span>
-                    {isActive && <span className="h-2 w-2 rounded-full bg-[#22D3EE]" />}
+                    {isActive && <span className="h-2 w-2 rounded-full bg-[#29d8ff]" />}
                   </button>
                 );
               })}
@@ -226,7 +225,7 @@ export default function Navbar() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setOpen(false)}
-                      className="flex h-12 items-center justify-center rounded-2xl border border-[#0EA5E9]/18 bg-[#020617]/90 text-white/86 transition hover:border-[#22D3EE] hover:text-[#00E5FF]"
+                      className="flex h-12 items-center justify-center rounded-2xl border border-[rgba(18,49,98,0.7)] bg-[rgba(0,6,22,0.88)] text-white/86 transition hover:border-[rgba(41,216,255,0.28)] hover:text-[#67dcff]"
                     >
                       <Icon />
                     </a>
@@ -239,7 +238,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setOpen(false)}
-                className="mt-2 flex items-center justify-center gap-2.5 rounded-2xl border border-[#43f399]/25 bg-[linear-gradient(180deg,#2ee16d,#1cca59)] px-4 py-3.5 font-display text-[12px] font-bold tracking-[0.08em] text-white"
+                className="mt-2 flex items-center justify-center gap-2.5 rounded-2xl border border-[rgba(109,246,154,0.28)] bg-[linear-gradient(180deg,#37df70_0%,#1fc85a_100%)] px-4 py-3.5 font-display text-[12px] font-bold tracking-[0.08em] text-white"
               >
                 <WhatsAppGlyph />
                 Chat WhatsApp
