@@ -102,14 +102,14 @@ export default function TestimoniSection() {
           </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-6xl overflow-hidden rounded-[1.5rem] border border-primary/15 bg-card/40 py-4 backdrop-blur-sm sm:py-5">
+        <div className="relative mx-auto w-full max-w-6xl overflow-hidden rounded-[12px] border border-white/[0.07] bg-[#0A1128] py-4 backdrop-blur-sm sm:py-5">
           <div className="relative z-10">
             <div className="overflow-hidden">
               <div className="testimoni-strip-track flex w-max gap-2.5 px-2.5 sm:gap-3 sm:px-3">
                 {loopedTestimonials.map((item, index) => (
                   <div
                     key={`${item.alt}-${index}`}
-                    className="shrink-0 overflow-hidden rounded-[1rem] border border-primary/18 bg-background/78 shadow-[0_14px_38px_hsl(var(--background)_/_0.36)]"
+                    className="shrink-0 overflow-hidden rounded-[10px] border border-white/[0.08] bg-[#0D1530] shadow-[0_14px_38px_hsl(var(--background)_/_0.24)]"
                   >
                     <Image
                       src={item.src}
@@ -123,7 +123,7 @@ export default function TestimoniSection() {
             </div>
           </div>
 
-          <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-40 bg-[radial-gradient(circle_at_center,hsl(var(--primary)_/_0.16),transparent_72%)] blur-2xl lg:block" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-40 bg-[radial-gradient(circle_at_center,rgba(0,200,255,0.12),transparent_72%)] blur-2xl lg:block" />
         </div>
       </div>
     </section>

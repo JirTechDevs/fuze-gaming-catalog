@@ -209,18 +209,6 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   const endIndex = Math.min(startIndex + ACCOUNTS_PER_PAGE, available.length);
   const visibleProducts = available.slice(startIndex, endIndex);
   const visibleAmbientParticles = isLiteMode ? ambientParticles.slice(0, 2) : ambientParticles;
-  const activeFilterCount = useMemo(() => {
-    let count = 0;
-
-    if (search.trim()) count += 1;
-    if (rankFilter !== "all") count += 1;
-    if (regionFilter !== "all") count += 1;
-    if (nickFilter !== "all") count += 1;
-    if (sortBy !== "default") count += 1;
-
-    return count;
-  }, [nickFilter, rankFilter, regionFilter, search, sortBy]);
-
   const paginationItems = useMemo(() => {
     if (totalPages <= 1) {
       return [1];
@@ -373,117 +361,103 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
               </h2>
             </div>
 
-            <div className={`rounded-[1.5rem] border p-5 sm:p-6 ${styles.filtersPanel}`}>
-              <div className={styles.filtersHeader}>
-                <div className={styles.filtersHeaderCopy}>
-                  <span className="font-display text-[11px] font-bold tracking-[0.16em] text-[#22D3EE]">
-                    FILTER ACCOUNT
-                  </span>
-                  <div className={styles.filtersMeta}>
-                    <span>{available.length} akun tersedia</span>
-                    <span className={styles.filtersMetaBadge}>
-                      {activeFilterCount} filter aktif
-                    </span>
-                  </div>
-                </div>
-              </div>
-
+            <div className={`rounded-[12px] border p-5 sm:px-6 sm:py-5 ${styles.filtersPanel}`}>
               <div id="catalog-filters-content" className={styles.filtersBody}>
-                <div className="grid gap-4 pt-5 sm:grid-cols-2 xl:grid-cols-[1.15fr_repeat(4,minmax(0,1fr))_auto] xl:items-end">
+                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-[1.15fr_repeat(4,minmax(0,1fr))_auto] xl:items-end">
                   <label className="block">
-                    <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
+                    <span className={styles.filterLabel}>
                       Cari Kode / Skin
                     </span>
-                    <span className={`flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                    <span className={`flex h-[3.25rem] items-center rounded-[8px] border px-4 ${styles.filterField}`}>
                       <input
                         type="text"
                         placeholder="Contoh: Vandal, Oni..."
                         value={search}
                         onChange={(event) => setSearch(event.target.value)}
-                        className="h-full w-full bg-transparent text-[14px] text-white outline-none placeholder:text-white/34"
+                        className="h-full w-full bg-transparent text-[14px] text-white/80 outline-none placeholder:text-white/28"
                       />
                     </span>
                   </label>
 
                   <label className="block">
-                    <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
+                    <span className={styles.filterLabel}>
                       Cari Rank
                     </span>
-                    <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                    <span className={`relative flex h-[3.25rem] items-center rounded-[8px] border px-4 ${styles.filterField}`}>
                       <select
                         value={rankFilter}
                         onChange={(event) => setRankFilter(event.target.value)}
-                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
+                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white/80 outline-none ${styles.selectField}`}
                       >
                         <option value="all">Semua Rank</option>
                         {rankOptions.map((rank) => (
                           <option key={rank} value={rank}>{rank}</option>
                         ))}
                       </select>
-                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
+                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/45" />
                     </span>
                   </label>
 
                   <label className="block">
-                    <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
+                    <span className={styles.filterLabel}>
                       Region
                     </span>
-                    <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                    <span className={`relative flex h-[3.25rem] items-center rounded-[8px] border px-4 ${styles.filterField}`}>
                       <select
                         value={regionFilter}
                         onChange={(event) => setRegionFilter(event.target.value)}
-                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
+                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white/80 outline-none ${styles.selectField}`}
                       >
                         <option value="all">Semua Region</option>
                         {regionOptions.map((region) => (
                           <option key={region} value={region}>{region}</option>
                         ))}
                       </select>
-                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
+                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/45" />
                     </span>
                   </label>
 
                   <label className="block">
-                    <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
+                    <span className={styles.filterLabel}>
                       Ganti Nick
                     </span>
-                    <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                    <span className={`relative flex h-[3.25rem] items-center rounded-[8px] border px-4 ${styles.filterField}`}>
                       <select
                         value={nickFilter}
                         onChange={(event) => setNickFilter(event.target.value)}
-                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
+                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white/80 outline-none ${styles.selectField}`}
                       >
                         <option value="all">Semua Status</option>
                         {nickOptions.map((option) => (
                           <option key={option} value={option}>{option}</option>
                         ))}
                       </select>
-                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
+                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/45" />
                     </span>
                   </label>
 
                   <label className="block">
-                    <span className="mb-2 block font-display text-[11px] font-bold tracking-[0.08em] text-[#22D3EE]">
+                    <span className={styles.filterLabel}>
                       Urutkan Harga
                     </span>
-                    <span className={`relative flex h-[3.25rem] items-center rounded-[0.9rem] border px-4 ${styles.filterField}`}>
+                    <span className={`relative flex h-[3.25rem] items-center rounded-[8px] border px-4 ${styles.filterField}`}>
                       <select
                         value={sortBy}
                         onChange={(event) => setSortBy(event.target.value)}
-                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white outline-none ${styles.selectField}`}
+                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white/80 outline-none ${styles.selectField}`}
                       >
                         <option value="default">Terbaru (Default)</option>
                         <option value="price-asc">Harga Termurah</option>
                         <option value="price-desc">Harga Termahal</option>
                       </select>
-                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-[#38BDF8]/60" />
+                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/45" />
                     </span>
                   </label>
 
                   <button
                     type="button"
                     onClick={resetFilters}
-                    className="inline-flex h-[3.25rem] w-full items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[linear-gradient(180deg,rgba(4,28,50,0.94),rgba(2,6,23,0.92))] px-6 font-display text-[14px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_24px_rgba(34,211,238,0.12)] transition hover:border-[#22D3EE] hover:text-[#00E5FF] sm:w-auto"
+                    className="inline-flex h-[3.25rem] w-full items-center justify-center rounded-[8px] border border-white/[0.1] bg-[#0D1530] px-6 font-display text-[14px] font-semibold text-white/80 transition hover:border-[#00C8FF]/26 hover:text-white sm:w-auto"
                   >
                     Reset Filter
                   </button>

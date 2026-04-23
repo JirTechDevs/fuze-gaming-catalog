@@ -19,34 +19,34 @@ function getRankBadgeClasses(rank: string) {
   const base = rank.split(" ")[0]?.toLowerCase();
 
   if (base === "silver") {
-    return "border-[#7b8799] text-[#e4ebf6]";
+    return "border-[rgba(148,163,184,0.35)] bg-[rgba(148,163,184,0.12)] text-[#94A3B8]";
   }
 
   if (base === "gold") {
-    return "border-[#8a6d1f] text-[#f0cb62]";
+    return "border-[rgba(245,158,11,0.35)] bg-[rgba(245,158,11,0.12)] text-[#F59E0B]";
   }
 
   if (base === "platinum") {
-    return "border-[#2f7e86] text-[#86f0ff]";
+    return "border-[rgba(34,211,238,0.35)] bg-[rgba(34,211,238,0.12)] text-[#22D3EE]";
   }
 
   if (base === "diamond") {
-    return "border-[#8d50db] text-[#d8b4ff]";
+    return "border-[rgba(34,211,238,0.35)] bg-[rgba(34,211,238,0.12)] text-[#22D3EE]";
   }
 
   if (base === "ascendant") {
-    return "border-[#38a36d] text-[#8af3b6]";
+    return "border-[rgba(34,197,94,0.35)] bg-[rgba(34,197,94,0.12)] text-[#4ADE80]";
   }
 
   if (base === "immortal") {
-    return "border-[#d34a58] text-[#ff8a9d]";
+    return "border-[rgba(239,68,68,0.35)] bg-[rgba(239,68,68,0.12)] text-[#EF4444]";
   }
 
   if (base === "radiant") {
-    return "border-[#c68a2f] text-[#ffe08d]";
+    return "border-[rgba(251,146,60,0.35)] bg-[rgba(251,146,60,0.12)] text-[#FB923C]";
   }
 
-  return "border-[#2c5f87] text-[#d9f6ff]";
+  return "border-[rgba(0,200,255,0.24)] bg-[rgba(0,200,255,0.1)] text-[#00C8FF]";
 }
 
 function getFeaturedLabel(featured?: Product["featured"]) {
@@ -104,7 +104,7 @@ export default function ProductCard({
         ease: [0.16, 1, 0.3, 1],
       }}
       whileHover={isLiteMode ? undefined : { y: -4, transition: { type: "spring", stiffness: 350, damping: 18 } }}
-      className={`group relative flex h-full min-h-[20rem] cursor-pointer flex-col overflow-hidden rounded-[1.35rem] border border-[#0EA5E9]/20 bg-[linear-gradient(180deg,rgba(4,28,50,0.98),rgba(2,6,23,0.96))] p-4 shadow-[0_18px_44px_rgba(2,9,22,0.28)] transition-all duration-300 hover:border-[#22D3EE] ${
+      className={`group relative flex h-full min-h-[20rem] cursor-pointer flex-col overflow-hidden rounded-[12px] border border-[rgba(0,200,255,0.12)] bg-[#0A1128] p-4 transition-all duration-300 hover:border-[rgba(0,200,255,0.4)] hover:shadow-[0_0_24px_rgba(0,200,255,0.08)] ${
         isSold ? "pointer-events-none opacity-50" : ""
       }`}
       style={{ contentVisibility: "auto", containIntrinsicSize: "320px 360px" }}
@@ -123,20 +123,20 @@ export default function ProductCard({
       }}
     >
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-        <span className="inline-flex min-w-0 max-w-full items-center gap-2 rounded-full border border-[#0EA5E9]/24 bg-[#041C32]/88 px-3 py-1.5 font-display text-[12px] font-bold tracking-[0.04em] text-[#22D3EE]">
-          <span className="h-2 w-2 rounded-full bg-[#00E5FF] shadow-[0_0_12px_rgba(0,229,255,0.82)]" />
+        <span className="inline-flex min-w-0 max-w-full items-center gap-2 rounded-full border border-white/[0.08] bg-[#0D1530] px-3 py-1.5 font-display text-[12px] font-bold tracking-[0.04em] text-white/84">
+          <span className="h-2 w-2 rounded-full bg-[#00C8FF] shadow-[0_0_12px_rgba(0,200,255,0.6)]" />
           <span className="break-all">{product.code}</span>
         </span>
 
         <span
-          className={`inline-flex shrink-0 rounded-full border bg-[#0b1328]/94 px-3 py-1.5 font-display text-[12px] font-semibold ${getRankBadgeClasses(product.rank)}`}
+          className={`inline-flex shrink-0 rounded-full border px-3 py-1.5 font-display text-[12px] font-semibold ${getRankBadgeClasses(product.rank)}`}
         >
           {product.rank}
         </span>
       </div>
 
       <div className="relative flex items-start gap-3 sm:gap-4">
-        <div className="relative w-[42%] max-w-[128px] shrink-0 overflow-hidden rounded-[0.95rem] border border-[#0EA5E9]/18 bg-[linear-gradient(180deg,rgba(10,37,64,0.88),rgba(2,6,23,0.96))] sm:max-w-[142px]">
+        <div className="relative w-[42%] max-w-[128px] shrink-0 overflow-hidden rounded-[10px] border border-white/[0.08] bg-[#0D1530] sm:max-w-[142px]">
           <img
             src={product.image}
             alt={product.code}
@@ -156,13 +156,13 @@ export default function ProductCard({
         </div>
 
         <div className="min-w-0 flex-1 pt-1">
-          <p className="font-display text-[13px] font-bold tracking-[0.04em] text-[#22D3EE]">
+          <p className="font-display text-[13px] font-bold tracking-[0.04em] text-white/52">
             FULL SKIN
           </p>
           <ul className="mt-3 space-y-2 text-[12px] leading-5 text-white/74">
             {visibleSkins.map((skin) => (
               <li key={skin} className="flex items-start gap-2">
-                <span className="mt-[0.55rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#00E5FF]" />
+                <span className="mt-[0.55rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#00C8FF]" />
                 <span className="min-w-0 break-words">{skin}</span>
               </li>
             ))}
@@ -171,7 +171,7 @@ export default function ProductCard({
       </div>
 
       <div className="mt-auto pt-5">
-        <p className="font-display text-[1.12rem] font-bold text-[#38BDF8] sm:text-[1.22rem]">
+        <p className="font-display text-[1.32rem] font-bold text-[#00C8FF] sm:text-[1.48rem]">
           Rp {formatPrice(product.price)}
         </p>
 
@@ -181,7 +181,7 @@ export default function ProductCard({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(event) => event.stopPropagation()}
-            className="mt-4 inline-flex h-[3.05rem] w-full items-center justify-center gap-2 rounded-[0.6rem] border border-[#43f399]/18 bg-[linear-gradient(180deg,#37bc4a,#2fa844)] px-4 font-display text-[14px] font-bold text-white shadow-[0_12px_24px_rgba(24,185,85,0.18)] transition hover:brightness-105"
+            className="mt-4 inline-flex h-[3.05rem] w-full items-center justify-center gap-2 rounded-[8px] bg-[#22C55E] px-4 font-display text-[14px] font-bold text-white shadow-[0_12px_24px_rgba(34,197,94,0.22)] transition hover:brightness-105"
           >
             <MessageCircle size={16} />
             Beli via WhatsApp

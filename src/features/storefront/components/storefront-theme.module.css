@@ -1,47 +1,53 @@
 .storefrontTheme {
-  --background: 229 84% 5%;
+  --font-display: var(--font-rajdhani);
+
+  --background: 224 66% 6%;
   --foreground: 210 40% 98%;
 
-  --card: 222 47% 11%;
+  --card: 224 60% 10%;
   --card-foreground: 210 40% 98%;
 
-  --popover: 209 85% 11%;
+  --popover: 224 60% 10%;
   --popover-foreground: 210 40% 98%;
 
-  --primary: 186 100% 50%;
+  --primary: 193 100% 50%;
   --primary-foreground: 229 84% 5%;
 
-  --aurora: 199 89% 48%;
+  --aurora: 193 100% 50%;
 
-  --secondary: 210 73% 15%;
+  --secondary: 224 49% 13%;
   --secondary-foreground: 210 40% 98%;
 
-  --muted: 209 85% 11%;
+  --muted: 224 41% 15%;
   --muted-foreground: 205 23% 72%;
 
-  --accent: 188 86% 53%;
+  --accent: 193 100% 50%;
   --accent-foreground: 229 84% 5%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 210 63% 20%;
-  --input: 210 63% 20%;
-  --ring: 188 86% 53%;
+  --border: 223 34% 18%;
+  --input: 223 34% 18%;
+  --ring: 193 100% 50%;
 
-  --glow-primary: 0 0 18px hsl(186 100% 50% / 0.3);
+  --glow-primary: 0 0 18px hsl(193 100% 50% / 0.24);
   --glow-strong:
-    0 0 26px hsl(186 100% 50% / 0.4),
-    0 0 52px hsl(198 93% 60% / 0.18);
+    0 0 26px hsl(193 100% 50% / 0.34),
+    0 0 52px hsl(193 100% 50% / 0.16);
 
-  --sidebar-background: 229 84% 5%;
+  --sidebar-background: 224 66% 6%;
   --sidebar-foreground: 210 40% 98%;
-  --sidebar-primary: 186 100% 50%;
+  --sidebar-primary: 193 100% 50%;
   --sidebar-primary-foreground: 229 84% 5%;
-  --sidebar-accent: 222 47% 11%;
+  --sidebar-accent: 224 60% 10%;
   --sidebar-accent-foreground: 210 40% 98%;
-  --sidebar-border: 210 63% 20%;
-  --sidebar-ring: 188 86% 53%;
+  --sidebar-border: 223 34% 18%;
+  --sidebar-ring: 193 100% 50%;
+
+  background-color: #050A18;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 35px 35px;
 
   color-scheme: dark;
 }

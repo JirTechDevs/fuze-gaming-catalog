@@ -4,7 +4,7 @@ interface FooterProps {
 
 export default function Footer({ compact = false }: FooterProps) {
   return (
-    <footer className={`border-t border-border/20 bg-background ${compact ? "py-6" : "py-10"}`}>
+    <footer className={`border-t border-white/[0.05] bg-transparent ${compact ? "py-6" : "py-10"}`}>
       <div className={`container mx-auto flex flex-col items-center px-4 text-center ${compact ? "gap-2" : "gap-3"}`}>
         <img
           src="/images/logo.png"

@@ -58,13 +58,13 @@ export default function FAQSection() {
                 value={`item-${index}`}
                 className="border-none"
               >
-                <AccordionTrigger className="flex items-start justify-between rounded-xl border border-primary/30 bg-gradient-to-r from-background via-primary/20 to-primary px-4 py-3.5 text-left text-sm font-medium text-foreground shadow-[0_4px_20px_hsl(var(--background)_/_0.5)] transition-all hover:no-underline data-[state=open]:rounded-b-none sm:items-center sm:px-5 sm:py-4 sm:text-base [&>svg]:mt-1 [&>svg]:shrink-0 [&>svg]:text-black sm:[&>svg]:mt-0">
+                <AccordionTrigger className="flex items-start justify-between rounded-[12px] border border-white/[0.07] bg-[#0A1128] px-4 py-3.5 text-left text-sm font-medium text-white shadow-[0_4px_20px_hsl(var(--background)_/_0.28)] transition-all hover:no-underline data-[state=open]:rounded-b-none sm:items-center sm:px-5 sm:py-4 sm:text-base [&>svg]:mt-1 [&>svg]:shrink-0 [&>svg]:text-[#00C8FF] sm:[&>svg]:mt-0">
                   <div className="flex min-w-0 items-start gap-3">
                     <Image src="/images/logo.png" alt="Fuze Logo" width={24} height={24} className="shrink-0 object-contain" />
                     <span className="break-words pr-3">{faq.question}</span>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="whitespace-pre-line rounded-b-xl border border-t-0 border-primary/20 bg-background/50 px-4 py-4 leading-relaxed text-muted-foreground sm:px-5">
+                <AccordionContent className="whitespace-pre-line rounded-b-[12px] border border-t-0 border-white/[0.07] bg-[#0D1530] px-4 py-4 leading-relaxed text-white/72 sm:px-5">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>

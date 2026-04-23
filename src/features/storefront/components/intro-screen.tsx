@@ -25,7 +25,7 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-background"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-[#050A18] [background-image:radial-gradient(rgba(255,255,255,0.07)_1px,transparent_1px)] [background-size:35px_35px]"
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
         >

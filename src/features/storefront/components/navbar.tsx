@@ -106,16 +106,14 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 bg-[rgba(0,9,28,0.96)] shadow-[0_10px_24px_rgba(0,0,0,0.14)] backdrop-blur-xl">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_-120%,rgba(0,20,68,0.34),transparent_34%),radial-gradient(circle_at_48%_0%,rgba(0,20,68,0.22),transparent_28%),linear-gradient(100deg,#000616_0%,#00091c_18%,#001444_45%,#00091c_72%,#000616_100%)]" />
-
+    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/[0.05] bg-transparent backdrop-blur-[12px]">
       <div className="relative mx-auto flex h-16 max-w-[1512px] items-center justify-between gap-4 px-4 sm:h-20 sm:px-6 xl:px-8">
         <Link href="/" className="flex min-w-0 shrink-0 items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[rgba(28,83,147,0.72)] bg-[linear-gradient(180deg,#001444_0%,#000616_100%)]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.08] bg-[#0A1128]/78">
             <img src="/images/logo.png" alt="Fuzevalo" className="h-7 w-7 object-contain" />
           </div>
-          <span className="truncate font-display text-sm font-extrabold tracking-[0.22em] text-white sm:text-base">
-            FUZE<span className="text-[#22D3EE]">VALO</span>
+          <span className="truncate font-display text-sm font-bold tracking-[0.22em] text-white sm:text-base">
+            FUZE<span className="text-[#00C8FF]">VALO</span>
           </span>
         </Link>
 
@@ -130,13 +128,13 @@ export default function Navbar() {
                 onClick={() => scrollToSection(link.href)}
                 className={`relative flex h-full items-center px-4 font-display text-[14px] font-semibold transition-colors xl:px-5 ${
                   isActive
-                    ? "text-[#29d8ff]"
-                    : "text-white/86 hover:text-[#67dcff]"
+                    ? "text-white"
+                    : "text-white/70 hover:text-white"
                 }`}
               >
                 {link.label}
                 {isActive && (
-                  <span className="absolute bottom-[10px] left-1/2 h-[2px] w-16 -translate-x-1/2 rounded-full bg-[#29d8ff]" />
+                  <span className="absolute bottom-0 left-1/2 h-[2px] w-10 -translate-x-1/2 rounded-full bg-[#00C8FF]" />
                 )}
               </button>
             );
@@ -154,7 +152,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={item.label}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(28,83,147,0.62)] bg-[linear-gradient(180deg,#001444_0%,#000616_100%)] text-white/86 transition hover:border-[#29d8ff] hover:text-[#67dcff]"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.02] text-white/70 transition hover:border-[#00C8FF]/40 hover:text-white"
               >
                 <Icon />
               </a>
@@ -165,7 +163,7 @@ export default function Navbar() {
             href="https://wa.me/628881462675"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-3 inline-flex items-center gap-2.5 rounded-full border border-[rgba(109,246,154,0.28)] bg-[linear-gradient(180deg,#37df70_0%,#1fc85a_100%)] px-6 py-3 font-display text-[13px] font-bold tracking-[0.02em] text-white transition hover:brightness-105"
+            className="ml-3 inline-flex items-center gap-2.5 rounded-full bg-[#22C55E] px-6 py-3 font-display text-[13px] font-bold tracking-[0.02em] text-white shadow-[0_10px_24px_rgba(34,197,94,0.24)] transition hover:brightness-105"
           >
             <WhatsAppGlyph />
             Chat WhatsApp
@@ -175,7 +173,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((current) => !current)}
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(28,83,147,0.62)] bg-[linear-gradient(180deg,#001444_0%,#000616_100%)] text-white transition hover:border-[#29d8ff] hover:text-[#67dcff] lg:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.02] text-white transition hover:border-[#00C8FF]/40 hover:text-white lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
         >
           {open ? <X size={22} /> : <Menu size={22} />}
@@ -188,7 +186,7 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-[rgba(18,49,98,0.72)] bg-[linear-gradient(180deg,#001444_0%,#000616_100%)] lg:hidden"
+            className="overflow-hidden border-t border-white/[0.06] bg-[#0A1128]/95 backdrop-blur-xl lg:hidden"
           >
             <div className="space-y-2 px-4 py-4">
               {navLinks.map((link) => {
@@ -204,12 +202,12 @@ export default function Navbar() {
                     }}
                     className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left font-display text-[12px] font-semibold tracking-[0.08em] transition ${
                       isActive
-                        ? "border-[rgba(41,216,255,0.28)] bg-[rgba(0,20,68,0.9)] text-[#29d8ff]"
-                        : "border-[rgba(18,49,98,0.7)] bg-[rgba(0,6,22,0.88)] text-white/86 hover:border-[rgba(41,216,255,0.28)] hover:text-[#67dcff]"
+                        ? "border-[#00C8FF]/30 bg-[#0D1530] text-white"
+                        : "border-white/[0.08] bg-[#0D1530]/86 text-white/70 hover:border-[#00C8FF]/30 hover:text-white"
                     }`}
                   >
                     <span>{link.label}</span>
-                    {isActive && <span className="h-2 w-2 rounded-full bg-[#29d8ff]" />}
+                    {isActive && <span className="h-2 w-2 rounded-full bg-[#00C8FF]" />}
                   </button>
                 );
               })}
@@ -222,14 +220,14 @@ export default function Navbar() {
                     <a
                       key={item.label}
                       href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => setOpen(false)}
-                      className="flex h-12 items-center justify-center rounded-2xl border border-[rgba(18,49,98,0.7)] bg-[rgba(0,6,22,0.88)] text-white/86 transition hover:border-[rgba(41,216,255,0.28)] hover:text-[#67dcff]"
-                    >
-                      <Icon />
-                    </a>
-                  );
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setOpen(false)}
+                    className="flex h-12 items-center justify-center rounded-2xl border border-white/[0.08] bg-[#0D1530]/86 text-white/70 transition hover:border-[#00C8FF]/30 hover:text-white"
+                  >
+                    <Icon />
+                  </a>
+                );
                 })}
               </div>
 
@@ -238,7 +236,7 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setOpen(false)}
-                className="mt-2 flex items-center justify-center gap-2.5 rounded-2xl border border-[rgba(109,246,154,0.28)] bg-[linear-gradient(180deg,#37df70_0%,#1fc85a_100%)] px-4 py-3.5 font-display text-[12px] font-bold tracking-[0.08em] text-white"
+                className="mt-2 flex items-center justify-center gap-2.5 rounded-2xl bg-[#22C55E] px-4 py-3.5 font-display text-[12px] font-bold tracking-[0.08em] text-white shadow-[0_10px_24px_rgba(34,197,94,0.24)]"
               >
                 <WhatsAppGlyph />
                 Chat WhatsApp
