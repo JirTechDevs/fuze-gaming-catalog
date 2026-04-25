@@ -1,495 +1,306 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Headphones, Shield, Zap } from "lucide-react";
+import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
 import type { StorefrontBanner } from "@/features/storefront/server";
 import styles from "./hero-section.module.css";
 
-const particles = [
-  { left: "6%", top: "22%", size: 4, delay: 0, duration: 4.2 },
-  { left: "12%", top: "72%", size: 2, delay: 0.7, duration: 5.4 },
-  { left: "20%", top: "38%", size: 3, delay: 1.3, duration: 5.8 },
-  { left: "28%", top: "18%", size: 2, delay: 0.4, duration: 4.8 },
-  { left: "34%", top: "66%", size: 4, delay: 1.8, duration: 5.2 },
-  { left: "44%", top: "28%", size: 2, delay: 1.1, duration: 6 },
-  { left: "55%", top: "76%", size: 3, delay: 2.2, duration: 5.6 },
-  { left: "63%", top: "20%", size: 4, delay: 1.5, duration: 4.9 },
-  { left: "72%", top: "44%", size: 2, delay: 0.8, duration: 5.7 },
-  { left: "81%", top: "68%", size: 3, delay: 2.5, duration: 5.1 },
-  { left: "88%", top: "30%", size: 2, delay: 1.9, duration: 4.6 },
-  { left: "93%", top: "58%", size: 4, delay: 0.2, duration: 5.3 },
+const fallbackHeroBanners: StorefrontBanner[] = [
+  { src: "/images/banners/pink.webp", alt: "Fuzevalo banner pink edition" },
 ];
 
-const consoleOrnaments = [
-  {
-    position: "left-[5%] top-[24%]",
-    delay: 0,
-    duration: 8,
-    rotate: -6,
-    scale: 1,
-    type: "cluster",
-  },
-  {
-    position: "right-[6%] top-[20%]",
-    delay: 0.8,
-    duration: 9,
-    rotate: 7,
-    scale: 1.05,
-    type: "crosshair",
-  },
-  {
-    position: "left-[10%] bottom-[20%]",
-    delay: 1.3,
-    duration: 7.2,
-    rotate: 4,
-    scale: 0.95,
-    type: "radar",
-  },
-  {
-    position: "right-[11%] bottom-[17%]",
-    delay: 0.5,
-    duration: 8.6,
-    rotate: -4,
-    scale: 0.98,
-    type: "dpad",
-  },
+const trustTicker = [
+  { icon: "transactions", label: "1000+ TRANSAKSI BERHASIL" },
+  { icon: "shield", label: "GARANSI HACKBACK 100%" },
+  { icon: "zap", label: "PROSES CEPAT <10 MENIT" },
+  { icon: "headphones", label: "CS AKTIF 24/7" },
 ] as const;
 
-const tacticalLines = [
-  { position: "left-[18%] top-[30%]", width: "w-24", delay: 0.2 },
-  { position: "right-[17%] top-[42%]", width: "w-20", delay: 0.9 },
-  { position: "left-[24%] bottom-[26%]", width: "w-16", delay: 1.1 },
-  { position: "right-[22%] bottom-[30%]", width: "w-28", delay: 0.4 },
-];
+const featureBadges = [
+  { icon: Shield, value: "100%", label: "Garansi Hackback" },
+  { icon: Zap, value: "<10 Menit", label: "Proses Cepat" },
+  { icon: Headphones, value: "24/7", label: "Fast Response" },
+] as const;
 
-const shopTicker = Array.from({ length: 10 }, (_, index) => ({
-  id: index,
-  label: "FUZEVALO GAMING SHOP",
-}));
+const heroParticles = [
+  { left: "6%", top: "18%", size: "0.42rem", duration: "8.5s", delay: "0s", opacity: 0.42 },
+  { left: "14%", top: "58%", size: "0.28rem", duration: "10s", delay: "1.2s", opacity: 0.26 },
+  { left: "28%", top: "32%", size: "0.52rem", duration: "7.8s", delay: "0.8s", opacity: 0.4 },
+  { left: "44%", top: "74%", size: "0.34rem", duration: "9.2s", delay: "2.1s", opacity: 0.24 },
+  { left: "61%", top: "22%", size: "0.46rem", duration: "8.8s", delay: "1.6s", opacity: 0.36 },
+  { left: "73%", top: "48%", size: "0.62rem", duration: "11s", delay: "0.4s", opacity: 0.3 },
+  { left: "86%", top: "16%", size: "0.32rem", duration: "9.6s", delay: "2.4s", opacity: 0.22 },
+  { left: "92%", top: "66%", size: "0.54rem", duration: "8.2s", delay: "1s", opacity: 0.28 },
+] as const;
 
-const ConsoleCluster = () => (
-  <svg viewBox="0 0 120 120" className="h-full w-full" aria-hidden="true">
-    <circle cx="28" cy="28" r="12" fill="none" stroke="currentColor" strokeWidth="3" />
-    <rect x="64" y="16" width="24" height="24" rx="4" fill="none" stroke="currentColor" strokeWidth="3" />
-    <path d="M22 82 L34 70 L46 82 L34 94 Z" fill="none" stroke="currentColor" strokeWidth="3" />
-    <path d="M74 74 L92 92 M92 74 L74 92" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <circle
-      cx="60"
-      cy="60"
-      r="44"
-      fill="none"
-      stroke="currentColor"
-      strokeOpacity="0.3"
-      strokeWidth="1.5"
-      strokeDasharray="4 8"
-    />
-  </svg>
-);
+type TickerIconName = (typeof trustTicker)[number]["icon"];
 
-const TacticalCrosshair = () => (
-  <svg viewBox="0 0 140 140" className="h-full w-full" aria-hidden="true">
-    <circle cx="70" cy="70" r="34" fill="none" stroke="currentColor" strokeWidth="2.5" />
-    <circle
-      cx="70"
-      cy="70"
-      r="54"
-      fill="none"
-      stroke="currentColor"
-      strokeOpacity="0.35"
-      strokeWidth="1.5"
-      strokeDasharray="6 10"
-    />
-    <path
-      d="M70 8 V34 M70 106 V132 M8 70 H34 M106 70 H132"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinecap="round"
-    />
-    <path
-      d="M48 70 H60 M80 70 H92 M70 48 V60 M70 80 V92"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-    <circle cx="70" cy="70" r="6" fill="currentColor" />
-  </svg>
-);
+function WhatsAppGlyph() {
+  return (
+    <svg viewBox="0 0 32 32" className="h-[18px] w-[18px] shrink-0" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M27.2 15.4c0 6.2-5 11.3-11.3 11.3-2 0-4-.5-5.7-1.5l-6.1 1.9 2-5.9a11.2 11.2 0 0 1-1.8-5.9C4.3 9.1 9.4 4 15.7 4S27.2 9.1 27.2 15.4Zm-11.5-9.5c-5.2 0-9.4 4.2-9.4 9.4 0 1.9.6 3.7 1.6 5.2l.2.2-1.2 3.7 3.8-1.2.2.1c1.5.9 3.2 1.4 4.9 1.4 5.2 0 9.4-4.2 9.4-9.4 0-5.2-4.2-9.4-9.5-9.4Zm5.4 12c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.7-1.7-2-.2-.3 0-.4.1-.6l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6 0-.2-.7-1.7-.9-2.3-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.6s1.1 3 1.3 3.2c.2.2 2.2 3.5 5.4 4.8 3.2 1.2 3.2.8 3.8.7.6-.1 1.8-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.1-.3-.2-.6-.4Z"
+      />
+    </svg>
+  );
+}
 
-const TacticalRadar = () => (
-  <svg viewBox="0 0 160 120" className="h-full w-full" aria-hidden="true">
-    <path
-      d="M18 100 Q44 18 132 18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M28 100 Q52 34 122 34"
-      fill="none"
-      stroke="currentColor"
-      strokeOpacity="0.7"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M38 100 Q60 48 112 48"
-      fill="none"
-      stroke="currentColor"
-      strokeOpacity="0.45"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-    <circle cx="104" cy="40" r="4" fill="currentColor" />
-    <path
-      d="M18 100 H144"
-      stroke="currentColor"
-      strokeOpacity="0.35"
-      strokeWidth="1.5"
-      strokeDasharray="5 8"
-    />
-    <path d="M18 100 L50 68" stroke="currentColor" strokeOpacity="0.4" strokeWidth="1.5" />
-  </svg>
-);
-
-const DPadPanel = () => (
-  <svg viewBox="0 0 150 120" className="h-full w-full" aria-hidden="true">
-    <rect
-      x="18"
-      y="18"
-      width="114"
-      height="84"
-      rx="18"
-      fill="none"
-      stroke="currentColor"
-      strokeOpacity="0.28"
-      strokeWidth="2"
-    />
-    <path
-      d="M56 40 H70 V26 H80 V40 H94 V50 H80 V64 H70 V50 H56 Z"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinejoin="round"
-    />
-    <circle cx="102" cy="44" r="7" fill="none" stroke="currentColor" strokeWidth="2.4" />
-    <rect x="95" y="58" width="14" height="14" rx="3" fill="none" stroke="currentColor" strokeWidth="2.4" />
-    <path d="M98 90 H118" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-    <path d="M32 82 H72" stroke="currentColor" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" />
-    <path d="M32 90 H62" stroke="currentColor" strokeOpacity="0.3" strokeWidth="2" strokeLinecap="round" />
-  </svg>
-);
+function TickerItemIcon({ icon }: { icon: TickerIconName }) {
+  if (icon === "shield") {
+    return (
+      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#00C8FF]" aria-hidden="true">
+        <path fill="currentColor" d="M10 2.1 16.4 4v5.2c0 4-2.5 6.7-6.4 8.7-3.9-2-6.4-4.7-6.4-8.7V4L10 2.1Zm0 3.1a1 1 0 0 0-1 1v3.2l-1.2 1.2a1 1 0 0 0 1.4 1.4l1.5-1.5c.2-.2.3-.4.3-.7V6.2a1 1 0 0 0-1-1Z" />
+      </svg>
+    );
+  }
+  if (icon === "zap") {
+    return (
+      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#00C8FF]" aria-hidden="true">
+        <path fill="currentColor" d="M11.5 1.8 4.6 10h3.8l-1.3 8.2 8-9.6h-4L11.5 1.8Z" />
+      </svg>
+    );
+  }
+  if (icon === "headphones") {
+    return (
+      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#00C8FF]" aria-hidden="true">
+        <path fill="currentColor" d="M10 3a7 7 0 0 0-7 7v2.6A2.4 2.4 0 0 0 5.4 15H7a1 1 0 0 0 1-1V9.8a1 1 0 0 0-1-1H5.2a4.8 4.8 0 0 1 9.6 0H13a1 1 0 0 0-1 1V14a1 1 0 0 0 1 1h1.6a2.4 2.4 0 0 0 2.4-2.4V10a7 7 0 0 0-7-7Z" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#00C8FF]" aria-hidden="true">
+      <path fill="currentColor" d="M6.7 2.7a1 1 0 0 1 1.4 0l9.2 9.2a1 1 0 0 1 0 1.4l-3 3a1 1 0 0 1-1.4 0L3.7 7.1a1 1 0 0 1 0-1.4l3-3Zm.7 2.1L5.8 6.4l7.8 7.8 1.6-1.6-7.8-7.8ZM6 8.9a1.1 1.1 0 1 0 0-2.2 1.1 1.1 0 0 0 0 2.2Z" />
+    </svg>
+  );
+}
 
 interface HeroSectionProps {
   banners: StorefrontBanner[];
 }
 
 export default function HeroSection({ banners }: HeroSectionProps) {
+  const heroBanners = banners.length > 0 ? banners : fallbackHeroBanners;
   const [activeIndex, setActiveIndex] = useState(0);
-  const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
-  const isLiteMode = isMobile || prefersReducedMotion;
-  const visibleParticles = isLiteMode ? particles.slice(0, 4) : particles;
 
   useEffect(() => {
+    if (heroBanners.length < 2) return;
     const timer = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % banners.length);
-    }, isLiteMode ? 5000 : 3500);
-
+      setActiveIndex((current) => (current + 1) % heroBanners.length);
+    }, prefersReducedMotion ? 5600 : 4200);
     return () => window.clearInterval(timer);
-  }, [banners.length, isLiteMode]);
+  }, [heroBanners.length, prefersReducedMotion]);
 
   const scrollToCatalog = () => {
-    document
-      .getElementById("catalog")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const prevIndex = (activeIndex - 1 + banners.length) % banners.length;
-  const nextIndex = (activeIndex + 1) % banners.length;
-  const goToPrevious = () => setActiveIndex(prevIndex);
-  const goToNext = () => setActiveIndex(nextIndex);
+  const prevIndex = (activeIndex - 1 + heroBanners.length) % heroBanners.length;
+  const nextIndex = (activeIndex + 1) % heroBanners.length;
+  const secondNextIndex = (activeIndex + 2) % heroBanners.length;
+  const tickerItems = [...trustTicker, ...trustTicker, ...trustTicker, ...trustTicker];
 
   return (
     <section className="relative isolate overflow-hidden">
       <div className={`absolute inset-0 ${styles.heroShell}`} />
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
-      <div className={`absolute inset-0 ${styles.heroSideFade}`} />
-      <div className={`absolute inset-0 opacity-95 ${styles.heroHalo}`} />
-      <div className={`absolute inset-x-0 top-1/2 h-[24rem] -translate-y-1/2 md:h-[34rem] ${styles.heroCenterGlow}`} />
-      <div className={`absolute inset-0 bg-grid opacity-[0.14] ${styles.heroGridMask}`} />
-      <div className={`absolute h-48 w-48 rounded-full bg-primary/16 blur-2xl md:h-72 md:w-72 md:bg-primary/20 md:blur-3xl ${styles.orbTopLeft}`} />
-      <div className={`absolute h-40 w-40 rounded-full bg-primary/14 blur-2xl md:h-64 md:w-64 md:bg-primary/16 md:blur-3xl ${styles.orbTopRight}`} />
-      <div className={`absolute h-40 w-40 rounded-full bg-primary/10 blur-2xl md:h-64 md:w-64 md:bg-primary/12 md:blur-3xl ${styles.orbBottomLeft}`} />
-      <div className={`absolute h-48 w-48 rounded-full bg-primary/12 blur-2xl md:h-72 md:w-72 md:bg-primary/14 md:blur-3xl ${styles.orbBottomRight}`} />
-      <div className={`absolute inset-0 ${styles.heroBottomFade}`} />
-
-      {consoleOrnaments.map((ornament) => (
-        <motion.div
-          key={ornament.position}
-          className={`pointer-events-none absolute hidden text-primary/55 lg:block ${ornament.position}`}
-          style={{
-            width:
-              ornament.type === "radar"
-                ? 160
-                : ornament.type === "dpad"
-                  ? 150
-                  : 120,
-          }}
-          initial={{ opacity: 0.18, scale: ornament.scale, rotate: ornament.rotate }}
-          animate={
-            isLiteMode
-              ? { opacity: 0.24, y: 0, rotate: ornament.rotate }
-              : {
-                  opacity: [0.2, 0.52, 0.24],
-                  y: [0, -10, 0],
-                  rotate: [ornament.rotate, ornament.rotate + 2, ornament.rotate],
-                }
-          }
-          transition={
-            isLiteMode
-              ? { duration: 0.2 }
-              : {
-                  duration: ornament.duration,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: ornament.delay,
-                }
-          }
-        >
-          {ornament.type === "cluster" && <ConsoleCluster />}
-          {ornament.type === "crosshair" && <TacticalCrosshair />}
-          {ornament.type === "radar" && <TacticalRadar />}
-          {ornament.type === "dpad" && <DPadPanel />}
-        </motion.div>
-      ))}
-
-      {tacticalLines.map((line) => (
-        <motion.div
-          key={line.position}
-          className={`pointer-events-none absolute hidden items-center gap-2 lg:flex ${line.position}`}
-          animate={isLiteMode ? { opacity: 0.22, x: 0 } : { opacity: [0.2, 0.55, 0.22], x: [0, 8, 0] }}
-          transition={
-            isLiteMode
-              ? { duration: 0.2 }
-              : {
-                  duration: 4.8,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: line.delay,
-                }
-          }
-        >
-          <span className={`h-1.5 w-1.5 rounded-full bg-primary/80 ${styles.ornamentDot}`} />
-          <span className={`h-px ${line.width} bg-gradient-to-r from-primary/60 to-transparent`} />
-        </motion.div>
-      ))}
-
-      <motion.div
-        className="pointer-events-none absolute left-[14%] top-1/2 hidden h-24 w-24 -translate-y-1/2 rounded-full border border-primary/18 lg:block"
-        animate={isLiteMode ? { rotate: 0, opacity: 0.18 } : { rotate: [0, 360], opacity: [0.18, 0.32, 0.18] }}
-        transition={isLiteMode ? { duration: 0.2 } : { duration: 18, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-      >
-        <div className="absolute inset-3 rounded-full border border-primary/20 border-dashed" />
-        <div className="absolute left-1/2 top-0 h-3 w-px -translate-x-1/2 bg-primary/60" />
-        <div className="absolute bottom-0 left-1/2 h-3 w-px -translate-x-1/2 bg-primary/30" />
-      </motion.div>
-
-      <motion.div
-        className="pointer-events-none absolute right-[15%] top-1/2 hidden h-28 w-28 -translate-y-1/2 lg:block"
-        animate={isLiteMode ? { rotate: 0, opacity: 0.15 } : { rotate: [0, -360], opacity: [0.15, 0.28, 0.15] }}
-        transition={isLiteMode ? { duration: 0.2 } : { duration: 22, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-      >
-        <div className="absolute inset-0 rounded-full border border-primary/16" />
-        <div className="absolute inset-4 rounded-full border border-primary/18 border-dashed" />
-        <div className="absolute left-1/2 top-2 h-[calc(50%-0.5rem)] w-px -translate-x-1/2 bg-primary/40" />
-      </motion.div>
-
-      {visibleParticles.map((particle) => (
-        <motion.span
-          key={`${particle.left}-${particle.top}`}
-          className={`pointer-events-none absolute rounded-full bg-primary/70 ${styles.particle}`}
-          style={{
+      <div className={`absolute inset-0 ${styles.heroAurora}`} />
+      <div className={`absolute inset-0 ${styles.heroAmbientGlow}`} />
+      <div className={`absolute inset-0 ${styles.heroTechLines}`} />
+      <div className={`absolute inset-0 ${styles.heroParticlesLayer}`} aria-hidden="true">
+        {heroParticles.map((particle, index) => {
+          const particleStyle = {
             left: particle.left,
             top: particle.top,
             width: particle.size,
             height: particle.size,
-          }}
-          animate={
-            isLiteMode
-              ? { opacity: 0.2, y: 0, scale: 1 }
-              : { opacity: [0.18, 0.85, 0.25], y: [0, -14, 0], scale: [1, 1.35, 0.92] }
-          }
-          transition={
-            isLiteMode
-              ? { duration: 0.2 }
-              : {
-                  duration: particle.duration,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: particle.delay,
-                }
-          }
-        />
-      ))}
+            opacity: particle.opacity,
+            animationDuration: prefersReducedMotion ? undefined : particle.duration,
+            animationDelay: prefersReducedMotion ? undefined : particle.delay,
+          } satisfies CSSProperties;
 
-      <div className="relative z-10 container mx-auto px-4 pb-10 pt-10 sm:pb-14 sm:pt-12 md:pb-20 md:pt-16 lg:pb-24 lg:pt-20">
+          return <span key={index} className={styles.heroParticle} style={particleStyle} />;
+        })}
+      </div>
+      <div className={`absolute inset-y-0 left-0 w-[42%] ${styles.heroCopyGlow}`} />
+      <div className={`absolute inset-x-0 bottom-0 h-28 ${styles.heroBottomFade}`} />
+      <div className={styles.heroLayout}>
+
+        {/* LEFT: Copy panel */}
         <motion.div
-          className="relative mx-auto flex w-full max-w-[1400px] flex-col items-center justify-center overflow-visible py-4 sm:py-8 md:py-12"
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
+          initial={prefersReducedMotion ? false : { opacity: 0, x: -28 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.65, ease: [0.16, 1, 0.3, 1] }}
+          className={`relative flex w-full min-w-0 flex-col gap-4 px-3 py-3 sm:px-0 sm:py-2 lg:max-w-none ${styles.heroCopyPanel}`}
         >
-          <motion.div
-            key={`prev-${prevIndex}`}
-            className={`absolute left-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 backdrop-blur-md lg:block ${styles.bannerSideCard}`}
-            animate={{ x: "-7%", scale: 0.94, opacity: 0.66, rotate: -4 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            onClick={goToPrevious}
-          >
-            <img
-              src={banners[prevIndex].src}
-              alt={banners[prevIndex].alt}
-              className="aspect-[1840/853] h-full w-full bg-background/70 object-cover"
-            />
-            <div className={`absolute inset-0 ${styles.bannerSideOverlayLeft}`} />
-          </motion.div>
+          <div className={styles.heroCopyDetailTop} aria-hidden="true" />
+          <div className={styles.heroCopyDetailBottom} aria-hidden="true" />
 
-          <div className={`relative z-20 w-full max-w-[920px] overflow-hidden rounded-[22px] border border-primary/25 bg-white/8 backdrop-blur-xl sm:rounded-[28px] ${styles.bannerStage}`}>
-            <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-background/30 sm:rounded-[28px]">
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={banners[activeIndex].src}
-                  src={banners[activeIndex].src}
-                  alt={banners[activeIndex].alt}
-                  className="aspect-[1840/853] h-full w-full bg-background/70 object-cover"
-                  initial={{ opacity: 0, scale: 1.035, y: 12 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.985, y: -12 }}
-                  transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-                />
-              </AnimatePresence>
-
-              <div className={`absolute inset-0 ${styles.bannerStageTop}`} />
-              <div className="absolute bottom-0 left-0 right-0 flex flex-wrap items-end justify-between gap-3 p-3 sm:p-4 md:p-5">
-                <div className="flex gap-2 rounded-full border border-white/10 bg-background/35 px-3 py-2 backdrop-blur-md">
-                  {banners.map((banner, index) => (
-                    <button
-                      key={banner.src}
-                      type="button"
-                      onClick={() => setActiveIndex(index)}
-                      aria-label={`Show banner ${index + 1}`}
-                      className={`h-2 rounded-full transition-all ${
-                        index === activeIndex ? "w-6 bg-primary" : "w-2 bg-foreground/30"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="pointer-events-none absolute inset-0 rounded-[22px] ring-1 ring-white/10 sm:rounded-[28px]" />
-
-              <button
-                type="button"
-                onClick={goToPrevious}
-                aria-label="Show previous banner"
-                className="absolute left-2.5 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-background/55 text-foreground transition hover:bg-primary hover:text-primary-foreground sm:left-3 sm:h-10 sm:w-10 md:left-5 md:h-11 md:w-11"
-              >
-                <ChevronLeft size={18} className="sm:h-5 sm:w-5" />
-              </button>
-              <button
-                type="button"
-                onClick={goToNext}
-                aria-label="Show next banner"
-                className="absolute right-2.5 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-background/55 text-foreground transition hover:bg-primary hover:text-primary-foreground sm:right-3 sm:h-10 sm:w-10 md:right-5 md:h-11 md:w-11"
-              >
-                <ChevronRight size={18} className="sm:h-5 sm:w-5" />
-              </button>
-            </div>
+          <div className="flex">
+            <span className={`${styles.heroTrustBadge} inline-flex items-center gap-2 rounded-full px-4 py-2 font-display text-[10px] font-bold tracking-[0.14em] text-[#8CDFFF] sm:text-[11px]`}>
+              <Shield size={13} />
+              STORE RESMI & TERPERCAYA
+            </span>
           </div>
 
-          <motion.div
-            key={`next-${nextIndex}`}
-            className={`absolute right-0 top-1/2 z-10 hidden w-[440px] -translate-y-1/2 cursor-pointer overflow-hidden rounded-[22px] border border-white/12 bg-white/6 backdrop-blur-md lg:block ${styles.bannerSideCard}`}
-            animate={{ x: "7%", scale: 0.94, opacity: 0.66, rotate: 4 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            onClick={goToNext}
-          >
-            <img
-              src={banners[nextIndex].src}
-              alt={banners[nextIndex].alt}
-              className="aspect-[1840/853] h-full w-full bg-background/70 object-cover"
-            />
-            <div className={`absolute inset-0 ${styles.bannerSideOverlayRight}`} />
-          </motion.div>
+          <div className="space-y-3">
+            <h1 className={styles.heroHeadline}>
+              <span className={styles.heroHeadlineLead}>JUAL AKUN</span>
+              <span className={styles.heroHeadlineAccent}>VALORANT</span>
+            </h1>
+          </div>
+
+          <div className={styles.heroStats}>
+            {featureBadges.map((badge) => (
+              <div
+                key={badge.label}
+                className={styles.heroStat}
+              >
+                <div className="flex items-start gap-1">
+                  <badge.icon size={11} strokeWidth={2.1} className={styles.heroStatIcon} />
+                  <p className={styles.heroStatValue}>
+                    {badge.value}
+                  </p>
+                </div>
+                <p className={styles.heroStatLabel}>
+                  {badge.label}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className={styles.heroActions}>
+            <a
+              href="https://wa.me/628881462675"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${styles.heroActionButton} ${styles.heroActionPrimary}`}
+            >
+              <WhatsAppGlyph />
+              Chat WhatsApp
+            </a>
+            <button
+              type="button"
+              onClick={scrollToCatalog}
+              className={`${styles.heroActionButton} ${styles.heroActionSecondary}`}
+            >
+              Lihat Katalog
+            </button>
+          </div>
+        </motion.div>
+
+        {/* RIGHT: Stacked banners */}
+        <motion.div
+          initial={prefersReducedMotion ? false : { opacity: 0, x: 32 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.72, ease: [0.16, 1, 0.3, 1], delay: prefersReducedMotion ? 0 : 0.08 }}
+          className={`relative flex min-w-0 items-center ${styles.heroVisualPanel}`}
+        >
+          {/*
+            The front card defines the visible size.
+            Card 2 and card 3 then sit to the right as preview layers.
+          */}
+          <div className={styles.bannerStack}>
+
+            {/* Card 3 — furthest back, right-most preview */}
+            {heroBanners.length > 2 && (
+              <button
+                type="button"
+                onClick={() => setActiveIndex(secondNextIndex)}
+                aria-label="Go to banner 3"
+                className={styles.bannerCard3}
+              >
+                <img src={heroBanners[secondNextIndex].src} alt={heroBanners[secondNextIndex].alt} className="h-full w-full object-cover" />
+                <div className={styles.cardShade} />
+              </button>
+            )}
+
+            {/* Card 2 — middle preview */}
+            {heroBanners.length > 1 && (
+              <button
+                type="button"
+                onClick={() => setActiveIndex(nextIndex)}
+                aria-label="Go to banner 2"
+                className={styles.bannerCard2}
+              >
+                <img src={heroBanners[nextIndex].src} alt={heroBanners[nextIndex].alt} className="h-full w-full object-cover" />
+                <div className={styles.cardShade} />
+              </button>
+            )}
+
+            {/* Card 1 — front, full size, active */}
+            <div className={styles.bannerCard1}>
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={heroBanners[activeIndex].src}
+                  src={heroBanners[activeIndex].src}
+                  alt={heroBanners[activeIndex].alt}
+                  className="absolute inset-0 h-full w-full object-cover object-center"
+                  initial={prefersReducedMotion ? false : { opacity: 0, scale: 1.04 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
+                  transition={{ duration: prefersReducedMotion ? 0.2 : 0.55, ease: [0.16, 1, 0.3, 1] }}
+                />
+              </AnimatePresence>
+              <div className={`absolute inset-0 ${styles.bannerScreenGlow}`} />
+
+              <button
+                type="button"
+                onClick={() => setActiveIndex(prevIndex)}
+                aria-label="Show previous banner"
+                className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[#041C32]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22D3EE] hover:text-[#00E5FF] sm:left-4 sm:h-10 sm:w-10"
+              >
+                <ChevronLeft size={18} />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveIndex(nextIndex)}
+                aria-label="Show next banner"
+                className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[#041C32]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22D3EE] hover:text-[#00E5FF] sm:right-4 sm:h-10 sm:w-10"
+              >
+                <ChevronRight size={18} />
+              </button>
+
+              <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-[#0EA5E9]/16 bg-[#041C32]/68 px-2.5 py-1.5 backdrop-blur-md sm:bottom-4 sm:px-3 sm:py-2">
+                {heroBanners.map((banner, index) => (
+                  <button
+                    key={banner.src}
+                    type="button"
+                    onClick={() => setActiveIndex(index)}
+                    aria-label={`Show banner ${index + 1}`}
+                    className={`h-2 rounded-full transition-all ${
+                      index === activeIndex
+                        ? "w-7 bg-[#22D3EE] shadow-[0_0_12px_rgba(0,229,255,0.72)]"
+                        : "w-2 bg-white/28"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
 
-      <div className="px-4 pb-10 md:hidden">
-        <motion.button
-          type="button"
-          onClick={scrollToCatalog}
-          className="mx-auto flex flex-col items-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-        >
-          <span className={`font-display text-[10px] tracking-[0.26em] text-primary/70 ${styles.scrollLabel}`}>
-            SCROLL FOR CATALOG
-          </span>
-          <ChevronDown size={18} className="animate-bounce text-primary" />
-        </motion.button>
-
-        <div className="mt-5 w-full">
-          <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-          <div className="hero-shop-mask overflow-hidden py-3">
-            <div className={`${isLiteMode ? "" : "hero-shop-track"} flex w-max items-center gap-6 whitespace-nowrap`}>
-              {[...shopTicker, ...shopTicker].map((item, index) => (
-                <span
-                  key={`${item.id}-${index}`}
-                  className="font-display text-xs tracking-[0.34em] text-primary/72"
-                >
+      {/* Ticker */}
+      <div className={`relative z-10 border-y border-white/[0.08] ${styles.tickerBar}`}>
+        <div className="hero-shop-mask overflow-hidden py-2.5 sm:py-3">
+          <div
+            className={`${prefersReducedMotion ? "" : "hero-shop-track"} flex w-max items-center whitespace-nowrap`}
+            style={prefersReducedMotion ? undefined : { animationDuration: "28s" }}
+          >
+            {tickerItems.map((item, index) => (
+              <span key={`${item.label}-${index}`} className={styles.tickerItem}>
+                <TickerItemIcon icon={item.icon} />
+                <span className={styles.tickerText}>
                   {item.label}
                 </span>
-              ))}
-            </div>
+                <span className="ml-1 text-white/14">•</span>
+              </span>
+            ))}
           </div>
-          <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-        </div>
-      </div>
-
-      <div className="absolute bottom-6 left-0 right-0 z-10 hidden flex-col items-center gap-6 md:flex">
-        <motion.button
-          type="button"
-          onClick={scrollToCatalog}
-          className="flex flex-col items-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-        >
-          <span className={`font-display text-[10px] tracking-[0.3em] text-primary/70 ${styles.scrollLabel}`}>
-            SCROLL FOR CATALOG
-          </span>
-          <ChevronDown size={20} className="animate-bounce text-primary" />
-        </motion.button>
-
-        <div className="w-full">
-          <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-          <div className="hero-shop-mask overflow-hidden py-4">
-            <div className={`${isLiteMode ? "" : "hero-shop-track"} flex w-max items-center gap-8 whitespace-nowrap`}>
-              {[...shopTicker, ...shopTicker].map((item, index) => (
-                <span
-                  key={`${item.id}-${index}`}
-                  className="font-display text-sm tracking-[0.5em] text-primary/72"
-                >
-                  {item.label}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
         </div>
       </div>
     </section>

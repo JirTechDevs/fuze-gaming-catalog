@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+
 
 @tailwind base;
 @tailwind components;
@@ -6,20 +6,22 @@
 
 @layer base {
   :root {
-    --background: 226 48% 6%;
-    --foreground: 194 100% 96%;
+    --background: 225 65% 6%;
+    --foreground: 210 40% 98%;
 
-    --card: 225 36% 10%;
-    --card-foreground: 194 100% 96%;
+    --card: 226 60% 10%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 225 36% 10%;
-    --popover-foreground: 194 100% 96%;
+    --popover: 226 48% 6%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 189 100% 72%;
-    --primary-foreground: 226 48% 6%;
+    --primary: 193 100% 50%;
+    --primary-foreground: 225 65% 6%;
 
-    --secondary: 220 28% 15%;
-    --secondary-foreground: 194 100% 92%;
+    --aurora: 265 85% 72%;
+
+    --secondary: 217 32% 17%;
+    --secondary-foreground: 210 40% 98%;
 
     --muted: 221 24% 14%;
     --muted-foreground: 214 18% 62%;
@@ -34,7 +36,7 @@
     --input: 219 28% 18%;
     --ring: 189 100% 72%;
 
-    --radius: 0.5rem;
+    --radius: 1.25rem;
 
     --glow-primary: 0 0 20px hsl(189 100% 72% / 0.34);
     --glow-strong: 0 0 30px hsl(189 100% 72% / 0.48),
@@ -58,6 +60,9 @@
 
   body {
     @apply bg-background font-body text-foreground antialiased;
+    background-color: #050A18;
+    background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px);
+    background-size: 35px 35px;
   }
 }
 
@@ -94,9 +99,6 @@
     animation: hero-shop-marquee 22s linear infinite;
   }
 
-  .hero-shop-track:hover {
-    animation-play-state: paused;
-  }
 
   .testimoni-strip-mask {
     mask-image: linear-gradient(
@@ -117,10 +119,6 @@
     animation-duration: 38s;
   }
 
-  .text-glow {
-    text-shadow: 0 0 10px hsl(189 100% 72% / 0.55),
-      0 0 30px hsl(189 100% 72% / 0.32);
-  }
 
   .box-glow {
     box-shadow: 0 0 15px hsl(189 100% 72% / 0.24),
@@ -188,9 +186,6 @@
 }
 
 @media (max-width: 767px) {
-  .text-glow {
-    text-shadow: 0 0 6px hsl(189 100% 72% / 0.32);
-  }
 
   .box-glow {
     box-shadow: 0 0 10px hsl(189 100% 72% / 0.14);
@@ -246,5 +241,16 @@
 
   to {
     transform: translateX(calc(-50% - 0.5rem));
+  }
+}
+
+@keyframes whatsapp-pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 24px rgba(34, 197, 94, 0.24);
+  }
+
+  50% {
+    box-shadow: 0 4px 32px rgba(34, 197, 94, 0.42);
   }
 }

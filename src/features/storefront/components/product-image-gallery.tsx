@@ -20,13 +20,13 @@ export default function ProductImageGallery({
         <div className="absolute left-3 right-3 top-3 z-10 flex flex-wrap items-start justify-between gap-2 sm:left-5 sm:right-5 sm:top-5">
           <div className="flex min-w-0 items-center gap-2 rounded-[1rem] border border-primary/40 bg-background/88 px-3 py-2 shadow-[0_0_18px_hsl(var(--primary)_/_0.16)] backdrop-blur-md sm:rounded-[1.2rem] sm:px-4 sm:py-2.5">
             <Shield size={14} className="shrink-0 text-primary" />
-            <span className="truncate font-display text-sm font-bold tracking-[0.14em] text-primary sm:text-lg sm:tracking-[0.16em]">
+            <span className="break-all font-display text-sm font-bold tracking-[0.14em] text-primary sm:text-lg sm:tracking-[0.16em]">
               {product.code}
             </span>
           </div>
 
-          <div className="rounded-[1rem] border border-primary/40 bg-background/88 px-3 py-2 text-right shadow-[0_0_18px_hsl(var(--primary)_/_0.16)] backdrop-blur-md sm:rounded-[1.2rem] sm:px-4 sm:py-2.5">
-            <p className="font-display text-base font-bold leading-none text-primary text-glow sm:text-xl">
+          <div className="rounded-[1rem] border border-primary/40 bg-background/88 px-3 py-2 text-left shadow-[0_0_18px_hsl(var(--primary)_/_0.16)] backdrop-blur-md sm:rounded-[1.2rem] sm:px-4 sm:py-2.5 sm:text-right">
+            <p className="font-display text-sm font-bold leading-none text-primary sm:text-xl">
               Rp {formatPrice(product.price)}
             </p>
           </div>
@@ -36,7 +36,7 @@ export default function ProductImageGallery({
           <img
             src={activeImage}
             alt={`${product.code} preview`}
-            className="h-full min-h-[24rem] w-full object-contain object-top sm:min-h-[32rem] lg:min-h-[40rem] xl:min-h-[46rem]"
+            className="h-full min-h-[18rem] w-full object-contain object-top sm:min-h-[32rem] lg:min-h-[40rem] xl:min-h-[46rem]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-card via-card/10 to-transparent" />
         </div>

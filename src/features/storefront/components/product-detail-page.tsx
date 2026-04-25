@@ -1,13 +1,5 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ChevronLeft,
-  ChevronRight,
-  ShieldCheck,
-} from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import {
   buildWhatsAppLink,
   formatPrice,
@@ -17,13 +9,11 @@ import Footer from "@/features/storefront/components/footer";
 import ProductImageGallery from "@/features/storefront/components/product-image-gallery";
 import Navbar from "@/features/storefront/components/navbar";
 import styles from "./product-detail-page.module.css";
+import themeStyles from "./storefront-theme.module.css";
 
 interface ProductDetailPageProps {
   product: Product;
 }
-
-type DetailPanelMode = "overview" | "skins";
-const detailPanelOrder: DetailPanelMode[] = ["overview", "skins"];
 
 function getHeroCount(product: Product) {
   if (product.agent.toLowerCase() === "full unlock") {
@@ -43,6 +33,28 @@ function isPremierLocked(product: Product) {
   );
 }
 
+function getAccountSpecs(product: Product) {
+  const specs = [
+    { label: "Rank", value: product.rank },
+    { label: "Region", value: product.region },
+    { label: "Agent", value: getHeroCount(product) },
+  ];
+
+  if (product.premier && product.premier !== "-") {
+    specs.push({ label: "Premier", value: product.premier });
+  }
+
+  if (product.changeNick && product.changeNick !== "-") {
+    specs.push({ label: "Change Nick", value: product.changeNick });
+  }
+
+  if (product.sisaVP && product.sisaVP !== "-") {
+    specs.push({ label: "Sisa VP", value: product.sisaVP });
+  }
+
+  return specs;
+}
+
 function getAgentRankNote(product: Product) {
   const notes = [];
 
@@ -59,36 +71,6 @@ function getAgentRankNote(product: Product) {
   }
 
   return notes.join(" • ") || "No special note";
-}
-
-function getMinusNotes(product: Product) {
-  const minusNotes = [];
-
-  if (product.changeNick.toLowerCase() !== "ready") {
-    minusNotes.push("Change nick belum ready.");
-  }
-
-  if (product.agent.toLowerCase() !== "full unlock") {
-    minusNotes.push(`Hero belum full unlock (${product.agent}).`);
-  }
-
-  if (isPremierLocked(product)) {
-    minusNotes.push("Premier tidak bisa diganti.");
-  }
-
-  if (product.status !== "available") {
-    minusNotes.push("Akun sudah sold.");
-  }
-
-  return minusNotes;
-}
-
-function getDetailPanelLabel(mode: DetailPanelMode) {
-  if (mode === "overview") {
-    return "Description";
-  }
-
-  return "Skins";
 }
 
 function GamepadDoodle() {
@@ -164,36 +146,13 @@ export default function ProductDetailPage({
   product,
 }: ProductDetailPageProps) {
   const isAvailable = product.status === "available";
-  const [detailPanelMode, setDetailPanelMode] = useState<DetailPanelMode>("overview");
-  const detailsList = [
-    { label: "Kode Akun", value: product.code },
-    { label: "Region", value: product.region },
-    // { label: "Minus", value: minusSummary },
-    { label: "Notes", value: getAgentRankNote(product) },
-  ];
-  const currentPanelIndex = detailPanelOrder.indexOf(detailPanelMode);
-  const previousPanelMode = currentPanelIndex > 0 ? detailPanelOrder[currentPanelIndex - 1] : null;
-  const nextPanelMode = currentPanelIndex < detailPanelOrder.length - 1
-    ? detailPanelOrder[currentPanelIndex + 1]
-    : null;
-  const desktopTabs = [
-    {
-      label: "Description",
-      mode: "overview" as const,
-      meta: `${product.code} info`,
-    },
-    {
-      label: "Skins",
-      mode: "skins" as const,
-      meta: `${product.skins.length} skins`,
-    },
-  ];
+  const accountSpecs = getAccountSpecs(product);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={`${themeStyles.storefrontTheme} min-h-screen bg-background`}>
       <Navbar />
 
-      <main className="relative isolate overflow-hidden pt-20">
+      <main className="relative isolate overflow-hidden">
         <div className={`absolute inset-0 ${styles.detailShell}`} />
         <div className={`absolute inset-0 ${styles.detailAura}`} />
         <div className={`absolute inset-0 ${styles.detailMesh}`} />
@@ -214,7 +173,7 @@ export default function ProductDetailPage({
           <TacticalMarkDoodle />
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 pb-16 pt-8 sm:pb-20 sm:pt-10">
+        <div className="relative z-10 container mx-auto px-4 pb-16 pt-6 sm:pb-20 sm:pt-10">
           <div className="mb-6 flex flex-wrap items-center gap-2 sm:mb-8 sm:gap-3">
             <Link
               href="/#catalog"
@@ -223,7 +182,7 @@ export default function ProductDetailPage({
               <ArrowLeft size={14} />
               KEMBALI KE KATALOG
             </Link>
-            <span className="rounded-full border border-border/40 bg-background/35 px-3 py-1.5 font-display text-[10px] tracking-[0.22em] text-muted-foreground">
+            <span className="w-full rounded-full border border-border/40 bg-background/35 px-3 py-1.5 text-center font-display text-[10px] tracking-[0.22em] text-muted-foreground sm:w-auto">
               ACCOUNT DETAIL
             </span>
           </div>
@@ -235,199 +194,75 @@ export default function ProductDetailPage({
 
             <section className="flex flex-col gap-4">
               <div className="rounded-[1.8rem] border border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.88),hsl(var(--background)/0.92))] p-5 backdrop-blur-md sm:p-6 xl:p-7">
-                <div className="flex flex-col gap-4">
+                <div className="flex h-full flex-col gap-4">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
-                      <h1 className="break-words font-display text-xl font-black tracking-[0.02em] text-white sm:text-3xl xl:text-[2.55rem]">
-                        Valorant Account
+                      <h1 className="break-words font-display text-xl font-bold tracking-tight text-white sm:text-3xl xl:text-[2.55rem]">
+                        {product.code}
                       </h1>
                     </div>
-                    <div className="flex items-center gap-2 self-start font-display text-lg font-bold tracking-[0.08em] text-white/92 sm:pt-1 sm:text-2xl">
-                      <span>{product.code}</span>
-                      <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] tracking-[0.18em] text-primary sm:hidden">
+                    <div className="flex items-center gap-2 self-start font-display text-lg font-semibold tracking-wide text-white/92 sm:pt-1 sm:text-2xl">
+                      <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] tracking-widest text-primary sm:hidden">
                         {product.rank}
                       </span>
                     </div>
                   </div>
 
-                  <div className="hidden items-center justify-between gap-4 rounded-[1.2rem] border border-border/30 bg-background/12 px-4 py-3 sm:flex">
-                    <div className="min-w-0">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground/72">
-                        Rank
-                      </p>
-                      <p className="mt-1 font-display text-lg font-bold text-white sm:text-xl">
-                        {product.rank}
-                      </p>
-                    </div>
-                    <span className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-primary">
-                      {isAvailable ? "Available" : "Sold"}
-                    </span>
-                  </div>
-
-                  <div className="hidden gap-3 sm:grid sm:grid-cols-3">
-                    {desktopTabs.map((item) => {
-                      const isActive = detailPanelMode === item.mode;
-
-                      return (
-                        <button
-                          key={item.label}
-                          type="button"
-                          onClick={() => setDetailPanelMode(item.mode)}
-                          className={`rounded-[1.15rem] border px-4 py-3 text-left transition ${
-                            isActive
-                              ? "border-primary/50 bg-[linear-gradient(145deg,hsl(var(--primary)/0.18),hsl(var(--primary)/0.06)_55%,transparent)] shadow-[0_0_18px_hsl(var(--primary)_/_0.14)]"
-                              : "border-border/30 bg-background/16 hover:border-primary/25 hover:bg-primary/6"
-                          }`}
-                        >
-                          <span className={`block text-xs font-semibold uppercase tracking-[0.16em] ${
-                            isActive ? "text-primary" : "text-muted-foreground/72"
-                          }`}>
-                            {item.label}
-                          </span>
-                          <p className="mt-1 text-base font-bold text-white sm:text-lg">
-                            {item.meta}
-                          </p>
-                        </button>
-                      );
-                    })}
-                  </div>
-
                   <div className="h-px bg-border/35" />
 
-                  <div className="relative min-h-[22rem] rounded-[1.5rem] border border-border/30 bg-background/12 p-4 sm:p-5">
-                    <div className="pointer-events-none absolute inset-y-0 -left-8 -right-8 flex items-center justify-between sm:hidden">
-                      <button
-                        type="button"
-                        onClick={() => previousPanelMode && setDetailPanelMode(previousPanelMode)}
-                        disabled={!previousPanelMode}
-                        className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-background/45 text-white/88 backdrop-blur-md transition disabled:cursor-not-allowed disabled:opacity-30"
-                        aria-label={`Go to ${previousPanelMode ? getDetailPanelLabel(previousPanelMode) : "previous"} panel`}
-                      >
-                        <ChevronLeft size={18} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => nextPanelMode && setDetailPanelMode(nextPanelMode)}
-                        disabled={!nextPanelMode}
-                        className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-background/45 text-white/88 backdrop-blur-md transition disabled:cursor-not-allowed disabled:opacity-30"
-                        aria-label={`Go to ${nextPanelMode ? getDetailPanelLabel(nextPanelMode) : "next"} panel`}
-                      >
-                        <ChevronRight size={18} />
-                      </button>
+                  <div className="rounded-[1.5rem] border border-border/30 bg-background/12 p-4 sm:p-5">
+                    <div className="flex flex-col items-start gap-3 border-b border-border/35 pb-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
+                          Daftar Skin
+                        </p>
+                      </div>
+                      <span className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-xs font-bold text-primary sm:whitespace-nowrap sm:text-sm">
+                        {product.skins.length} skins
+                      </span>
                     </div>
-
-                    {detailPanelMode !== "overview" ? (
-                      <div className="mb-4 flex items-center justify-between gap-3 border-b border-border/35 pb-4">
-                        <div>
-                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground/72">
-                            Detail Viewer
-                          </p>
-                          <p className="mt-1 text-sm text-white/84">
-                            Showing skin list
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setDetailPanelMode("overview")}
-                          className="hidden rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:inline-flex"
+                    <ol className="panel-scrollbar mt-4 max-h-[18rem] space-y-1 overflow-y-auto pr-2 text-sm leading-4 text-white/88 sm:text-base">
+                      {product.skins.map((skin, index) => (
+                        <li
+                          key={skin}
+                          className="rounded-[0.7rem] border border-border/25 bg-background/22 px-4 py-2"
                         >
-                          Kembali ke Deskripsi
-                        </button>
-                      </div>
-                    ) : null}
-
-                    {detailPanelMode === "overview" ? (
-                      <div className="space-y-5">
-                        <div className="space-y-2 text-sm leading-6 text-white/90 sm:text-lg sm:leading-7">
-                          {/* <p><span className="font-bold text-white">Minus:</span> {minusSummary}</p> */}
-                          {product.premier && product.premier !== "-" ? (
-                            <p><span className="font-bold text-white">Premier:</span> {product.premier}</p>
-                          ) : null}
-                          <p><span className="font-bold text-white">Region:</span> {product.region}</p>
-                          <p><span className="font-bold text-white">Agent:</span> {getHeroCount(product)}</p>
-                        </div>
-
-                        <div className="rounded-[1.35rem] border border-primary/30 bg-primary/20 px-4 py-4 shadow-[0_0_24px_hsl(var(--primary)_/_0.14)]">
-                          <div className="flex items-start gap-3">
-                            <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-primary/35 bg-primary/16 text-primary">
-                              <ShieldCheck size={18} />
-                            </div>
-                            <div>
-                              <p className="font-display text-[10px] tracking-[0.26em] text-primary/78">
-                                GUARANTEE
-                              </p>
-                              <p className="mt-1 text-xs font-bold uppercase tracking-[0.06em] text-white sm:text-base">
-                                Lifetime Warranty, No Hackback, Best Price
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="space-y-5 border-t border-border/35 pt-5">
-                          <div>
-                            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
-                              Contact Admin For More Info
-                            </p>
-                          </div>
-
-                          <div>
-                            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-xl">
-                              Details
-                            </p>
-                            <div className="mt-4 space-y-2 text-sm leading-6 text-white/90 sm:text-lg sm:leading-7">
-                              {detailsList.map((item) => (
-                                <p key={item.label}>
-                                  <span className="font-bold text-white">{item.label}:</span> {item.value}
-                                </p>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="border-t border-border/35 pt-5">
-                            <p className="font-display text-base font-black uppercase tracking-[0.04em] text-white sm:text-lg">
-                              Reminder
-                            </p>
-                            <div className="mt-3 space-y-2 text-sm leading-6 text-white/88 sm:text-lg sm:leading-7">
-                              <p>* Garansi akun selamanya & anti HB</p>
-                              <p>* Pembelian akun diproses aman via admin storefront</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex h-full flex-col">
-                        <div className="flex items-center justify-between gap-3 border-b border-border/35 pb-4">
-                          <div>
-                            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
-                              Skin List
-                            </p>
-                           
-                          </div>
-                          <span className="whitespace-nowrap rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-sm font-bold text-primary">
-                            {product.skins.length} skins
+                          <span className="mr-2 font-display text-primary/86">
+                            {String(index + 1).padStart(2, "0")}.
                           </span>
-                        </div>
-                        <ol className="panel-scrollbar mt-4 max-h-[16rem] space-y-2 overflow-y-auto pr-2 text-sm leading-6 text-white/88 sm:max-h-[18rem] sm:text-base">
-                          {product.skins.slice(0, 10).map((skin, index) => (
-                            <li
-                              key={skin}
-                              className="rounded-[1rem] border border-border/25 bg-background/22 px-4 py-3"
-                            >
-                              <span className="mr-2 font-display text-primary/86">
-                                {String(index + 1).padStart(2, "0")}.
-                              </span>
-                              {skin}
-                            </li>
-                          ))}
-                        </ol>
-                      </div>
-                    )}
+                          {skin}
+                        </li>
+                      ))}
+                    </ol>
                   </div>
 
-                  <div className={`rounded-[1.6rem] border border-border/40 px-4 py-5 sm:px-5 ${styles.pricePanel}`}>
+                  <div className="space-y-2 px-1 text-sm leading-6 text-white/88 sm:text-base sm:leading-7">
+                    {accountSpecs.map((item) => (
+                      <p key={item.label}>
+                        <span className="font-bold text-white">{item.label}:</span>{" "}
+                        {item.value}
+                      </p>
+                    ))}
+                  </div>
+
+                  <div className="rounded-[1.5rem] border border-border/30 bg-background/12 p-4 sm:p-5">
+                    <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
+                      Catatan Akun
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-white/78 sm:text-base sm:leading-7">
+                      {getAgentRankNote(product)}
+                    </p>
+                    <p className="mt-3 text-sm leading-6 text-white/78 sm:text-base sm:leading-7">
+                      {isPremierLocked(product)
+                        ? "Premier account locked and cannot be changed."
+                        : "Account ready for login and immediate purchase."}
+                    </p>
+                  </div>
+
+                  <div className={`mt-auto rounded-[1.6rem] border border-border/40 px-4 py-5 sm:px-5 ${styles.pricePanel}`}>
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                       <div>
-                        <p className="font-display text-[2.6rem] font-black leading-none text-white sm:text-[3.15rem] xl:text-[3.75rem]">
+                        <p className="font-display text-3xl font-bold leading-none text-white sm:text-4xl xl:text-5xl">
                           Rp {formatPrice(product.price)}
                         </p>
                       </div>
@@ -448,20 +283,19 @@ export default function ProductDetailPage({
                         href={buildWhatsAppLink(product)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-[1.2rem] bg-white px-5 py-4 text-center font-display text-base font-bold text-zinc-950 transition hover:bg-primary hover:text-primary-foreground"
+                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-[#22D3EE]/35 bg-[linear-gradient(180deg,#22D3EE,#0EA5E9)] px-5 py-4 text-center font-display text-sm font-bold text-[#020617] shadow-[0_16px_34px_rgba(14,165,233,0.22)] transition hover:brightness-105 sm:text-base"
                       >
                         <WhatsAppGlyph />
                         Beli Sekarang
                       </a>
                     ) : (
-                      <span className="mt-5 flex items-center justify-center rounded-[1.2rem] border border-border/35 bg-background/28 px-5 py-4 text-center font-display text-base font-bold text-muted-foreground">
+                      <span className="mt-5 flex items-center justify-center rounded-[1.2rem] border border-border/35 bg-background/28 px-5 py-4 text-center font-display text-sm font-bold text-muted-foreground sm:text-base">
                         Akun Sudah Sold
                       </span>
                     )}
                   </div>
                 </div>
               </div>
-
             </section>
           </div>
         </div>

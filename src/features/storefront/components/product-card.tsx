@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { MessageCircle, Shield } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
   buildWhatsAppLink,
@@ -9,28 +9,73 @@ import {
   type Product,
 } from "@/features/catalog/domain/product";
 import { useIsMobile } from "@/hooks/use-mobile";
+import styles from "./product-card.module.css";
 
 interface ProductCardProps {
   product: Product;
   index: number;
 }
 
-const rankColors: Record<string, string> = {
-  Iron: "text-[hsl(20,15%,50%)]",
-  Bronze: "text-[hsl(30,50%,45%)]",
-  Silver: "text-[hsl(220,10%,65%)]",
-  Gold: "text-[hsl(45,80%,55%)]",
-  Platinum: "text-[hsl(187,60%,55%)]",
-  Diamond: "text-[hsl(280,60%,65%)]",
-  Ascendant: "text-[hsl(150,60%,50%)]",
-  Immortal: "text-[hsl(0,70%,60%)]",
-  Radiant: "text-[hsl(45,100%,65%)]",
-};
+function getRankBadgeClasses(rank: string) {
+  const base = rank.split(" ")[0]?.toLowerCase();
 
-function getRankColor(rank: string) {
-  const base = rank.split(" ")[0];
+  if (base === "silver") {
+    return styles.rankSilver;
+  }
 
-  return rankColors[base] || "text-foreground";
+  if (base === "gold") {
+    return styles.rankGold;
+  }
+
+  if (base === "diamond" || base === "platinum") {
+    return styles.rankDiamond;
+  }
+
+  if (base === "ascendant") {
+    return styles.rankDefault;
+  }
+
+  if (base === "immortal") {
+    return styles.rankImmortal;
+  }
+
+  if (base === "radiant") {
+    return styles.rankGold;
+  }
+
+  return styles.rankDefault;
+}
+
+function getFeaturedLabel(featured?: Product["featured"]) {
+  if (featured === "hot") {
+    return "HOT";
+  }
+
+  if (featured === "best-deal") {
+    return "BEST DEAL";
+  }
+
+  if (featured === "rare") {
+    return "RARE";
+  }
+
+  return null;
+}
+
+function getFeaturedClasses(featured?: Product["featured"]) {
+  if (featured === "hot") {
+    return styles.flagHot;
+  }
+
+  if (featured === "best-deal") {
+    return styles.flagBest;
+  }
+
+  if (featured === "rare") {
+    return styles.flagRare;
+  }
+
+  return "";
 }
 
 export default function ProductCard({
@@ -43,10 +88,13 @@ export default function ProductCard({
   const isSold = product.status === "sold";
   const visibleSkins = product.skins.slice(0, 4);
   const router = useRouter();
+  const featuredLabel = getFeaturedLabel(product.featured);
+  const productImage = "/images/catalog/mock_image.jpg";
+  // const productImage = product.image;
 
   return (
     <motion.div
-      initial={isLiteMode ? { opacity: 0, y: 16 } : { opacity: 0, y: 40 }}
+      initial={isLiteMode ? false : { opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{
@@ -54,11 +102,9 @@ export default function ProductCard({
         duration: isLiteMode ? 0.24 : 0.5,
         ease: [0.16, 1, 0.3, 1],
       }}
-      whileHover={isLiteMode ? undefined : { y: -6, transition: { duration: 0.25 } }}
-      className={`group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-[1.2rem] border border-border/40 bg-card/95 backdrop-blur-none transition-all duration-300 sm:bg-card/85 sm:backdrop-blur-sm hover:border-primary/40 ${isLiteMode ? "" : "hover:box-glow"} sm:rounded-[1.75rem] ${
-        isSold ? "pointer-events-none opacity-50" : ""
-      }`}
-      style={{ contentVisibility: "auto", containIntrinsicSize: "320px 520px" }}
+      whileHover={isLiteMode ? undefined : { y: -4, transition: { type: "spring", stiffness: 350, damping: 18 } }}
+      className={`${styles.card} ${isSold ? styles.sold : ""}`}
+      style={{ contentVisibility: "auto", containIntrinsicSize: "320px 360px" }}
       role="link"
       tabIndex={isSold ? -1 : 0}
       onClick={() => !isSold && router.push(`/catalog/${product.id}`)}
@@ -73,93 +119,66 @@ export default function ProductCard({
         }
       }}
     >
-      <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/0 to-transparent transition-all duration-500 group-hover:via-primary/50" />
+      <div className={styles.cardTop}>
+        <span className={styles.productId}>
+          <span className={styles.productCode}>{product.code}</span>
+        </span>
 
-      <div className="relative aspect-[4/5] overflow-hidden bg-[radial-gradient(circle_at_top,_hsl(var(--primary)/0.24),_transparent_58%),linear-gradient(180deg,_hsl(var(--secondary)/0.9),_hsl(var(--card)))] p-2 sm:p-3">
-        <div className="relative h-full w-full overflow-hidden rounded-[1.2rem] border border-white/10 bg-background/25 sm:rounded-[1.35rem]">
+        <span
+          className={`${styles.rankBadge} ${getRankBadgeClasses(product.rank)}`}
+        >
+          {product.rank}
+        </span>
+      </div>
+
+      <div className={styles.cardMain}>
+        <div className={styles.thumbWrap}>
           <img
-            src={product.image}
+            src={productImage}
             alt={product.code}
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-contain object-top transition-all duration-700 group-hover:scale-[1.03] group-hover:brightness-110"
           />
+          <div className={styles.thumbShade} />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/12 to-transparent opacity-75" />
-        </div>
-
-        {isSold && (
-          <div className="absolute inset-0 flex items-center justify-center bg-background/80">
-            <span className="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-1.5 font-display text-sm font-bold tracking-[0.3em] text-destructive">
-              SOLD
-            </span>
-          </div>
-        )}
-
-        <div className="absolute inset-x-2 top-2 flex flex-col items-start gap-1.5 sm:inset-x-6 sm:top-6 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-2">
-          <div className="relative flex max-w-full min-w-0 items-center gap-1.5 rounded-[0.85rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-2.5 py-2 shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-none sm:max-w-[68%] sm:gap-2 sm:rounded-[1.2rem] sm:px-4 sm:py-3 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)] sm:backdrop-blur-md">
-            <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
-            <Shield size={12} className="relative shrink-0 text-primary sm:h-[14px] sm:w-[14px]" />
-            <span className="relative truncate font-display text-[11px] font-bold leading-none tracking-[0.08em] text-primary drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)] sm:text-xl sm:tracking-[0.14em]">
-              {product.code}
-            </span>
-          </div>
-
-          <div className="relative rounded-[0.85rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-2.5 py-2 text-right shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-none sm:rounded-[1.2rem] sm:px-4 sm:py-3 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)] sm:backdrop-blur-md">
-            <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
-            <p
-              className={`font-display text-[11px] font-bold leading-none tracking-[0.08em] drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)] sm:text-xl sm:tracking-normal ${getRankColor(product.rank)}`}
+          {featuredLabel && (
+            <span
+              className={`${styles.flag} ${getFeaturedClasses(product.featured)}`}
             >
-              {product.rank}
-            </p>
-          </div>
+              {featuredLabel}
+            </span>
+          )}
         </div>
 
-        <div className="absolute inset-x-2 bottom-2 flex justify-start sm:inset-x-6 sm:bottom-6">
-          <div className="relative rounded-[0.95rem] border border-primary/45 bg-[linear-gradient(135deg,_hsl(var(--primary)/0.28),_hsl(var(--background)/0.96)_42%,_hsl(var(--background)/0.94)_100%)] px-3 py-2 text-right shadow-[0_0_16px_hsl(var(--primary)/0.16)] backdrop-blur-none sm:rounded-[1.2rem] sm:px-4 sm:py-3 sm:shadow-[0_0_22px_hsl(var(--primary)/0.22)] sm:backdrop-blur-md">
-            <div className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-primary/80 to-transparent" />
-            <p className="font-display text-[11px] font-bold leading-none text-primary drop-shadow-[0_0_14px_hsl(var(--primary)/0.55)] sm:text-xl">
-              Rp {formatPrice(product.price)}
-            </p>
-          </div>
+        <div className={styles.cardInfo}>
+          <p className={styles.cardInfoTitle}>
+            FULL SKIN
+          </p>
+          <ul className={styles.skinList}>
+            {visibleSkins.map((skin) => (
+              <li key={skin}>{skin}</li>
+            ))}
+          </ul>
         </div>
       </div>
 
-      <div className="relative flex flex-1 flex-col gap-3 p-3 sm:gap-4 sm:p-5">
-        <div className="flex min-h-[8rem] max-h-[9rem] flex-col rounded-[1.1rem] border border-border/35 bg-background/35 p-3 sm:min-h-[10rem] sm:max-h-[11.5rem] sm:rounded-[1.5rem] sm:p-4">
-          <span className="font-display text-[10px] font-bold tracking-[0.12em] text-foreground sm:text-xs sm:tracking-[0.16em]">
-            DAFTAR SKIN
-          </span>
-          <ol className="panel-scrollbar mt-2 flex-1 space-y-1 overflow-y-auto pr-1 text-[11px] leading-4 text-foreground/80 sm:mt-3 sm:space-y-1.5 sm:text-sm sm:leading-5">
-            {visibleSkins.map((skin) => (
-              <li key={skin} className="rounded-lg border border-border/20 bg-background/20 px-2 py-1.5 sm:rounded-xl sm:px-3 sm:py-2">
-                <span className="break-words">
-                  {skin}
-                </span>
-              </li>
-            ))}
-          </ol>
-          {product.skins.length > visibleSkins.length && (
-            <p className="mt-2 text-[10px] text-muted-foreground/70 sm:mt-3 sm:text-xs">
-              +{product.skins.length - visibleSkins.length} skin lainnya
-            </p>
-          )}
-        </div>
+      <div className={styles.footer}>
+        <p className={styles.price}>
+          Rp {formatPrice(product.price)}
+        </p>
 
-        <div className="mt-auto flex flex-col gap-4">
-          {!isSold && (
-            <a
-              href={buildWhatsAppLink(product)}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(event) => event.stopPropagation()}
-              className={`flex w-full items-center justify-center gap-1.5 rounded-[0.95rem] bg-primary px-2 py-2.5 text-center font-display text-[10px] font-bold tracking-[0.08em] text-primary-foreground transition-all duration-300 sm:gap-2 sm:rounded-[1.15rem] sm:px-4 sm:py-3.5 sm:text-sm sm:tracking-[0.16em] ${isLiteMode ? "" : "hover:box-glow-strong"}`}
-            >
-              <MessageCircle size={14} className="sm:h-4 sm:w-4" />
-              BELI AKUN INI
-            </a>
-          )}
-        </div>
+        {!isSold && (
+          <a
+            href={buildWhatsAppLink(product)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(event) => event.stopPropagation()}
+            className={styles.cta}
+          >
+            <MessageCircle size={16} />
+            Beli via WhatsApp
+          </a>
+        )}
       </div>
     </motion.div>
   );
