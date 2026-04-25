@@ -152,7 +152,7 @@ export default function ProductDetailPage({
     <div className={`${themeStyles.storefrontTheme} min-h-screen bg-background`}>
       <Navbar />
 
-      <main className="relative isolate overflow-hidden pt-16 sm:pt-20">
+      <main className="relative isolate overflow-hidden">
         <div className={`absolute inset-0 ${styles.detailShell}`} />
         <div className={`absolute inset-0 ${styles.detailAura}`} />
         <div className={`absolute inset-0 ${styles.detailMesh}`} />

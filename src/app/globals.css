@@ -6,17 +6,17 @@
 
 @layer base {
   :root {
-    --background: 226 48% 6%;
+    --background: 225 65% 6%;
     --foreground: 210 40% 98%;
 
-    --card: 226 48% 6%;
+    --card: 226 60% 10%;
     --card-foreground: 210 40% 98%;
 
     --popover: 226 48% 6%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 189 100% 72%;
-    --primary-foreground: 226 48% 6%;
+    --primary: 193 100% 50%;
+    --primary-foreground: 225 65% 6%;
 
     --aurora: 265 85% 72%;
 
@@ -60,6 +60,9 @@
 
   body {
     @apply bg-background font-body text-foreground antialiased;
+    background-color: #050A18;
+    background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px);
+    background-size: 35px 35px;
   }
 }
 

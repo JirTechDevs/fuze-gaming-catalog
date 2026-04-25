@@ -9,6 +9,7 @@ import {
   type Product,
 } from "@/features/catalog/domain/product";
 import { useIsMobile } from "@/hooks/use-mobile";
+import styles from "./product-card.module.css";
 
 interface ProductCardProps {
   product: Product;
@@ -19,34 +20,30 @@ function getRankBadgeClasses(rank: string) {
   const base = rank.split(" ")[0]?.toLowerCase();
 
   if (base === "silver") {
-    return "border-[rgba(148,163,184,0.35)] bg-[rgba(148,163,184,0.12)] text-[#94A3B8]";
+    return styles.rankSilver;
   }
 
   if (base === "gold") {
-    return "border-[rgba(245,158,11,0.35)] bg-[rgba(245,158,11,0.12)] text-[#F59E0B]";
+    return styles.rankGold;
   }
 
-  if (base === "platinum") {
-    return "border-[rgba(34,211,238,0.35)] bg-[rgba(34,211,238,0.12)] text-[#22D3EE]";
-  }
-
-  if (base === "diamond") {
-    return "border-[rgba(34,211,238,0.35)] bg-[rgba(34,211,238,0.12)] text-[#22D3EE]";
+  if (base === "diamond" || base === "platinum") {
+    return styles.rankDiamond;
   }
 
   if (base === "ascendant") {
-    return "border-[rgba(34,197,94,0.35)] bg-[rgba(34,197,94,0.12)] text-[#4ADE80]";
+    return styles.rankDefault;
   }
 
   if (base === "immortal") {
-    return "border-[rgba(239,68,68,0.35)] bg-[rgba(239,68,68,0.12)] text-[#EF4444]";
+    return styles.rankImmortal;
   }
 
   if (base === "radiant") {
-    return "border-[rgba(251,146,60,0.35)] bg-[rgba(251,146,60,0.12)] text-[#FB923C]";
+    return styles.rankGold;
   }
 
-  return "border-[rgba(0,200,255,0.24)] bg-[rgba(0,200,255,0.1)] text-[#00C8FF]";
+  return styles.rankDefault;
 }
 
 function getFeaturedLabel(featured?: Product["featured"]) {
@@ -67,15 +64,15 @@ function getFeaturedLabel(featured?: Product["featured"]) {
 
 function getFeaturedClasses(featured?: Product["featured"]) {
   if (featured === "hot") {
-    return "border-[#ff5e72]/50 bg-[linear-gradient(180deg,#ff6d7e,#ff3f5f)] text-white";
+    return styles.flagHot;
   }
 
   if (featured === "best-deal") {
-    return "border-[#ff9b2f]/50 bg-[linear-gradient(180deg,#ff9c34,#ff6d00)] text-[#fff4dd]";
+    return styles.flagBest;
   }
 
   if (featured === "rare") {
-    return "border-[#3b8eff]/50 bg-[linear-gradient(180deg,#4a9dff,#2e67ff)] text-white";
+    return styles.flagRare;
   }
 
   return "";
@@ -92,6 +89,8 @@ export default function ProductCard({
   const visibleSkins = product.skins.slice(0, 4);
   const router = useRouter();
   const featuredLabel = getFeaturedLabel(product.featured);
+  const productImage = "/images/catalog/mock_image.jpg";
+  // const productImage = product.image;
 
   return (
     <motion.div
@@ -104,9 +103,7 @@ export default function ProductCard({
         ease: [0.16, 1, 0.3, 1],
       }}
       whileHover={isLiteMode ? undefined : { y: -4, transition: { type: "spring", stiffness: 350, damping: 18 } }}
-      className={`group relative flex h-full min-h-[20rem] cursor-pointer flex-col overflow-hidden rounded-[12px] border border-[rgba(0,200,255,0.12)] bg-[#0A1128] p-4 transition-all duration-300 hover:border-[rgba(0,200,255,0.4)] hover:shadow-[0_0_24px_rgba(0,200,255,0.08)] ${
-        isSold ? "pointer-events-none opacity-50" : ""
-      }`}
+      className={`${styles.card} ${isSold ? styles.sold : ""}`}
       style={{ contentVisibility: "auto", containIntrinsicSize: "320px 360px" }}
       role="link"
       tabIndex={isSold ? -1 : 0}
@@ -122,56 +119,51 @@ export default function ProductCard({
         }
       }}
     >
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-        <span className="inline-flex min-w-0 max-w-full items-center gap-2 rounded-full border border-white/[0.08] bg-[#0D1530] px-3 py-1.5 font-display text-[12px] font-bold tracking-[0.04em] text-white/84">
-          <span className="h-2 w-2 rounded-full bg-[#00C8FF] shadow-[0_0_12px_rgba(0,200,255,0.6)]" />
-          <span className="break-all">{product.code}</span>
+      <div className={styles.cardTop}>
+        <span className={styles.productId}>
+          <span className={styles.productCode}>{product.code}</span>
         </span>
 
         <span
-          className={`inline-flex shrink-0 rounded-full border px-3 py-1.5 font-display text-[12px] font-semibold ${getRankBadgeClasses(product.rank)}`}
+          className={`${styles.rankBadge} ${getRankBadgeClasses(product.rank)}`}
         >
           {product.rank}
         </span>
       </div>
 
-      <div className="relative flex items-start gap-3 sm:gap-4">
-        <div className="relative w-[42%] max-w-[128px] shrink-0 overflow-hidden rounded-[10px] border border-white/[0.08] bg-[#0D1530] sm:max-w-[142px]">
+      <div className={styles.cardMain}>
+        <div className={styles.thumbWrap}>
           <img
-            src={product.image}
+            src={productImage}
             alt={product.code}
             loading="lazy"
             decoding="async"
-            className="aspect-square h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#031021]/55 via-transparent to-transparent" />
+          <div className={styles.thumbShade} />
 
           {featuredLabel && (
             <span
-              className={`absolute left-3 top-3 inline-flex rounded-[0.45rem] border px-2 py-1 font-display text-[11px] font-bold leading-none ${getFeaturedClasses(product.featured)}`}
+              className={`${styles.flag} ${getFeaturedClasses(product.featured)}`}
             >
               {featuredLabel}
             </span>
           )}
         </div>
 
-        <div className="min-w-0 flex-1 pt-1">
-          <p className="font-display text-[13px] font-bold tracking-[0.04em] text-white/52">
+        <div className={styles.cardInfo}>
+          <p className={styles.cardInfoTitle}>
             FULL SKIN
           </p>
-          <ul className="mt-3 space-y-2 text-[12px] leading-5 text-white/74">
+          <ul className={styles.skinList}>
             {visibleSkins.map((skin) => (
-              <li key={skin} className="flex items-start gap-2">
-                <span className="mt-[0.55rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#00C8FF]" />
-                <span className="min-w-0 break-words">{skin}</span>
-              </li>
+              <li key={skin}>{skin}</li>
             ))}
           </ul>
         </div>
       </div>
 
-      <div className="mt-auto pt-5">
-        <p className="font-display text-[1.32rem] font-bold text-[#00C8FF] sm:text-[1.48rem]">
+      <div className={styles.footer}>
+        <p className={styles.price}>
           Rp {formatPrice(product.price)}
         </p>
 
@@ -181,7 +173,7 @@ export default function ProductCard({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(event) => event.stopPropagation()}
-            className="mt-4 inline-flex h-[3.05rem] w-full items-center justify-center gap-2 rounded-[8px] bg-[#22C55E] px-4 font-display text-[14px] font-bold text-white shadow-[0_12px_24px_rgba(34,197,94,0.22)] transition hover:brightness-105"
+            className={styles.cta}
           >
             <MessageCircle size={16} />
             Beli via WhatsApp

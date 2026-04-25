@@ -54,7 +54,7 @@ export default function StorefrontPage({ products, banners }: StorefrontPageProp
       {introComplete && (
         <div className={`${themeStyles.storefrontTheme} min-h-screen bg-background`}>
           <Navbar />
-          <div className="pt-16 sm:pt-20">
+          <div>
             <HeroSection banners={banners} />
             <CatalogSection products={products} />
             <div className="mx-auto h-[2px] w-[90%] max-w-[1480px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
@@ -67,7 +67,7 @@ export default function StorefrontPage({ products, banners }: StorefrontPageProp
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Chat via WhatsApp"
-              className="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#22C55E] text-white shadow-[0_4px_24px_rgba(34,197,94,0.35)] transition hover:scale-[1.03] animate-[whatsapp-pulse_2.8s_ease-in-out_infinite] sm:bottom-6 sm:right-6"
+              className={themeStyles.floatingWhatsapp}
             >
               <FloatingWhatsAppGlyph />
             </a>

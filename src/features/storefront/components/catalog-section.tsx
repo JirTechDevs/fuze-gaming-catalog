@@ -31,101 +31,6 @@ const techLines = [
   { left: "42%", top: "84%", width: "w-24", delay: 0.9 },
 ];
 
-const catalogDoodles = [
-  { position: "left-[4%] top-[22%]", width: 128, rotate: -6, delay: 0, duration: 10, type: "gamepad" },
-  { position: "right-[6%] top-[28%]", width: 144, rotate: 8, delay: 0.8, duration: 11.5, type: "crosshair" },
-  { position: "left-[46%] top-[16%]", width: 122, rotate: 0, delay: 0.3, duration: 12.8, type: "tactical-mark" },
-  { position: "left-[8%] bottom-[18%]", width: 150, rotate: 5, delay: 1.4, duration: 9.6, type: "blaster" },
-  { position: "right-[10%] bottom-[14%]", width: 126, rotate: -7, delay: 0.5, duration: 10.8, type: "joystick" },
-] as const;
-
-const GamepadDoodle = () => (
-  <svg viewBox="0 0 180 120" className="h-full w-full" aria-hidden="true">
-    <path
-      d="M44 42 C36 40 28 44 24 52 L16 74 C12 84 18 96 30 96 C37 96 43 92 47 86 L56 72 H124 L133 86 C137 92 143 96 150 96 C162 96 168 84 164 74 L156 52 C152 44 144 40 136 42 Z"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinejoin="round"
-    />
-    <path d="M56 56 H76 M66 46 V66" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <circle cx="122" cy="54" r="6" fill="none" stroke="currentColor" strokeWidth="3" />
-    <circle cx="138" cy="68" r="6" fill="none" stroke="currentColor" strokeWidth="3" />
-    <path d="M90 46 V72" stroke="currentColor" strokeOpacity="0.36" strokeWidth="2" strokeDasharray="4 8" />
-  </svg>
-);
-
-const CrosshairDoodle = () => (
-  <svg viewBox="0 0 160 160" className="h-full w-full" aria-hidden="true">
-    <circle cx="80" cy="80" r="28" fill="none" stroke="currentColor" strokeWidth="3" />
-    <circle
-      cx="80"
-      cy="80"
-      r="50"
-      fill="none"
-      stroke="currentColor"
-      strokeOpacity="0.32"
-      strokeWidth="2"
-      strokeDasharray="6 10"
-    />
-    <path d="M80 12 V40 M80 120 V148 M12 80 H40 M120 80 H148" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <circle cx="80" cy="80" r="7" fill="currentColor" />
-  </svg>
-);
-
-const BlasterDoodle = () => (
-  <svg viewBox="0 0 190 120" className="h-full w-full" aria-hidden="true">
-    <path
-      d="M22 58 H98 L124 36 H152 L168 50 L138 72 H100 L70 94 H40 Z"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinejoin="round"
-    />
-    <path d="M100 58 H170" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <path d="M136 34 L154 18" stroke="currentColor" strokeOpacity="0.42" strokeWidth="2.4" strokeLinecap="round" />
-    <path d="M144 82 L160 96" stroke="currentColor" strokeOpacity="0.42" strokeWidth="2.4" strokeLinecap="round" />
-    <circle cx="56" cy="58" r="7" fill="none" stroke="currentColor" strokeWidth="3" />
-  </svg>
-);
-
-const JoystickDoodle = () => (
-  <svg viewBox="0 0 150 150" className="h-full w-full" aria-hidden="true">
-    <circle cx="75" cy="34" r="14" fill="none" stroke="currentColor" strokeWidth="3" />
-    <path d="M75 48 V94" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <path
-      d="M36 94 H114 L126 122 H24 Z"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinejoin="round"
-    />
-    <circle cx="56" cy="108" r="5" fill="none" stroke="currentColor" strokeWidth="2.6" />
-    <circle cx="96" cy="108" r="5" fill="none" stroke="currentColor" strokeWidth="2.6" />
-  </svg>
-);
-
-const TacticalMarkDoodle = () => (
-  <svg viewBox="0 0 150 120" className="h-full w-full" aria-hidden="true">
-    <path
-      d="M18 20 L62 96 H84 L62 56 H88 L132 20 H102 L74 46 L48 20 Z"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3.2"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M36 20 L74 86 L114 20"
-      fill="none"
-      stroke="currentColor"
-      strokeOpacity="0.34"
-      strokeWidth="1.8"
-      strokeLinejoin="round"
-    />
-    <path d="M58 102 H92" stroke="currentColor" strokeOpacity="0.38" strokeWidth="2" strokeLinecap="round" />
-  </svg>
-);
-
 export default function CatalogSection({ products }: CatalogSectionProps) {
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
@@ -268,7 +173,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
       {visibleAmbientParticles.map((particle) => (
         <motion.span
           key={`${particle.left}-${particle.top}`}
-          className={`pointer-events-none absolute rounded-full bg-primary/14 blur-3xl ${styles.ambientParticle}`}
+          className={styles.ambientParticle}
           style={{
             left: particle.left,
             top: particle.top,
@@ -311,153 +216,127 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             delay: line.delay,
           }}
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-primary/80 shadow-[0_0_16px_hsl(var(--primary)_/_0.7)]" />
+          <span className={styles.techDot} />
           <span className={`h-px ${line.width} ${styles.techLine}`} />
         </motion.div>
       ))}
 
-      {catalogDoodles.map((doodle) => (
-        <motion.div
-          key={doodle.position}
-          className={`pointer-events-none absolute hidden text-primary/28 xl:block ${doodle.position}`}
-          style={{ width: doodle.width }}
-          initial={{ opacity: 0.16, rotate: doodle.rotate }}
-          animate={{
-            opacity: [0.14, 0.3, 0.16],
-            y: [0, -12, 0],
-            rotate: [doodle.rotate, doodle.rotate + 2, doodle.rotate],
-          }}
-          transition={{
-            duration: doodle.duration,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-            delay: doodle.delay,
-          }}
-        >
-          {doodle.type === "gamepad" && <GamepadDoodle />}
-          {doodle.type === "crosshair" && <CrosshairDoodle />}
-          {doodle.type === "tactical-mark" && <TacticalMarkDoodle />}
-          {doodle.type === "blaster" && <BlasterDoodle />}
-          {doodle.type === "joystick" && <JoystickDoodle />}
-        </motion.div>
-      ))}
-
-      <div className="relative z-10 container mx-auto space-y-16 px-4 sm:space-y-20 lg:space-y-24">
+      <div className={styles.catalogContainer}>
 
         <div>
           <motion.div
-            className="mb-8 flex flex-col gap-6 sm:mb-10"
+            className={styles.catalogHeader}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex flex-col gap-2">
-              <span className="font-display text-[11px] tracking-widest text-primary/80">
+            <div>
+              <span className={styles.sectionKicker}>
                 BROWSE OUR COLLECTION
               </span>
-              <h2 className="font-display text-3xl font-bold tracking-wide text-foreground md:text-4xl">
+              <h2 className={styles.sectionTitle}>
                 ACCOUNT <span className="text-primary">CATALOG</span>
               </h2>
             </div>
 
-            <div className={`rounded-[12px] border p-5 sm:px-6 sm:py-5 ${styles.filtersPanel}`}>
+            <div className={styles.filtersPanel}>
               <div id="catalog-filters-content" className={styles.filtersBody}>
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-[1.15fr_repeat(4,minmax(0,1fr))_auto] xl:items-end">
-                  <label className="block">
+                <div className={styles.filtersGrid}>
+                  <label className={styles.filterGroup}>
                     <span className={styles.filterLabel}>
                       Cari Kode / Skin
                     </span>
-                    <span className={`flex h-[3.25rem] items-center rounded-[8px] border px-4 ${styles.filterField}`}>
+                    <span className={styles.filterField}>
                       <input
                         type="text"
                         placeholder="Contoh: Vandal, Oni..."
                         value={search}
                         onChange={(event) => setSearch(event.target.value)}
-                        className="h-full w-full bg-transparent text-[14px] text-white/80 outline-none placeholder:text-white/28"
+                        className={styles.filterInput}
                       />
                     </span>
                   </label>
 
-                  <label className="block">
+                  <label className={styles.filterGroup}>
                     <span className={styles.filterLabel}>
                       Cari Rank
                     </span>
-                    <span className={`relative flex h-[3.25rem] items-center rounded-[8px] border px-4 ${styles.filterField}`}>
+                    <span className={`${styles.filterField} ${styles.selectWrap}`}>
                       <select
                         value={rankFilter}
                         onChange={(event) => setRankFilter(event.target.value)}
-                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white/80 outline-none ${styles.selectField}`}
+                        className={styles.selectField}
                       >
                         <option value="all">Semua Rank</option>
                         {rankOptions.map((rank) => (
                           <option key={rank} value={rank}>{rank}</option>
                         ))}
                       </select>
-                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/45" />
+                      <ChevronDown size={16} className={styles.selectIcon} />
                     </span>
                   </label>
 
-                  <label className="block">
+                  <label className={styles.filterGroup}>
                     <span className={styles.filterLabel}>
                       Region
                     </span>
-                    <span className={`relative flex h-[3.25rem] items-center rounded-[8px] border px-4 ${styles.filterField}`}>
+                    <span className={`${styles.filterField} ${styles.selectWrap}`}>
                       <select
                         value={regionFilter}
                         onChange={(event) => setRegionFilter(event.target.value)}
-                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white/80 outline-none ${styles.selectField}`}
+                        className={styles.selectField}
                       >
                         <option value="all">Semua Region</option>
                         {regionOptions.map((region) => (
                           <option key={region} value={region}>{region}</option>
                         ))}
                       </select>
-                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/45" />
+                      <ChevronDown size={16} className={styles.selectIcon} />
                     </span>
                   </label>
 
-                  <label className="block">
+                  <label className={styles.filterGroup}>
                     <span className={styles.filterLabel}>
                       Ganti Nick
                     </span>
-                    <span className={`relative flex h-[3.25rem] items-center rounded-[8px] border px-4 ${styles.filterField}`}>
+                    <span className={`${styles.filterField} ${styles.selectWrap}`}>
                       <select
                         value={nickFilter}
                         onChange={(event) => setNickFilter(event.target.value)}
-                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white/80 outline-none ${styles.selectField}`}
+                        className={styles.selectField}
                       >
                         <option value="all">Semua Status</option>
                         {nickOptions.map((option) => (
                           <option key={option} value={option}>{option}</option>
                         ))}
                       </select>
-                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/45" />
+                      <ChevronDown size={16} className={styles.selectIcon} />
                     </span>
                   </label>
 
-                  <label className="block">
+                  <label className={styles.filterGroup}>
                     <span className={styles.filterLabel}>
                       Urutkan Harga
                     </span>
-                    <span className={`relative flex h-[3.25rem] items-center rounded-[8px] border px-4 ${styles.filterField}`}>
+                    <span className={`${styles.filterField} ${styles.selectWrap}`}>
                       <select
                         value={sortBy}
                         onChange={(event) => setSortBy(event.target.value)}
-                        className={`h-full w-full appearance-none bg-transparent pr-7 text-[14px] text-white/80 outline-none ${styles.selectField}`}
+                        className={styles.selectField}
                       >
                         <option value="default">Terbaru (Default)</option>
                         <option value="price-asc">Harga Termurah</option>
                         <option value="price-desc">Harga Termahal</option>
                       </select>
-                      <ChevronDown size={16} className="pointer-events-none absolute right-4 text-white/45" />
+                      <ChevronDown size={16} className={styles.selectIcon} />
                     </span>
                   </label>
 
                   <button
                     type="button"
                     onClick={resetFilters}
-                    className="inline-flex h-[3.25rem] w-full items-center justify-center rounded-[8px] border border-white/[0.1] bg-[#0D1530] px-6 font-display text-[14px] font-semibold text-white/80 transition hover:border-[#00C8FF]/26 hover:text-white sm:w-auto"
+                    className={styles.resetButton}
                   >
                     Reset Filter
                   </button>
@@ -466,7 +345,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:gap-6">
+          <div className={styles.catalogGrid}>
             {visibleProducts.map((product, index) => (
               <ProductCard
                 key={product.id}

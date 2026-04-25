@@ -126,21 +126,15 @@ export default function HeroSection({ banners }: HeroSectionProps) {
       </div>
       <div className={`absolute inset-y-0 left-0 w-[42%] ${styles.heroCopyGlow}`} />
       <div className={`absolute inset-x-0 bottom-0 h-28 ${styles.heroBottomFade}`} />
-      <div className={`pointer-events-none absolute -left-16 top-20 hidden h-56 w-56 lg:block ${styles.heroReticleLeft}`} />
-      <div className={`pointer-events-none absolute right-10 top-10 hidden h-40 w-40 xl:block ${styles.heroReticleRight}`} />
-
-      <div className={`relative z-10 mx-auto max-w-[1512px] px-4 pb-8 pt-6 sm:px-6 sm:pb-10 sm:pt-8 xl:px-8 ${styles.heroLayout}`}>
+      <div className={styles.heroLayout}>
 
         {/* LEFT: Copy panel */}
         <motion.div
           initial={prefersReducedMotion ? false : { opacity: 0, x: -28 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.65, ease: [0.16, 1, 0.3, 1] }}
-          className={`relative flex w-full min-w-0 flex-col gap-6 rounded-[12px] border border-white/[0.08] bg-[#0A1128]/90 px-5 py-6 shadow-[0_20px_48px_rgba(1,8,22,0.24)] backdrop-blur-sm sm:px-6 lg:max-w-none lg:border-transparent lg:bg-transparent lg:px-0 lg:py-0 lg:shadow-none lg:backdrop-blur-none ${styles.heroCopyPanel}`}
+          className={`relative flex w-full min-w-0 flex-col gap-6 px-5 py-6 sm:px-6 lg:max-w-none ${styles.heroCopyPanel}`}
         >
-          <div className={styles.heroCopyDetailTop} aria-hidden="true" />
-          <div className={styles.heroCopyDetailBottom} aria-hidden="true" />
-
           <div className="flex">
             <span className={`${styles.heroTrustBadge} inline-flex items-center gap-2 rounded-full px-4 py-2 font-display text-[10px] font-bold tracking-[0.14em] text-[#8CDFFF] sm:text-[11px]`}>
               <Shield size={13} />
@@ -162,12 +156,12 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 className={styles.heroStat}
               >
                 <div className="flex items-start gap-1">
-                  <badge.icon size={11} strokeWidth={2.1} className="mt-0.5 shrink-0 text-[#22D3EE]" />
-                  <p className="font-display text-[0.84rem] font-bold leading-[0.92] text-white sm:text-[0.95rem] xl:text-[1.02rem]">
+                  <badge.icon size={11} strokeWidth={2.1} className={styles.heroStatIcon} />
+                  <p className={styles.heroStatValue}>
                     {badge.value}
                   </p>
                 </div>
-                <p className="mt-0.5 break-words text-[8px] leading-[1.15] tracking-[0.01em] text-white/64 sm:text-[8.5px] xl:text-[9px]">
+                <p className={styles.heroStatLabel}>
                   {badge.label}
                 </p>
               </div>
@@ -178,7 +172,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
             <button
               type="button"
               onClick={scrollToCatalog}
-              className={`${styles.heroActionButton} inline-flex min-h-[54px] items-center justify-center rounded-[10px] border border-[#00C8FF]/18 bg-[#0D1530] px-6 py-3.5 text-center font-display text-[13px] font-semibold tracking-[0.02em] text-white shadow-[0_0_20px_rgba(0,200,255,0.06)] transition hover:border-[#00C8FF]/34 hover:text-[#8CDFFF]`}
+              className={`${styles.heroActionButton} ${styles.heroActionSecondary}`}
             >
               Lihat Katalog
             </button>
@@ -186,7 +180,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
               href="https://wa.me/628881462675"
               target="_blank"
               rel="noopener noreferrer"
-              className={`${styles.heroActionButton} inline-flex min-h-[54px] items-center justify-center gap-2 rounded-[10px] bg-[#22C55E] px-5 py-3.5 text-center font-display text-[13px] font-semibold leading-none whitespace-nowrap tracking-[0.02em] text-white shadow-[0_12px_24px_rgba(34,197,94,0.24)] transition hover:brightness-105`}
+              className={`${styles.heroActionButton} ${styles.heroActionPrimary}`}
             >
               <WhatsAppGlyph />
               Chat WhatsApp
@@ -288,16 +282,16 @@ export default function HeroSection({ banners }: HeroSectionProps) {
       </div>
 
       {/* Ticker */}
-      <div className={`relative z-10 border-y border-white/[0.07] ${styles.tickerBar}`}>
+      <div className={`relative z-10 border-y border-white/[0.08] ${styles.tickerBar}`}>
         <div className="hero-shop-mask overflow-hidden py-3 sm:py-3.5">
           <div
             className={`${prefersReducedMotion ? "" : "hero-shop-track"} flex w-max items-center whitespace-nowrap`}
             style={prefersReducedMotion ? undefined : { animationDuration: "28s" }}
           >
             {tickerItems.map((item, index) => (
-              <span key={`${item.label}-${index}`} className="inline-flex items-center gap-3 px-5 sm:px-6">
+              <span key={`${item.label}-${index}`} className={styles.tickerItem}>
                 <TickerItemIcon icon={item.icon} />
-                <span className="font-display text-[13px] font-semibold tracking-[0.06em] text-white">
+                <span className={styles.tickerText}>
                   {item.label}
                 </span>
                 <span className="ml-1 text-white/14">•</span>
