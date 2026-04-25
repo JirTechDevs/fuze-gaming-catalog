@@ -127,11 +127,19 @@
 }
 
 .storefrontTheme::before {
-  display: none;
+  background:
+    radial-gradient(circle at 18% 18%, rgb(0 200 255 / 0.18) 0%, transparent 24%),
+    radial-gradient(circle at 82% 18%, rgb(59 130 246 / 0.12) 0%, transparent 22%),
+    linear-gradient(180deg, rgb(2 8 21 / 0.18) 0%, transparent 28%);
+  opacity: 0.95;
 }
 
 .storefrontTheme::after {
-  display: none;
+  background:
+    radial-gradient(circle at 14% 32%, rgb(34 211 238 / 0.1) 0%, transparent 18%),
+    radial-gradient(circle at 88% 28%, rgb(34 211 238 / 0.08) 0%, transparent 16%);
+  filter: blur(26px);
+  opacity: 0.92;
 }
 
 .floatingWhatsapp {

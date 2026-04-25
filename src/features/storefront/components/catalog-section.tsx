@@ -159,7 +159,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   };
 
   return (
-    <section id="catalog" className="relative isolate overflow-hidden py-14 sm:py-16 lg:py-20">
+    <section id="catalog" className="relative isolate overflow-hidden pb-14 pt-3 sm:pb-16 sm:pt-4 lg:pb-20 lg:pt-4">
       <div className={`absolute inset-0 ${styles.catalogShell}`} />
       <div className={`absolute inset-0 opacity-90 ${styles.catalogAura}`} />
       <div className={`absolute inset-0 ${styles.catalogMesh}`} />
@@ -226,7 +226,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
         <div>
           <motion.div
             className={styles.catalogHeader}
-            initial={{ opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}

@@ -133,8 +133,11 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           initial={prefersReducedMotion ? false : { opacity: 0, x: -28 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.65, ease: [0.16, 1, 0.3, 1] }}
-          className={`relative flex w-full min-w-0 flex-col gap-6 px-5 py-6 sm:px-6 lg:max-w-none ${styles.heroCopyPanel}`}
+          className={`relative flex w-full min-w-0 flex-col gap-4 px-3 py-3 sm:px-0 sm:py-2 lg:max-w-none ${styles.heroCopyPanel}`}
         >
+          <div className={styles.heroCopyDetailTop} aria-hidden="true" />
+          <div className={styles.heroCopyDetailBottom} aria-hidden="true" />
+
           <div className="flex">
             <span className={`${styles.heroTrustBadge} inline-flex items-center gap-2 rounded-full px-4 py-2 font-display text-[10px] font-bold tracking-[0.14em] text-[#8CDFFF] sm:text-[11px]`}>
               <Shield size={13} />
@@ -169,13 +172,6 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           </div>
 
           <div className={styles.heroActions}>
-            <button
-              type="button"
-              onClick={scrollToCatalog}
-              className={`${styles.heroActionButton} ${styles.heroActionSecondary}`}
-            >
-              Lihat Katalog
-            </button>
             <a
               href="https://wa.me/628881462675"
               target="_blank"
@@ -185,6 +181,13 @@ export default function HeroSection({ banners }: HeroSectionProps) {
               <WhatsAppGlyph />
               Chat WhatsApp
             </a>
+            <button
+              type="button"
+              onClick={scrollToCatalog}
+              className={`${styles.heroActionButton} ${styles.heroActionSecondary}`}
+            >
+              Lihat Katalog
+            </button>
           </div>
         </motion.div>
 
@@ -283,7 +286,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
 
       {/* Ticker */}
       <div className={`relative z-10 border-y border-white/[0.08] ${styles.tickerBar}`}>
-        <div className="hero-shop-mask overflow-hidden py-3 sm:py-3.5">
+        <div className="hero-shop-mask overflow-hidden py-2.5 sm:py-3">
           <div
             className={`${prefersReducedMotion ? "" : "hero-shop-track"} flex w-max items-center whitespace-nowrap`}
             style={prefersReducedMotion ? undefined : { animationDuration: "28s" }}

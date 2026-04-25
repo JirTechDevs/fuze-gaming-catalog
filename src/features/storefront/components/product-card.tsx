@@ -94,7 +94,7 @@ export default function ProductCard({
 
   return (
     <motion.div
-      initial={isLiteMode ? { opacity: 0, y: 16 } : { opacity: 0, y: 40 }}
+      initial={isLiteMode ? false : { opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{
