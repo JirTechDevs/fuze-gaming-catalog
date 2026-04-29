@@ -1,6 +1,28 @@
 import type { Metadata } from "next";
+import { Inter, Plus_Jakarta_Sans, Rajdhani } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+const jakartasans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-display",
+});
+
+const rajdhani = Rajdhani({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-rajdhani",
+});
 
 export const metadata: Metadata = {
   title: "Fuzevalo",
@@ -32,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${jakartasans.variable} ${rajdhani.variable}`}>
       <body>
         {children}
         <Toaster />

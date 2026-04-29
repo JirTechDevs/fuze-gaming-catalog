@@ -1,22 +1,21 @@
 .detailShell {
-  background:
-    linear-gradient(180deg, hsl(227 32% 7%) 0%, hsl(224 28% 8%) 50%, hsl(227 30% 7%) 100%);
+  background: transparent;
 }
 
 .detailAura {
   background-image:
-    radial-gradient(circle at 18% 18%, hsl(188 100% 70% / 0.1) 0%, transparent 24%),
-    radial-gradient(circle at 82% 20%, hsl(194 100% 86% / 0.08) 0%, transparent 22%),
-    radial-gradient(circle at 30% 78%, hsl(182 100% 72% / 0.06) 0%, transparent 18%),
-    radial-gradient(circle at 78% 74%, hsl(190 100% 74% / 0.08) 0%, transparent 24%);
+    radial-gradient(circle at 18% 18%, rgb(0 229 255 / 0.06) 0%, transparent 24%),
+    radial-gradient(circle at 82% 20%, rgb(34 211 238 / 0.04) 0%, transparent 22%),
+    radial-gradient(circle at 30% 78%, rgb(56 189 248 / 0.035) 0%, transparent 18%),
+    radial-gradient(circle at 78% 74%, rgb(14 165 233 / 0.04) 0%, transparent 24%);
 }
 
 .detailMesh {
   background-image:
-    linear-gradient(hsl(189 100% 72% / 0.022) 1px, transparent 1px),
-    linear-gradient(90deg, hsl(189 100% 72% / 0.022) 1px, transparent 1px);
+    linear-gradient(rgb(34 211 238 / 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(34 211 238 / 0.015) 1px, transparent 1px);
   background-size: 52px 52px;
-  mask-image: radial-gradient(circle at center, black, transparent 86%);
+  mask-image: radial-gradient(circle at center, black, transparent 88%);
 }
 
 .detailEdgeFade {
@@ -35,7 +34,7 @@
     linear-gradient(
       180deg,
       hsl(var(--background) / 0.08) 0%,
-      transparent 12%,
+      transparent 16%,
       transparent 84%,
       hsl(var(--background) / 0.42) 100%
     );
@@ -44,16 +43,16 @@
 .detailGlowTop {
   background: radial-gradient(
     ellipse at top,
-    hsl(189 100% 72% / 0.18) 0%,
-    hsl(189 100% 72% / 0.07) 32%,
-    transparent 74%
+    rgb(0 229 255 / 0.08) 0%,
+    rgb(34 211 238 / 0.03) 34%,
+    transparent 72%
   );
 }
 
 .detailGlowBottom {
   background: radial-gradient(
     ellipse at bottom,
-    hsl(191 100% 82% / 0.08) 0%,
+    rgb(56 189 248 / 0.04) 0%,
     transparent 66%
   );
 }
@@ -64,7 +63,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    hsl(var(--primary) / 0.3),
+    hsl(var(--primary) / 0.34),
     transparent
   );
 }
@@ -89,7 +88,7 @@
   width: 14rem;
   height: 14rem;
   border-radius: 9999px;
-  background: radial-gradient(circle, hsl(var(--primary) / 0.22) 0%, transparent 68%);
+  background: radial-gradient(circle, rgb(34 211 238 / 0.16) 0%, transparent 68%);
   pointer-events: none;
   z-index: -1;
 }

@@ -15,8 +15,8 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setShow(false);
-      window.setTimeout(onComplete, 600);
-    }, 1800);
+      window.setTimeout(onComplete, 400);
+    }, 1200);
 
     return () => window.clearTimeout(timer);
   }, [onComplete]);
@@ -25,9 +25,9 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-background"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-[#050A18] [background-image:radial-gradient(rgba(255,255,255,0.07)_1px,transparent_1px)] [background-size:35px_35px]"
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
         >
           <motion.div
             className={`absolute h-[280px] w-[280px] rounded-full sm:h-[400px] sm:w-[400px] ${styles.introRadialGlow}`}
@@ -67,7 +67,7 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
             >
-              FUZE<span className="text-primary text-glow">VALO</span>
+              FUZE<span className="text-primary">VALO</span>
             </motion.span>
 
             <motion.div

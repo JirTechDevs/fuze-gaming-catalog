@@ -1,9 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Archive, ChevronDown, Search, SlidersHorizontal } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ChevronDown, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
+import { valorantRanks } from "@/features/catalog/domain/valorant-ranks";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ProductCard from "@/features/storefront/components/product-card";
 import styles from "./catalog-section.module.css";
@@ -30,101 +31,6 @@ const techLines = [
   { left: "42%", top: "84%", width: "w-24", delay: 0.9 },
 ];
 
-const catalogDoodles = [
-  { position: "left-[4%] top-[22%]", width: 128, rotate: -6, delay: 0, duration: 10, type: "gamepad" },
-  { position: "right-[6%] top-[28%]", width: 144, rotate: 8, delay: 0.8, duration: 11.5, type: "crosshair" },
-  { position: "left-[46%] top-[16%]", width: 122, rotate: 0, delay: 0.3, duration: 12.8, type: "tactical-mark" },
-  { position: "left-[8%] bottom-[18%]", width: 150, rotate: 5, delay: 1.4, duration: 9.6, type: "blaster" },
-  { position: "right-[10%] bottom-[14%]", width: 126, rotate: -7, delay: 0.5, duration: 10.8, type: "joystick" },
-] as const;
-
-const GamepadDoodle = () => (
-  <svg viewBox="0 0 180 120" className="h-full w-full" aria-hidden="true">
-    <path
-      d="M44 42 C36 40 28 44 24 52 L16 74 C12 84 18 96 30 96 C37 96 43 92 47 86 L56 72 H124 L133 86 C137 92 143 96 150 96 C162 96 168 84 164 74 L156 52 C152 44 144 40 136 42 Z"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinejoin="round"
-    />
-    <path d="M56 56 H76 M66 46 V66" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <circle cx="122" cy="54" r="6" fill="none" stroke="currentColor" strokeWidth="3" />
-    <circle cx="138" cy="68" r="6" fill="none" stroke="currentColor" strokeWidth="3" />
-    <path d="M90 46 V72" stroke="currentColor" strokeOpacity="0.36" strokeWidth="2" strokeDasharray="4 8" />
-  </svg>
-);
-
-const CrosshairDoodle = () => (
-  <svg viewBox="0 0 160 160" className="h-full w-full" aria-hidden="true">
-    <circle cx="80" cy="80" r="28" fill="none" stroke="currentColor" strokeWidth="3" />
-    <circle
-      cx="80"
-      cy="80"
-      r="50"
-      fill="none"
-      stroke="currentColor"
-      strokeOpacity="0.32"
-      strokeWidth="2"
-      strokeDasharray="6 10"
-    />
-    <path d="M80 12 V40 M80 120 V148 M12 80 H40 M120 80 H148" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <circle cx="80" cy="80" r="7" fill="currentColor" />
-  </svg>
-);
-
-const BlasterDoodle = () => (
-  <svg viewBox="0 0 190 120" className="h-full w-full" aria-hidden="true">
-    <path
-      d="M22 58 H98 L124 36 H152 L168 50 L138 72 H100 L70 94 H40 Z"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinejoin="round"
-    />
-    <path d="M100 58 H170" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <path d="M136 34 L154 18" stroke="currentColor" strokeOpacity="0.42" strokeWidth="2.4" strokeLinecap="round" />
-    <path d="M144 82 L160 96" stroke="currentColor" strokeOpacity="0.42" strokeWidth="2.4" strokeLinecap="round" />
-    <circle cx="56" cy="58" r="7" fill="none" stroke="currentColor" strokeWidth="3" />
-  </svg>
-);
-
-const JoystickDoodle = () => (
-  <svg viewBox="0 0 150 150" className="h-full w-full" aria-hidden="true">
-    <circle cx="75" cy="34" r="14" fill="none" stroke="currentColor" strokeWidth="3" />
-    <path d="M75 48 V94" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    <path
-      d="M36 94 H114 L126 122 H24 Z"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinejoin="round"
-    />
-    <circle cx="56" cy="108" r="5" fill="none" stroke="currentColor" strokeWidth="2.6" />
-    <circle cx="96" cy="108" r="5" fill="none" stroke="currentColor" strokeWidth="2.6" />
-  </svg>
-);
-
-const TacticalMarkDoodle = () => (
-  <svg viewBox="0 0 150 120" className="h-full w-full" aria-hidden="true">
-    <path
-      d="M18 20 L62 96 H84 L62 56 H88 L132 20 H102 L74 46 L48 20 Z"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3.2"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M36 20 L74 86 L114 20"
-      fill="none"
-      stroke="currentColor"
-      strokeOpacity="0.34"
-      strokeWidth="1.8"
-      strokeLinejoin="round"
-    />
-    <path d="M58 102 H92" stroke="currentColor" strokeOpacity="0.38" strokeWidth="2" strokeLinecap="round" />
-  </svg>
-);
-
 export default function CatalogSection({ products }: CatalogSectionProps) {
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
@@ -134,7 +40,6 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   const [regionFilter, setRegionFilter] = useState("all");
   const [nickFilter, setNickFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
-  const [filtersOpen, setFiltersOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   // Keep this block commented so we can quickly restore the extra demo section later.
@@ -152,7 +57,15 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   );
 
   const rankOptions = useMemo(
-    () => [...new Set(availableProducts.map((product) => product.rank))],
+    () => {
+      const availableRankSet = new Set(availableProducts.map((product) => product.rank));
+      const orderedKnownRanks = valorantRanks.filter((rank) => availableRankSet.has(rank));
+      const unknownRanks = [...availableRankSet].filter(
+        (rank) => !valorantRanks.includes(rank as (typeof valorantRanks)[number]),
+      );
+
+      return [...orderedKnownRanks, ...unknownRanks];
+    },
     [availableProducts],
   );
 
@@ -201,7 +114,6 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   const endIndex = Math.min(startIndex + ACCOUNTS_PER_PAGE, available.length);
   const visibleProducts = available.slice(startIndex, endIndex);
   const visibleAmbientParticles = isLiteMode ? ambientParticles.slice(0, 2) : ambientParticles;
-
   const paginationItems = useMemo(() => {
     if (totalPages <= 1) {
       return [1];
@@ -227,11 +139,6 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
     return items;
   }, [currentPageSafe, totalPages]);
 
-  const sold = useMemo(
-    () => products.filter((product) => product.status === "sold"),
-    [products],
-  );
-
   useEffect(() => {
     setCurrentPage(1);
   }, [search, rankFilter, regionFilter, nickFilter, sortBy]);
@@ -252,7 +159,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   };
 
   return (
-    <section id="catalog" className="relative isolate overflow-hidden py-14 sm:py-16 lg:py-20">
+    <section id="catalog" className="relative isolate overflow-hidden pb-14 pt-3 sm:pb-16 sm:pt-4 lg:pb-20 lg:pt-4">
       <div className={`absolute inset-0 ${styles.catalogShell}`} />
       <div className={`absolute inset-0 opacity-90 ${styles.catalogAura}`} />
       <div className={`absolute inset-0 ${styles.catalogMesh}`} />
@@ -266,7 +173,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
       {visibleAmbientParticles.map((particle) => (
         <motion.span
           key={`${particle.left}-${particle.top}`}
-          className={`pointer-events-none absolute rounded-full bg-primary/14 blur-3xl ${styles.ambientParticle}`}
+          className={styles.ambientParticle}
           style={{
             left: particle.left,
             top: particle.top,
@@ -309,196 +216,136 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             delay: line.delay,
           }}
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-primary/80 shadow-[0_0_16px_hsl(var(--primary)_/_0.7)]" />
+          <span className={styles.techDot} />
           <span className={`h-px ${line.width} ${styles.techLine}`} />
         </motion.div>
       ))}
 
-      {catalogDoodles.map((doodle) => (
-        <motion.div
-          key={doodle.position}
-          className={`pointer-events-none absolute hidden text-primary/28 xl:block ${doodle.position}`}
-          style={{ width: doodle.width }}
-          initial={{ opacity: 0.16, rotate: doodle.rotate }}
-          animate={{
-            opacity: [0.14, 0.3, 0.16],
-            y: [0, -12, 0],
-            rotate: [doodle.rotate, doodle.rotate + 2, doodle.rotate],
-          }}
-          transition={{
-            duration: doodle.duration,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-            delay: doodle.delay,
-          }}
-        >
-          {doodle.type === "gamepad" && <GamepadDoodle />}
-          {doodle.type === "crosshair" && <CrosshairDoodle />}
-          {doodle.type === "tactical-mark" && <TacticalMarkDoodle />}
-          {doodle.type === "blaster" && <BlasterDoodle />}
-          {doodle.type === "joystick" && <JoystickDoodle />}
-        </motion.div>
-      ))}
+      <div className={styles.catalogContainer}>
 
-      <div className="relative z-10 container mx-auto space-y-16 px-4 sm:space-y-20 lg:space-y-24">
         <div>
           <motion.div
-            className="mb-8 flex flex-col gap-6 sm:mb-10"
-            initial={{ opacity: 0, y: 20 }}
+            className={styles.catalogHeader}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex flex-col gap-2">
-              <span className="font-display text-[11px] tracking-[0.4em] text-primary/60">
+            <div>
+              <span className={styles.sectionKicker}>
                 BROWSE OUR COLLECTION
               </span>
-              <h2 className="font-display text-3xl font-bold tracking-[0.12em] text-foreground md:text-4xl">
-                ACCOUNT <span className="text-primary text-glow">CATALOG</span>
+              <h2 className={styles.sectionTitle}>
+                ACCOUNT <span className="text-primary">CATALOG</span>
               </h2>
             </div>
 
-            <div className="rounded-[1.5rem] border border-border/40 bg-card/75 p-4 backdrop-blur-none sm:bg-card/50 sm:backdrop-blur-md sm:p-5 lg:p-6">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-2">
-                  <SlidersHorizontal size={14} className="text-muted-foreground/50" />
-                  <span className="font-display text-[11px] tracking-[0.28em] text-muted-foreground/60">
-                    FILTER CATALOG
-                  </span>
-                </div>
-                <div className="flex items-center justify-between gap-2 sm:justify-end">
-                  <span className="rounded bg-secondary/50 px-2 py-0.5 font-display text-[10px] tracking-wider text-muted-foreground/50">
-                    {available.length} {available.length === 1 ? "ACCOUNT" : "ACCOUNTS"}
-                  </span>
+            <div className={styles.filtersPanel}>
+              <div id="catalog-filters-content" className={styles.filtersBody}>
+                <div className={styles.filtersGrid}>
+                  <label className={styles.filterGroup}>
+                    <span className={styles.filterLabel}>
+                      Cari Kode / Skin
+                    </span>
+                    <span className={styles.filterField}>
+                      <input
+                        type="text"
+                        placeholder="Contoh: Vandal, Oni..."
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                        className={styles.filterInput}
+                      />
+                    </span>
+                  </label>
+
+                  <label className={styles.filterGroup}>
+                    <span className={styles.filterLabel}>
+                      Cari Rank
+                    </span>
+                    <span className={`${styles.filterField} ${styles.selectWrap}`}>
+                      <select
+                        value={rankFilter}
+                        onChange={(event) => setRankFilter(event.target.value)}
+                        className={styles.selectField}
+                      >
+                        <option value="all">Semua Rank</option>
+                        {rankOptions.map((rank) => (
+                          <option key={rank} value={rank}>{rank}</option>
+                        ))}
+                      </select>
+                      <ChevronDown size={16} className={styles.selectIcon} />
+                    </span>
+                  </label>
+
+                  <label className={styles.filterGroup}>
+                    <span className={styles.filterLabel}>
+                      Region
+                    </span>
+                    <span className={`${styles.filterField} ${styles.selectWrap}`}>
+                      <select
+                        value={regionFilter}
+                        onChange={(event) => setRegionFilter(event.target.value)}
+                        className={styles.selectField}
+                      >
+                        <option value="all">Semua Region</option>
+                        {regionOptions.map((region) => (
+                          <option key={region} value={region}>{region}</option>
+                        ))}
+                      </select>
+                      <ChevronDown size={16} className={styles.selectIcon} />
+                    </span>
+                  </label>
+
+                  <label className={styles.filterGroup}>
+                    <span className={styles.filterLabel}>
+                      Ganti Nick
+                    </span>
+                    <span className={`${styles.filterField} ${styles.selectWrap}`}>
+                      <select
+                        value={nickFilter}
+                        onChange={(event) => setNickFilter(event.target.value)}
+                        className={styles.selectField}
+                      >
+                        <option value="all">Semua Status</option>
+                        {nickOptions.map((option) => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
+                      <ChevronDown size={16} className={styles.selectIcon} />
+                    </span>
+                  </label>
+
+                  <label className={styles.filterGroup}>
+                    <span className={styles.filterLabel}>
+                      Urutkan Harga
+                    </span>
+                    <span className={`${styles.filterField} ${styles.selectWrap}`}>
+                      <select
+                        value={sortBy}
+                        onChange={(event) => setSortBy(event.target.value)}
+                        className={styles.selectField}
+                      >
+                        <option value="default">Terbaru (Default)</option>
+                        <option value="price-asc">Harga Termurah</option>
+                        <option value="price-desc">Harga Termahal</option>
+                      </select>
+                      <ChevronDown size={16} className={styles.selectIcon} />
+                    </span>
+                  </label>
+
                   <button
                     type="button"
-                    onClick={() => setFiltersOpen((current) => !current)}
-                    aria-expanded={filtersOpen}
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-3 py-2 font-display text-[10px] tracking-[0.18em] text-primary transition hover:bg-primary hover:text-primary-foreground"
+                    onClick={resetFilters}
+                    className={styles.resetButton}
                   >
-                    {filtersOpen ? "COLLAPSE" : "FILTERS"}
-                    <ChevronDown
-                      size={14}
-                      className={`transition-transform ${filtersOpen ? "rotate-180" : ""}`}
-                    />
+                    Reset Filter
                   </button>
                 </div>
               </div>
-
-              <AnimatePresence initial={false}>
-                {filtersOpen && (
-                  <motion.div
-                    key="catalog-filters"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
-                    className="overflow-hidden"
-                  >
-                    <div className="mt-4 grid grid-cols-1 gap-3 border-t border-white/5 pt-4 sm:grid-cols-2 xl:grid-cols-5">
-                      <label className="block sm:col-span-2 xl:col-span-1">
-                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                          SEARCH
-                        </span>
-                        <div className="relative">
-                          <Search
-                            size={15}
-                            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/40"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Code or rank..."
-                            value={search}
-                            onChange={(event) => setSearch(event.target.value)}
-                            className="w-full rounded-lg border border-border/50 bg-background/40 py-2.5 pl-9 pr-4 text-sm text-foreground backdrop-blur-sm placeholder:text-muted-foreground/40 transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                          />
-                        </div>
-                      </label>
-
-                      <label className="block">
-                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                          RANK
-                        </span>
-                        <select
-                          value={rankFilter}
-                          onChange={(event) => setRankFilter(event.target.value)}
-                          className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                        >
-                          <option value="all">All ranks</option>
-                          {rankOptions.map((rank) => (
-                            <option key={rank} value={rank}>
-                              {rank}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-
-                      <label className="block">
-                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                          REGION
-                        </span>
-                        <select
-                          value={regionFilter}
-                          onChange={(event) => setRegionFilter(event.target.value)}
-                          className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                        >
-                          <option value="all">All regions</option>
-                          {regionOptions.map((region) => (
-                            <option key={region} value={region}>
-                              {region}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-
-                      <label className="block">
-                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                          CHANGE NICK
-                        </span>
-                        <select
-                          value={nickFilter}
-                          onChange={(event) => setNickFilter(event.target.value)}
-                          className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                        >
-                          <option value="all">All status</option>
-                          {nickOptions.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-
-                      <label className="block">
-                        <span className="mb-1.5 block font-display text-[10px] tracking-[0.22em] text-muted-foreground/55">
-                          SORT
-                        </span>
-                        <select
-                          value={sortBy}
-                          onChange={(event) => setSortBy(event.target.value)}
-                          className="w-full rounded-lg border border-border/50 bg-background/40 px-3 py-2.5 text-sm text-foreground backdrop-blur-sm transition-all focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
-                        >
-                          <option value="default">Recommended</option>
-                          <option value="price-asc">Price: Low to High</option>
-                          <option value="price-desc">Price: High to Low</option>
-                        </select>
-                      </label>
-
-                      <button
-                        type="button"
-                        onClick={resetFilters}
-                        className="rounded-full border border-primary/20 bg-primary/8 px-3 py-2 font-display text-[10px] tracking-[0.18em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:col-span-2 xl:col-span-5 xl:justify-self-end"
-                      >
-                        RESET
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-2 items-stretch gap-3 sm:gap-5 lg:gap-6 xl:grid-cols-3">
+          <div className={styles.catalogGrid}>
             {visibleProducts.map((product, index) => (
               <ProductCard
                 key={product.id}

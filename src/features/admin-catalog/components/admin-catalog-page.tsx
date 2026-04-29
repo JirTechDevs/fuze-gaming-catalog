@@ -108,7 +108,7 @@ export default function AdminCatalogPage({
       <div className="container mx-auto px-4 pb-12 pt-20 sm:pt-24">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="font-display text-2xl font-bold tracking-widest text-foreground">
-            ADMIN <span className="text-glow text-primary">PANEL</span>
+            ADMIN <span className="text-primary">PANEL</span>
           </h1>
           <button
             onClick={openNew}

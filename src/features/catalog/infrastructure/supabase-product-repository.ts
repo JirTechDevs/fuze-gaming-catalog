@@ -1,11 +1,11 @@
-import { unstable_noStore as noStore } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { unstable_cache } from "next/cache";
+import { createPublicClient } from "@/lib/supabase/public";
 import type {
   Product,
   ProductRepository,
 } from "@/features/catalog/domain/product";
 
-const CATALOG_IMAGE_FALLBACK = "/images/catalog/mock_image.jpg";
+const CATALOG_IMAGE_FALLBACK = "/images/catalog/mock_image.webp";
 
 type CatalogProductRow = {
   id: string;
@@ -82,43 +82,59 @@ function mapCatalogRowToProduct(row: CatalogProductRow): Product {
   };
 }
 
+async function fetchProductList(): Promise<Product[]> {
+  const supabase = createPublicClient();
+  const { data, error } = await supabase
+    .from("catalog_items")
+    .select(catalogProductSelect)
+    .eq("status", "available")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(`Failed to list storefront products: ${error.message}`);
+  }
+
+  return ((data ?? []) as CatalogProductRow[]).map(mapCatalogRowToProduct);
+}
+
+async function fetchProductById(id: string): Promise<Product | null> {
+  const supabase = createPublicClient();
+  const { data, error } = await supabase
+    .from("catalog_items")
+    .select(catalogProductSelect)
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to load storefront product: ${error.message}`);
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return mapCatalogRowToProduct(data as CatalogProductRow);
+}
+
+const getCachedProductList = unstable_cache(
+  fetchProductList,
+  ["catalog-products"],
+  { revalidate: 60, tags: ["catalog-products"] },
+);
+
 class SupabaseProductRepository implements ProductRepository {
   async list(): Promise<Product[]> {
-    noStore();
-
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("catalog_items")
-      .select(catalogProductSelect)
-      .eq("status", "available")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      throw new Error(`Failed to list storefront products: ${error.message}`);
-    }
-
-    return ((data ?? []) as CatalogProductRow[]).map(mapCatalogRowToProduct);
+    return getCachedProductList();
   }
 
   async getById(id: string): Promise<Product | null> {
-    noStore();
+    const getCachedProduct = unstable_cache(
+      () => fetchProductById(id),
+      [`catalog-product-${id}`],
+      { revalidate: 60, tags: ["catalog-products", `catalog-product-${id}`] },
+    );
 
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("catalog_items")
-      .select(catalogProductSelect)
-      .eq("id", id)
-      .maybeSingle();
-
-    if (error) {
-      throw new Error(`Failed to load storefront product: ${error.message}`);
-    }
-
-    if (!data) {
-      return null;
-    }
-
-    return mapCatalogRowToProduct(data as CatalogProductRow);
+    return getCachedProduct();
   }
 }
 

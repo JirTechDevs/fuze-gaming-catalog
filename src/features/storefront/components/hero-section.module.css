@@ -1,108 +1,627 @@
 .heroShell {
   background:
-    linear-gradient(180deg, hsl(226 50% 6%) 0%, hsl(228 45% 8%) 100%);
+    radial-gradient(circle at 16% 38%, rgb(0 200 255 / 0.08) 0%, transparent 22%),
+    radial-gradient(circle at 84% 28%, rgb(59 130 246 / 0.06) 0%, transparent 20%);
 }
 
-.heroSideFade {
-  background: linear-gradient(
-    90deg,
-    hsl(var(--background) / 0.95),
-    transparent,
-    hsl(var(--background) / 0.95)
-  );
-}
-
-.heroHalo {
+.heroAurora {
   background-image:
-    radial-gradient(circle at 50% 50%, hsl(var(--primary) / 0.38) 0%, transparent 21%),
-    radial-gradient(circle at 50% 50%, hsl(193 100% 85% / 0.2) 0%, transparent 44%),
-    radial-gradient(circle at 14% 20%, hsl(185 100% 68% / 0.15) 0%, transparent 18%),
-    radial-gradient(circle at 86% 32%, hsl(190 100% 76% / 0.14) 0%, transparent 18%);
+    radial-gradient(circle at 18% 24%, rgb(0 200 255 / 0.12) 0%, transparent 26%),
+    radial-gradient(circle at 78% 24%, rgb(0 200 255 / 0.08) 0%, transparent 22%),
+    linear-gradient(180deg, rgb(5 10 24 / 0.04), transparent 36%, rgb(5 10 24 / 0.16) 100%);
 }
 
-.heroCenterGlow {
-  background: radial-gradient(
-    ellipse at center,
-    hsl(189 100% 72% / 0.22) 0%,
-    hsl(189 100% 72% / 0.12) 35%,
-    transparent 72%
-  );
+.heroAmbientGlow {
+  background-image:
+    radial-gradient(circle at 18% 44%, rgb(0 200 255 / 0.11) 0%, transparent 24%),
+    radial-gradient(circle at 80% 40%, rgb(0 200 255 / 0.12) 0%, transparent 26%);
+  filter: blur(52px);
+  opacity: 0.92;
 }
 
-.heroGridMask {
-  mask-image: radial-gradient(circle at center, black, transparent 86%);
+.heroTechLines {
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent 0%, transparent 9%,
+      rgb(34 211 238 / 0.04) 9.1%, transparent 9.2%,
+      transparent 89%,
+      rgb(34 211 238 / 0.04) 89.1%, transparent 89.2%
+    ),
+    linear-gradient(
+      180deg,
+      transparent 0%, transparent 18%,
+      rgb(34 211 238 / 0.035) 18.1%, transparent 18.2%,
+      transparent 76%,
+      rgb(34 211 238 / 0.035) 76.1%, transparent 76.2%
+    );
+  mask-image: linear-gradient(180deg, transparent 0%, black 14%, black 88%, transparent 100%);
+}
+
+.heroCopyGlow {
+  background: radial-gradient(circle at left center, rgb(0 200 255 / 0.08) 0%, transparent 68%);
+}
+
+.heroParticlesLayer {
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.heroParticle {
+  position: absolute;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 35% 35%, rgb(186 230 253 / 0.92) 0%, rgb(34 211 238 / 0.78) 36%, rgb(14 165 233 / 0.18) 68%, transparent 100%);
+  box-shadow:
+    0 0 0 1px rgb(103 232 249 / 0.1),
+    0 0 12px rgb(34 211 238 / 0.28);
+  will-change: transform, opacity;
+  animation-name: heroParticleFloat;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.heroParticle::after {
+  content: "";
+  position: absolute;
+  inset: -0.5rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgb(34 211 238 / 0.16) 0%, transparent 72%);
 }
 
 .heroBottomFade {
+  background: linear-gradient(180deg, transparent 0%, rgb(5 10 24 / 0.32) 100%);
+}
+
+@keyframes heroParticleFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.22;
+  }
+
+  50% {
+    transform: translate3d(0, -14px, 0) scale(1.08);
+    opacity: 0.78;
+  }
+}
+
+.heroReticleLeft,
+.heroReticleRight {
+  border-radius: 9999px;
+  border: 1px solid rgb(14 165 233 / 0.2);
+  box-shadow: inset 0 0 0 22px rgb(10 37 64 / 0.22), 0 0 50px rgb(34 211 238 / 0.09);
+}
+
+.heroReticleLeft::before,
+.heroReticleLeft::after,
+.heroReticleRight::before,
+.heroReticleRight::after {
+  content: "";
+  position: absolute;
+  inset: 50%;
+  background: rgb(34 211 238 / 0.16);
+}
+
+.heroReticleLeft::before,
+.heroReticleRight::before {
+  height: 1px;
+  transform: translate(-50%, -50%);
+  width: calc(100% + 28px);
+}
+
+.heroReticleLeft::after,
+.heroReticleRight::after {
+  height: calc(100% + 28px);
+  transform: translate(-50%, -50%);
+  width: 1px;
+}
+
+.heroCopyPanel {
+  isolation: isolate;
+  position: relative;
+  z-index: 1;
+}
+
+.heroCopyDetailTop,
+.heroCopyDetailBottom {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.heroCopyDetailTop {
+  inset: 0 auto auto 0;
+  width: min(20rem, 92%);
+  height: 14rem;
+  background:
+    radial-gradient(circle at 26% 18%, rgb(0 200 255 / 0.14) 0%, rgb(0 200 255 / 0.05) 18%, transparent 44%),
+    radial-gradient(circle at 56% 72%, rgb(0 200 255 / 0.08) 0%, transparent 18%),
+    radial-gradient(circle at 40% 54%, rgb(125 211 252 / 0.08) 0%, transparent 10%);
+  filter: blur(10px);
+  opacity: 0.95;
+}
+
+.heroCopyDetailTop::before,
+.heroCopyDetailTop::after,
+.heroCopyDetailBottom::before,
+.heroCopyDetailBottom::after {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  background: rgb(140 223 255 / 0.85);
+  box-shadow: 0 0 14px rgb(0 200 255 / 0.54);
+}
+
+.heroCopyDetailTop::before {
+  top: 2.15rem;
+  left: 1.2rem;
+  width: 0.22rem;
+  height: 0.22rem;
+}
+
+.heroCopyDetailTop::after {
+  top: 7.9rem;
+  left: 9.8rem;
+  width: 0.28rem;
+  height: 0.28rem;
+}
+
+.heroCopyDetailBottom {
+  right: -0.75rem;
+  bottom: 2rem;
+  width: min(13rem, 52%);
+  height: 9.5rem;
+  background:
+    radial-gradient(circle at 22% 26%, rgb(0 200 255 / 0.09) 0%, transparent 16%),
+    radial-gradient(circle at 66% 44%, rgb(0 200 255 / 0.12) 0%, rgb(0 200 255 / 0.04) 22%, transparent 48%),
+    radial-gradient(circle at 56% 78%, rgb(0 200 255 / 0.08) 0%, transparent 18%);
+  filter: blur(12px);
+  opacity: 0.82;
+}
+
+.heroCopyDetailBottom::before {
+  right: 2.6rem;
+  top: 1.6rem;
+  width: 0.22rem;
+  height: 0.22rem;
+}
+
+.heroCopyDetailBottom::after {
+  right: 4.8rem;
+  bottom: 2rem;
+  width: 0.28rem;
+  height: 0.28rem;
+}
+
+.heroHeadline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05em;
+  line-height: 0.95;
+}
+
+.heroHeadlineLead,
+.heroHeadlineAccent {
+  display: block;
+  font-family: var(--font-display), sans-serif;
+  line-height: 1;
+}
+
+.heroHeadlineLead {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.heroHeadlineAccent {
+  font-size: 5.55rem;
+  font-weight: 900;
+  color: #00C8FF;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  text-shadow:
+    0 0 20px rgb(0 200 255 / 0.24),
+    0 0 42px rgb(0 200 255 / 0.08);
+}
+
+.heroLayout {
+  position: relative;
+  z-index: 1;
+  width: min(var(--container-max), calc(100% - 48px));
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 336px;
+  padding: 16px 0 8px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.heroLayout::before {
+  display: none;
+}
+
+.heroVisualPanel {
+  position: relative;
+  justify-content: center;
+  z-index: 1;
+}
+
+.heroVisualPanel::before {
+  content: "";
+  position: absolute;
+  inset: 10% -8% 12% 24%;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 52% 50%, rgb(0 229 255 / 0.22) 0%, rgb(0 229 255 / 0.08) 34%, transparent 72%);
+  filter: blur(42px);
+  opacity: 0.95;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.heroStats {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr) minmax(0, 0.92fr);
+  gap: 0;
+  align-items: stretch;
+}
+
+.heroStat {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  min-height: 3.2rem;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0 20px;
+}
+
+.heroStat:first-child {
+  padding-left: 0;
+}
+
+.heroStat:last-child {
+  padding-right: 0;
+}
+
+.heroStat:not(:last-child) {
+  border-right: 1px solid rgb(255 255 255 / 0.12);
+}
+
+.heroStatIcon {
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+  color: var(--blue-2);
+}
+
+.heroStatValue {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text-1);
+  white-space: nowrap;
+}
+
+.heroStatLabel {
+  margin-top: 0.42rem;
+  font-size: 0.86rem;
+  line-height: 1.2;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.heroTrustBadge {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid rgba(74, 207, 255, 0.28);
+  background: linear-gradient(180deg, rgba(8, 55, 92, 0.9) 0%, rgba(5, 37, 66, 0.92) 100%);
+  box-shadow:
+    0 0 28px rgba(47, 189, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.heroTrustBadge::before {
+  content: "";
+  position: absolute;
+  inset: -0.35rem;
+  z-index: -1;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(56, 199, 255, 0.16) 0%, transparent 72%);
+  filter: blur(12px);
+  opacity: 0.68;
+}
+
+.heroActions {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.9fr);
+  gap: 0.8rem;
+  align-items: stretch;
+}
+
+.heroActionButton {
+  height: 56px;
+  width: 100%;
+  min-width: 0;
+  padding: 0 24px;
+  border-radius: 18px;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-display), sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    color 0.25s ease,
+    filter 0.25s ease;
+}
+
+.heroActionButton:hover {
+  transform: translateY(-1px);
+}
+
+.heroActionPrimary {
+  color: var(--text-1);
+  background: linear-gradient(180deg, var(--green-1) 0%, var(--green-2) 100%);
+  box-shadow:
+    var(--shadow-green),
+    0 0 24px rgba(49, 218, 107, 0.12);
+}
+
+.heroActionSecondary {
+  color: #eef6ff;
+  border: 1px solid rgba(85, 162, 255, 0.3);
+  background: linear-gradient(180deg, rgba(11, 31, 64, 0.85) 0%, rgba(7, 18, 36, 0.92) 100%);
+  box-shadow:
+    0 0 0 1px rgba(33, 114, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.heroActionSecondary:hover {
+  color: var(--blue-1);
+  border-color: rgba(85, 162, 255, 0.44);
+}
+
+@media (min-width: 1024px) {
+  .heroLayout {
+    display: grid;
+    grid-template-columns: 410px minmax(0, 1fr);
+    align-items: center;
+    gap: 28px;
+  }
+
+  .heroVisualPanel {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 1023px) {
+  .heroLayout {
+    width: min(var(--container-max), calc(100% - 28px));
+    padding: 24px 18px 12px;
+  }
+
+  .heroCopyPanel::before,
+  .heroCopyPanel::after,
+  .heroCopyDetailTop,
+  .heroCopyDetailBottom {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroParticle {
+    animation: none;
+    opacity: 0.28;
+  }
+}
+
+@media (min-width: 640px) {
+  .heroHeadlineLead {
+    font-size: 3.5rem;
+  }
+
+  .heroHeadlineAccent {
+    font-size: 5.55rem;
+  }
+
+  .heroStats {
+    gap: 0;
+  }
+}
+
+@media (min-width: 640px) {
+  .heroStat {
+    min-height: 3.6rem;
+  }
+
+  .heroActions {
+    width: auto;
+    grid-template-columns: 228px 184px;
+  }
+}
+
+/* ─────────────────────────────────────────
+   BANNER STACK
+   The front banner defines the size.
+   Card2 and card3 are then layered to the right
+   so the stack stays horizontal and readable.
+   z-index: card1 > card2 > card3.
+───────────────────────────────────────── */
+
+.bannerStack {
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  overflow: visible;
+}
+
+@media (min-width: 1280px) {
+  .bannerStack {
+    max-width: 712px;
+  }
+}
+
+/* Card 1 — front, active banner */
+.bannerCard1 {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  aspect-ratio: 16 / 8.35;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  border: 1px solid rgba(97, 158, 255, 0.22);
+  background:
+    radial-gradient(circle at 22% 44%, rgba(255, 68, 68, 0.08), transparent 20%),
+    linear-gradient(180deg, rgba(9, 22, 48, 0.96) 0%, rgba(5, 14, 31, 0.98) 100%);
+  box-shadow:
+    var(--shadow-card),
+    var(--shadow-glow),
+    0 0 44px rgba(0, 200, 255, 0.08);
+}
+
+/* Card 2 — middle, tucked behind the main card from the right */
+.bannerCard2 {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 70%;
+  transform: translateY(-50%) scale(0.74);
+  transform-origin: left center;
+  width: 100%;
+  aspect-ratio: 16 / 8.35;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(104, 164, 255, 0.12);
+  background: linear-gradient(180deg, #0a1b35 0%, #061323 100%);
+  box-shadow: 0 24px 80px rgb(2 6 23 / 0.52);
+  transition: opacity 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+
+.bannerCard2:hover {
+  border-color: var(--blue-2);
+  opacity: 0.95;
+}
+
+/* Card 3 — furthest back, slightly lower and further right */
+.bannerCard3 {
+  position: absolute;
+  z-index: 1;
+  top: 54%;
+  left: 99%;
+  transform: translateY(-50%) scale(0.52);
+  transform-origin: left center;
+  width: 100%;
+  aspect-ratio: 16 / 8.35;
+  overflow: hidden;
+  border-radius: 1.35rem;
+  border: 1px solid rgba(104, 164, 255, 0.12);
+  background: linear-gradient(180deg, #0a1b35 0%, #061323 100%);
+  box-shadow: 0 16px 60px rgb(2 6 23 / 0.44);
+  opacity: 0.82;
+  transition: opacity 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+
+.bannerCard3:hover {
+  border-color: var(--blue-2);
+  opacity: 0.92;
+}
+
+/* Shade overlay on preview cards */
+.cardShade {
+  position: absolute;
+  inset: 0;
   background: linear-gradient(
     180deg,
-    transparent 0%,
-    transparent 74%,
-    hsl(var(--background)) 100%
+    rgb(2 6 23 / 0.08) 0%,
+    rgb(2 6 23 / 0.42) 100%
   );
 }
 
-.orbTopLeft {
-  left: -10%;
-  top: 14%;
+.bannerScreenGlow {
+  background-image:
+    radial-gradient(circle at 35% 46%, rgb(34 211 238 / 0.12) 0%, transparent 30%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.06), transparent 20%, rgb(2 6 23 / 0.18) 100%);
 }
 
-.orbTopRight {
-  right: -8%;
-  top: 18%;
+/* ── Ticker bar ── */
+.tickerBar {
+  background: linear-gradient(180deg, rgba(12, 21, 38, 0.96) 0%, rgba(8, 18, 34, 0.98) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 0 18px rgba(0, 0, 0, 0.16);
 }
 
-.orbBottomLeft {
-  bottom: -18%;
-  left: 14%;
+.tickerItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 22px;
 }
 
-.orbBottomRight {
-  bottom: -14%;
-  right: 12%;
+.tickerText {
+  color: #fff;
+  font-family: var(--font-display), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-.bannerSideCard {
-  box-shadow: 0 30px 90px hsl(225 60% 3% / 0.42);
+@media (max-width: 639px) {
+  .heroLayout {
+    width: min(var(--container-max), calc(100% - 28px));
+  }
+
+  .heroHeadlineLead {
+    font-size: clamp(2.45rem, 9.5vw, 3.1rem);
+  }
+
+  .heroHeadlineAccent {
+    font-size: clamp(4rem, 14vw, 5.05rem);
+  }
+
+  .heroActionButton {
+    padding-inline: 1rem;
+    font-size: 14px;
+  }
+
+  .bannerStack {
+    max-width: 100%;
+  }
+
+  .bannerCard1 {
+    border-radius: 1.35rem;
+  }
+
+  .bannerCard2,
+  .bannerCard3 {
+    display: none;
+  }
 }
 
-.bannerSideOverlayLeft {
-  background: linear-gradient(
-    90deg,
-    hsl(var(--background) / 0.12),
-    hsl(var(--background) / 0.52)
-  );
-}
+@media (max-width: 420px) {
+  .heroActions {
+    grid-template-columns: 1fr;
+  }
 
-.bannerSideOverlayRight {
-  background: linear-gradient(
-    270deg,
-    hsl(var(--background) / 0.12),
-    hsl(var(--background) / 0.52)
-  );
-}
-
-.bannerStage {
-  box-shadow: 0 0 60px hsl(var(--primary) / 0.24);
-}
-
-.bannerStageTop {
-  background: linear-gradient(
-    180deg,
-    hsl(var(--background) / 0.02),
-    transparent 32%,
-    hsl(var(--background) / 0.64) 100%
-  );
-}
-
-.ornamentDot {
-  box-shadow: 0 0 16px hsl(var(--primary) / 0.85);
-}
-
-.particle {
-  box-shadow: 0 0 18px hsl(var(--primary) / 0.7);
-}
-
-.scrollLabel {
-  padding-top: 16px;
+  .heroLayout {
+    padding-inline: 18px;
+  }
 }
