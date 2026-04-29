@@ -177,23 +177,23 @@ export default function ProductDetailPage({
           <div className="mb-6 flex flex-wrap items-center gap-2 sm:mb-8 sm:gap-3">
             <Link
               href="/#catalog"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2.5 font-display text-[11px] tracking-[0.16em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:w-auto sm:justify-start sm:py-2"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary/10 px-4 py-2.5 font-display text-[11px] tracking-[0.16em] text-primary transition hover:bg-primary hover:text-primary-foreground sm:w-auto sm:justify-start sm:py-2"
             >
               <ArrowLeft size={14} />
               KEMBALI KE KATALOG
             </Link>
-            <span className="w-full rounded-full border border-border/40 bg-background/35 px-3 py-1.5 text-center font-display text-[10px] tracking-[0.22em] text-muted-foreground sm:w-auto">
+            <span className="w-full rounded-full bg-background/35 px-3 py-1.5 text-center font-display text-[10px] tracking-[0.22em] text-muted-foreground sm:w-auto">
               ACCOUNT DETAIL
             </span>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-stretch xl:gap-8">
+          <div className="grid gap-6 lg:grid-cols-2 lg:items-stretch xl:gap-8">
             <section className="h-full">
               <ProductImageGallery product={product} />
             </section>
 
             <section className="flex flex-col gap-4">
-              <div className="rounded-[1.8rem] border border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.88),hsl(var(--background)/0.92))] p-5 backdrop-blur-md sm:p-6 xl:p-7">
+              <div className="rounded-[1.8rem] bg-[linear-gradient(180deg,hsl(var(--card)/0.88),hsl(var(--background)/0.92))] p-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)] backdrop-blur-md sm:p-6 xl:p-7">
                 <div className="flex h-full flex-col gap-4">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
@@ -202,13 +202,37 @@ export default function ProductDetailPage({
                       </h1>
                     </div>
                     <div className="flex items-center gap-2 self-start font-display text-lg font-semibold tracking-wide text-white/92 sm:pt-1 sm:text-2xl">
-                      <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] tracking-widest text-primary sm:hidden">
+                      <span className="rounded-full bg-primary/10 px-3 py-1 text-[10px] tracking-widest text-primary sm:hidden">
                         {product.rank}
                       </span>
                     </div>
                   </div>
 
                   <div className="h-px bg-border/35" />
+
+                  <div className="rounded-[1.5rem] bg-background/12 p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)] sm:p-5">
+                    <div className="flex flex-col items-start gap-3 pb-4 sm:flex-row sm:items-center sm:justify-between">
+                      <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
+                        Daftar Skin
+                      </p>
+                      <span className="rounded-full bg-primary/12 px-3 py-1 text-xs font-bold text-primary sm:whitespace-nowrap sm:text-sm">
+                        {product.skins.length} skins
+                      </span>
+                    </div>
+                    <ol className="panel-scrollbar mt-4 max-h-[18rem] space-y-1 overflow-y-auto pr-2 text-sm leading-4 text-white/88 sm:text-base">
+                      {product.skins.map((skin, index) => (
+                        <li
+                          key={skin}
+                          className="rounded-[0.7rem] bg-background/22 px-4 py-2 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)]"
+                        >
+                          <span className="mr-2 font-display text-primary/86">
+                            {String(index + 1).padStart(2, "0")}.
+                          </span>
+                          {skin}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
 
                   <div className="space-y-2 px-1 text-sm leading-6 text-white/88 sm:text-base sm:leading-7">
                     {accountSpecs.map((item) => (
@@ -219,7 +243,7 @@ export default function ProductDetailPage({
                     ))}
                   </div>
 
-                  <div className="rounded-[1.5rem] border border-border/30 bg-background/12 p-4 sm:p-5">
+                  <div className="rounded-[1.5rem] bg-background/12 p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)] sm:p-5">
                     <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
                       Catatan Akun
                     </p>
@@ -233,7 +257,7 @@ export default function ProductDetailPage({
                     </p>
                   </div>
 
-                  <div className={`mt-auto rounded-[1.6rem] border border-border/40 px-4 py-5 sm:px-5 ${styles.pricePanel}`}>
+                  <div className={`mt-auto rounded-[1.6rem] px-4 py-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)] sm:px-5 ${styles.pricePanel}`}>
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                       <div>
                         <p className="font-display text-3xl font-bold leading-none text-white sm:text-4xl xl:text-5xl">
@@ -242,9 +266,9 @@ export default function ProductDetailPage({
                       </div>
                       <div className="inline-flex items-center gap-3 self-start sm:self-auto">
                         <span className="text-base font-semibold text-white/82">Status:</span>
-                        <span className={`rounded-full px-4 py-2 text-sm font-bold lowercase ${
+                        <span className={`rounded-full px-4 py-2 text-sm font-bold lowercase shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)] ${
                           isAvailable
-                            ? "border border-primary/35 bg-primary/18 text-primary"
+                            ? "bg-primary/18 text-primary"
                             : "bg-zinc-700 text-white"
                         }`}>
                           {isAvailable ? "available" : "sold"}
@@ -257,13 +281,13 @@ export default function ProductDetailPage({
                         href={buildWhatsAppLink(product)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-[1.2rem] border border-[#22D3EE]/35 bg-[linear-gradient(180deg,#22D3EE,#0EA5E9)] px-5 py-4 text-center font-display text-sm font-bold text-[#020617] shadow-[0_16px_34px_rgba(14,165,233,0.22)] transition hover:brightness-105 sm:text-base"
+                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-[1.2rem] bg-[linear-gradient(180deg,#22D3EE,#0EA5E9)] px-5 py-4 text-center font-display text-sm font-bold text-[#020617] shadow-[0_16px_34px_rgba(14,165,233,0.22)] transition hover:brightness-105 sm:text-base"
                       >
                         <WhatsAppGlyph />
                         Beli Sekarang
                       </a>
                     ) : (
-                      <span className="mt-5 flex items-center justify-center rounded-[1.2rem] border border-border/35 bg-background/28 px-5 py-4 text-center font-display text-sm font-bold text-muted-foreground sm:text-base">
+                      <span className="mt-5 flex items-center justify-center rounded-[1.2rem] bg-background/28 px-5 py-4 text-center font-display text-sm font-bold text-muted-foreground sm:text-base">
                         Akun Sudah Sold
                       </span>
                     )}

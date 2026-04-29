@@ -88,8 +88,8 @@ export default function ProductCard({
   const isSold = product.status === "sold";
   const router = useRouter();
   const featuredLabel = getFeaturedLabel(product.featured);
-  const productImage = "/images/catalog/mock_image.jpg";
-  // const productImage = product.image;
+  const productImage = product.image;
+  // const productImage = "/images/catalog/mock_image.jpg";
 
   return (
     <motion.div
