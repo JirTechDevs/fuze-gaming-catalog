@@ -1,7 +1,3 @@
-:global(html) {
-  scroll-behavior: smooth;
-}
-
 .storefrontTheme {
   --font-display: var(--font-rajdhani);
   --font-body: var(--font-inter);
