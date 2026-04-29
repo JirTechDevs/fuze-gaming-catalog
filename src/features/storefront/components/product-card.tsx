@@ -86,7 +86,6 @@ export default function ProductCard({
   const prefersReducedMotion = useReducedMotion();
   const isLiteMode = isMobile || prefersReducedMotion;
   const isSold = product.status === "sold";
-  const visibleSkins = product.skins.slice(0, 4);
   const router = useRouter();
   const featuredLabel = getFeaturedLabel(product.featured);
   const productImage = "/images/catalog/mock_image.jpg";
@@ -152,11 +151,16 @@ export default function ProductCard({
 
         <div className={styles.cardInfo}>
           <p className={styles.cardInfoTitle}>
-            FULL SKIN
+            Daftar Skin
           </p>
           <ul className={styles.skinList}>
-            {visibleSkins.map((skin) => (
-              <li key={skin}>{skin}</li>
+            {product.skins.map((skin, index) => (
+              <li key={skin}>
+                <span className={styles.skinNumber}>
+                  {index + 1}.
+                </span>
+                <span>{skin}</span>
+              </li>
             ))}
           </ul>
         </div>

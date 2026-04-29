@@ -210,32 +210,6 @@ export default function ProductDetailPage({
 
                   <div className="h-px bg-border/35" />
 
-                  <div className="rounded-[1.5rem] border border-border/30 bg-background/12 p-4 sm:p-5">
-                    <div className="flex flex-col items-start gap-3 border-b border-border/35 pb-4 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
-                          Daftar Skin
-                        </p>
-                      </div>
-                      <span className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-xs font-bold text-primary sm:whitespace-nowrap sm:text-sm">
-                        {product.skins.length} skins
-                      </span>
-                    </div>
-                    <ol className="panel-scrollbar mt-4 max-h-[18rem] space-y-1 overflow-y-auto pr-2 text-sm leading-4 text-white/88 sm:text-base">
-                      {product.skins.map((skin, index) => (
-                        <li
-                          key={skin}
-                          className="rounded-[0.7rem] border border-border/25 bg-background/22 px-4 py-2"
-                        >
-                          <span className="mr-2 font-display text-primary/86">
-                            {String(index + 1).padStart(2, "0")}.
-                          </span>
-                          {skin}
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-
                   <div className="space-y-2 px-1 text-sm leading-6 text-white/88 sm:text-base sm:leading-7">
                     {accountSpecs.map((item) => (
                       <p key={item.label}>

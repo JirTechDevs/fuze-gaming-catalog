@@ -72,6 +72,31 @@ export default function ProductImageGallery({
             })}
           </div>
         )}
+
+        <div className="mt-4 rounded-[1.2rem] border border-border/30 bg-background/22 p-4 sm:rounded-[1.4rem] sm:p-5">
+          <div className="flex flex-col items-start gap-3 border-b border-border/35 pb-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
+              Daftar Skin
+            </p>
+            <span className="rounded-full border border-primary/30 bg-primary/12 px-3 py-1 text-xs font-bold text-primary sm:whitespace-nowrap sm:text-sm">
+              {product.skins.length} skins
+            </span>
+          </div>
+
+          <ol className="panel-scrollbar mt-4 max-h-[18rem] space-y-1 overflow-y-auto pr-2 text-sm leading-4 text-white/88 sm:text-base">
+            {product.skins.map((skin, index) => (
+              <li
+                key={skin}
+                className="rounded-[0.7rem] border border-border/25 bg-background/22 px-4 py-2"
+              >
+                <span className="mr-2 font-display text-primary/86">
+                  {String(index + 1).padStart(2, "0")}.
+                </span>
+                {skin}
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     </section>
   );
