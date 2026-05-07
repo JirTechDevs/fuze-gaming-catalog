@@ -1,49 +1,41 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Headphones, Shield, Zap } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import type { StorefrontBanner } from "@/features/storefront/server";
 import styles from "./hero-section.module.css";
 
+interface HeroSectionProps {
+  banners: StorefrontBanner[];
+}
+
 const fallbackHeroBanners: StorefrontBanner[] = [
   { src: "/images/banners/pink.webp", alt: "Fuzevalo banner pink edition" },
 ];
 
-const trustTicker = [
+const featureStats = [
+  { value: "100%", label: "Garansi Hackback" },
+  { value: "<10 Menit", label: "Proses Cepat" },
+  { value: "24/7", label: "Fast Response" },
+] as const;
+
+const tickerItems = [
   { icon: "transactions", label: "1000+ TRANSAKSI BERHASIL" },
   { icon: "shield", label: "GARANSI HACKBACK 100%" },
   { icon: "zap", label: "PROSES CEPAT <10 MENIT" },
   { icon: "headphones", label: "CS AKTIF 24/7" },
 ] as const;
 
-const featureBadges = [
-  { icon: Shield, value: "100%", label: "Garansi Hackback" },
-  { icon: Zap, value: "<10 Menit", label: "Proses Cepat" },
-  { icon: Headphones, value: "24/7", label: "Fast Response" },
-] as const;
+type TickerIconName = (typeof tickerItems)[number]["icon"];
 
-const heroParticles = [
-  { left: "6%", top: "18%", size: "0.42rem", duration: "8.5s", delay: "0s", opacity: 0.42 },
-  { left: "14%", top: "58%", size: "0.28rem", duration: "10s", delay: "1.2s", opacity: 0.26 },
-  { left: "28%", top: "32%", size: "0.52rem", duration: "7.8s", delay: "0.8s", opacity: 0.4 },
-  { left: "44%", top: "74%", size: "0.34rem", duration: "9.2s", delay: "2.1s", opacity: 0.24 },
-  { left: "61%", top: "22%", size: "0.46rem", duration: "8.8s", delay: "1.6s", opacity: 0.36 },
-  { left: "73%", top: "48%", size: "0.62rem", duration: "11s", delay: "0.4s", opacity: 0.3 },
-  { left: "86%", top: "16%", size: "0.32rem", duration: "9.6s", delay: "2.4s", opacity: 0.22 },
-  { left: "92%", top: "66%", size: "0.54rem", duration: "8.2s", delay: "1s", opacity: 0.28 },
-] as const;
+const STAR_COUNT = 50;
 
-type TickerIconName = (typeof trustTicker)[number]["icon"];
-
-function WhatsAppGlyph() {
+function WhatsAppGlyph({ size = 16 }: { size?: number }) {
   return (
-    <svg viewBox="0 0 32 32" className="h-[18px] w-[18px] shrink-0" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M27.2 15.4c0 6.2-5 11.3-11.3 11.3-2 0-4-.5-5.7-1.5l-6.1 1.9 2-5.9a11.2 11.2 0 0 1-1.8-5.9C4.3 9.1 9.4 4 15.7 4S27.2 9.1 27.2 15.4Zm-11.5-9.5c-5.2 0-9.4 4.2-9.4 9.4 0 1.9.6 3.7 1.6 5.2l.2.2-1.2 3.7 3.8-1.2.2.1c1.5.9 3.2 1.4 4.9 1.4 5.2 0 9.4-4.2 9.4-9.4 0-5.2-4.2-9.4-9.5-9.4Zm5.4 12c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.7-1.7-2-.2-.3 0-.4.1-.6l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6 0-.2-.7-1.7-.9-2.3-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.6s1.1 3 1.3 3.2c.2.2 2.2 3.5 5.4 4.8 3.2 1.2 3.2.8 3.8.7.6-.1 1.8-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.1-.3-.2-.6-.4Z"
-      />
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true">
+      <path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.88 11.9L4 20l4.2-1.1a7.93 7.93 0 0 0 3.84.98 7.94 7.94 0 0 0 7.94-7.93 7.88 7.88 0 0 0-2.39-5.63z" />
     </svg>
   );
 }
@@ -51,34 +43,30 @@ function WhatsAppGlyph() {
 function TickerItemIcon({ icon }: { icon: TickerIconName }) {
   if (icon === "shield") {
     return (
-      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#00C8FF]" aria-hidden="true">
+      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#22d3ff]" aria-hidden="true">
         <path fill="currentColor" d="M10 2.1 16.4 4v5.2c0 4-2.5 6.7-6.4 8.7-3.9-2-6.4-4.7-6.4-8.7V4L10 2.1Zm0 3.1a1 1 0 0 0-1 1v3.2l-1.2 1.2a1 1 0 0 0 1.4 1.4l1.5-1.5c.2-.2.3-.4.3-.7V6.2a1 1 0 0 0-1-1Z" />
       </svg>
     );
   }
   if (icon === "zap") {
     return (
-      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#00C8FF]" aria-hidden="true">
+      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#22d3ff]" aria-hidden="true">
         <path fill="currentColor" d="M11.5 1.8 4.6 10h3.8l-1.3 8.2 8-9.6h-4L11.5 1.8Z" />
       </svg>
     );
   }
   if (icon === "headphones") {
     return (
-      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#00C8FF]" aria-hidden="true">
+      <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#22d3ff]" aria-hidden="true">
         <path fill="currentColor" d="M10 3a7 7 0 0 0-7 7v2.6A2.4 2.4 0 0 0 5.4 15H7a1 1 0 0 0 1-1V9.8a1 1 0 0 0-1-1H5.2a4.8 4.8 0 0 1 9.6 0H13a1 1 0 0 0-1 1V14a1 1 0 0 0 1 1h1.6a2.4 2.4 0 0 0 2.4-2.4V10a7 7 0 0 0-7-7Z" />
       </svg>
     );
   }
   return (
-    <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#00C8FF]" aria-hidden="true">
+    <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-[#22d3ff]" aria-hidden="true">
       <path fill="currentColor" d="M6.7 2.7a1 1 0 0 1 1.4 0l9.2 9.2a1 1 0 0 1 0 1.4l-3 3a1 1 0 0 1-1.4 0L3.7 7.1a1 1 0 0 1 0-1.4l3-3Zm.7 2.1L5.8 6.4l7.8 7.8 1.6-1.6-7.8-7.8ZM6 8.9a1.1 1.1 0 1 0 0-2.2 1.1 1.1 0 0 0 0 2.2Z" />
     </svg>
   );
-}
-
-interface HeroSectionProps {
-  banners: StorefrontBanner[];
 }
 
 export default function HeroSection({ banners }: HeroSectionProps) {
@@ -101,72 +89,68 @@ export default function HeroSection({ banners }: HeroSectionProps) {
   const prevIndex = (activeIndex - 1 + heroBanners.length) % heroBanners.length;
   const nextIndex = (activeIndex + 1) % heroBanners.length;
   const secondNextIndex = (activeIndex + 2) % heroBanners.length;
-  const tickerItems = [...trustTicker, ...trustTicker, ...trustTicker, ...trustTicker];
+  const tickerLoop = [...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems];
 
   return (
-    <section className="relative isolate overflow-hidden">
-      <div className={`absolute inset-0 ${styles.heroShell}`} />
-      <div className={`absolute inset-0 ${styles.heroAurora}`} />
-      <div className={`absolute inset-0 ${styles.heroAmbientGlow}`} />
-      <div className={`absolute inset-0 ${styles.heroTechLines}`} />
-      <div className={`absolute inset-0 ${styles.heroParticlesLayer}`} aria-hidden="true">
-        {heroParticles.map((particle, index) => {
-          const particleStyle = {
-            left: particle.left,
-            top: particle.top,
-            width: particle.size,
-            height: particle.size,
-            opacity: particle.opacity,
-            animationDuration: prefersReducedMotion ? undefined : particle.duration,
-            animationDelay: prefersReducedMotion ? undefined : particle.delay,
-          } satisfies CSSProperties;
+    <section className={`relative isolate overflow-hidden ${styles.heroSection}`}>
+      {/* Aurora background */}
+      <div className={styles.heroAurora} aria-hidden="true" />
 
-          return <span key={index} className={styles.heroParticle} style={particleStyle} />;
+      {/* SVG grid + radial mask */}
+      <svg className={styles.heroGrid} aria-hidden="true">
+        <defs>
+          <pattern id="auroraGrid" width="48" height="48" patternUnits="userSpaceOnUse">
+            <path d="M48 0 L0 0 0 48" stroke="#00b4ff" strokeWidth="0.5" fill="none" />
+          </pattern>
+          <radialGradient id="auroraGridMask" cx="50%" cy="50%">
+            <stop offset="0%" stopColor="#000" stopOpacity="0" />
+            <stop offset="100%" stopColor="#000" stopOpacity="1" />
+          </radialGradient>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#auroraGrid)" />
+        <rect width="100%" height="100%" fill="url(#auroraGridMask)" />
+      </svg>
+
+      {/* Stars */}
+      <div className={styles.heroStars} aria-hidden="true">
+        {Array.from({ length: STAR_COUNT }, (_, i) => {
+          const starStyle: CSSProperties = {
+            left: `${(i * 37) % 100}%`,
+            top: `${(i * 73) % 100}%`,
+            opacity: 0.3 + (i % 4) * 0.15,
+          };
+          return <span key={i} className={styles.heroStar} style={starStyle} />;
         })}
       </div>
-      <div className={`absolute inset-y-0 left-0 w-[42%] ${styles.heroCopyGlow}`} />
-      <div className={`absolute inset-x-0 bottom-0 h-28 ${styles.heroBottomFade}`} />
-      <div className={styles.heroLayout}>
 
+      {/* Hero content split layout */}
+      <div className={styles.heroLayout}>
         {/* LEFT: Copy panel */}
         <motion.div
           initial={prefersReducedMotion ? false : { opacity: 0, x: -28 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.65, ease: [0.16, 1, 0.3, 1] }}
-          className={`relative flex w-full min-w-0 flex-col gap-4 px-3 py-3 sm:px-0 sm:py-2 lg:max-w-none ${styles.heroCopyPanel}`}
+          className={styles.heroCopy}
         >
-          <div className={styles.heroCopyDetailTop} aria-hidden="true" />
-          <div className={styles.heroCopyDetailBottom} aria-hidden="true" />
-
-          <div className="flex">
-            <span className={`${styles.heroTrustBadge} inline-flex items-center gap-2 rounded-full px-4 py-2 font-display text-[10px] font-bold tracking-[0.14em] text-[#8CDFFF] sm:text-[11px]`}>
-              <Shield size={13} />
-              STORE RESMI & TERPERCAYA
-            </span>
+          <div className={styles.heroBadge}>
+            <span className={styles.heroBadgeDot} />
+            STORE RESMI &amp; TERPERCAYA
           </div>
 
-          <div className="space-y-3">
-            <h1 className={styles.heroHeadline}>
-              <span className={styles.heroHeadlineLead}>JUAL AKUN</span>
-              <span className={styles.heroHeadlineAccent}>VALORANT</span>
-            </h1>
-          </div>
+          <h1 className={styles.heroHeadline}>
+            <span className={styles.heroHeadlineLead}>JUAL AKUN</span>
+            <span className={styles.heroHeadlineAccent}>FUZEVALO</span>
+          </h1>
+
+          <p className={styles.heroLede}>
+            Marketplace akun FPS kompetitif dengan garansi hackback 100%. Proses cepat, transaksi aman.
+          </p>
 
           <div className={styles.heroStats}>
-            {featureBadges.map((badge) => (
-              <div
-                key={badge.label}
-                className={styles.heroStat}
-              >
-                <div className="flex items-start gap-1">
-                  <badge.icon size={11} strokeWidth={2.1} className={styles.heroStatIcon} />
-                  <p className={styles.heroStatValue}>
-                    {badge.value}
-                  </p>
-                </div>
-                <p className={styles.heroStatLabel}>
-                  {badge.label}
-                </p>
+            {featureStats.map((stat) => (
+              <div key={stat.label} className={styles.heroStat}>
+                <div className={styles.heroStatValue}>{stat.value}</div>
+                <div className={styles.heroStatLabel}>{stat.label}</div>
               </div>
             ))}
           </div>
@@ -179,14 +163,14 @@ export default function HeroSection({ banners }: HeroSectionProps) {
               className={`${styles.heroActionButton} ${styles.heroActionPrimary}`}
             >
               <WhatsAppGlyph />
-              Chat WhatsApp
+              Chat WhatsApp Sekarang
             </a>
             <button
               type="button"
               onClick={scrollToCatalog}
               className={`${styles.heroActionButton} ${styles.heroActionSecondary}`}
             >
-              Lihat Katalog
+              Lihat Katalog →
             </button>
           </div>
         </motion.div>
@@ -196,15 +180,9 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           initial={prefersReducedMotion ? false : { opacity: 0, x: 32 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.72, ease: [0.16, 1, 0.3, 1], delay: prefersReducedMotion ? 0 : 0.08 }}
-          className={`relative flex min-w-0 items-center ${styles.heroVisualPanel}`}
+          className={styles.heroVisualPanel}
         >
-          {/*
-            The front card defines the visible size.
-            Card 2 and card 3 then sit to the right as preview layers.
-          */}
           <div className={styles.bannerStack}>
-
-            {/* Card 3 — furthest back, right-most preview */}
             {heroBanners.length > 2 && (
               <button
                 type="button"
@@ -217,7 +195,6 @@ export default function HeroSection({ banners }: HeroSectionProps) {
               </button>
             )}
 
-            {/* Card 2 — middle preview */}
             {heroBanners.length > 1 && (
               <button
                 type="button"
@@ -230,7 +207,6 @@ export default function HeroSection({ banners }: HeroSectionProps) {
               </button>
             )}
 
-            {/* Card 1 — front, full size, active */}
             <div className={styles.bannerCard1}>
               <AnimatePresence mode="wait">
                 <motion.img
@@ -250,7 +226,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 type="button"
                 onClick={() => setActiveIndex(prevIndex)}
                 aria-label="Show previous banner"
-                className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[#041C32]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22D3EE] hover:text-[#00E5FF] sm:left-4 sm:h-10 sm:w-10"
+                className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#00b4ff]/35 bg-[#030712]/80 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22d3ff] hover:text-[#22d3ff] sm:left-4 sm:h-10 sm:w-10"
               >
                 <ChevronLeft size={18} />
               </button>
@@ -259,12 +235,12 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 type="button"
                 onClick={() => setActiveIndex(nextIndex)}
                 aria-label="Show next banner"
-                className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#0EA5E9]/30 bg-[#041C32]/92 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22D3EE] hover:text-[#00E5FF] sm:right-4 sm:h-10 sm:w-10"
+                className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#00b4ff]/35 bg-[#030712]/80 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22d3ff] hover:text-[#22d3ff] sm:right-4 sm:h-10 sm:w-10"
               >
                 <ChevronRight size={18} />
               </button>
 
-              <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-[#0EA5E9]/16 bg-[#041C32]/68 px-2.5 py-1.5 backdrop-blur-md sm:bottom-4 sm:px-3 sm:py-2">
+              <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-[#00b4ff]/25 bg-[#030712]/70 px-2.5 py-1.5 backdrop-blur-md sm:bottom-4 sm:px-3 sm:py-2">
                 {heroBanners.map((banner, index) => (
                   <button
                     key={banner.src}
@@ -273,7 +249,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                     aria-label={`Show banner ${index + 1}`}
                     className={`h-2 rounded-full transition-all ${
                       index === activeIndex
-                        ? "w-7 bg-[#22D3EE] shadow-[0_0_12px_rgba(0,229,255,0.72)]"
+                        ? "w-7 bg-[#22d3ff] shadow-[0_0_12px_rgba(34,211,255,0.72)]"
                         : "w-2 bg-white/28"
                     }`}
                   />
@@ -285,18 +261,16 @@ export default function HeroSection({ banners }: HeroSectionProps) {
       </div>
 
       {/* Ticker */}
-      <div className={`relative z-10 border-y border-white/[0.08] ${styles.tickerBar}`}>
+      <div className={styles.tickerBar}>
         <div className="hero-shop-mask overflow-hidden py-2.5 sm:py-3">
           <div
             className={`${prefersReducedMotion ? "" : "hero-shop-track"} flex w-max items-center whitespace-nowrap`}
             style={prefersReducedMotion ? undefined : { animationDuration: "28s" }}
           >
-            {tickerItems.map((item, index) => (
+            {tickerLoop.map((item, index) => (
               <span key={`${item.label}-${index}`} className={styles.tickerItem}>
                 <TickerItemIcon icon={item.icon} />
-                <span className={styles.tickerText}>
-                  {item.label}
-                </span>
+                <span className={styles.tickerText}>{item.label}</span>
                 <span className="ml-1 text-white/14">•</span>
               </span>
             ))}
