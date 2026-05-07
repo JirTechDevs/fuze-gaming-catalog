@@ -132,18 +132,6 @@ export default function Navbar() {
           })}
         </div>
 
-        <div className={styles.navActions}>
-          <a
-            href="https://wa.me/628881462675"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.whatsappBtn}
-          >
-            <WhatsAppGlyph />
-            Chat WhatsApp
-          </a>
-        </div>
-
         <button
           type="button"
           onClick={() => setOpen((current) => !current)}

@@ -62,8 +62,8 @@
   grid-template-columns: 410px minmax(0, 1fr);
   gap: 28px;
   align-items: center;
-  padding: 88px 0 60px;
-  min-height: 560px;
+  padding: 24px 0 60px;
+  min-height: 520px;
 }
 
 .heroCopy {
@@ -359,7 +359,7 @@
   .heroLayout {
     grid-template-columns: 1fr;
     gap: 32px;
-    padding: 72px 18px 40px;
+    padding: 20px 18px 40px;
     width: min(1480px, calc(100% - 28px));
   }
 
@@ -375,7 +375,7 @@
   }
 
   .heroLayout {
-    padding: 64px 16px 32px;
+    padding: 16px 16px 32px;
     gap: 24px;
     min-height: 0;
   }
