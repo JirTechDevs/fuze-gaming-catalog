@@ -1,4 +1,5 @@
 export const valorantRanks = [
+  "Unranked",
   "Iron 1",
   "Iron 2",
   "Iron 3",
