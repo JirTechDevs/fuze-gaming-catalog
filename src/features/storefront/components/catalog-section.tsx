@@ -13,7 +13,7 @@ interface CatalogSectionProps {
   products: Product[];
 }
 
-const ACCOUNTS_PER_PAGE = 6;
+const ACCOUNTS_PER_PAGE = 12;
 
 const ambientParticles = [
   { left: "5%", top: "14%", size: 180, delay: 0, duration: 14, opacity: 0.14 },
