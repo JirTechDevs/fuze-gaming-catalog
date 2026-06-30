@@ -213,7 +213,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                   key={heroBanners[activeIndex].src}
                   src={heroBanners[activeIndex].src}
                   alt={heroBanners[activeIndex].alt}
-                  className="absolute inset-0 h-full w-full object-contain object-center"
+                  className="absolute inset-0 h-full w-full object-cover object-center"
                   initial={prefersReducedMotion ? false : { opacity: 0, scale: 1.04 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
