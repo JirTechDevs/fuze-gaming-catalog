@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
 import { valorantRanks } from "@/features/catalog/domain/valorant-ranks";
@@ -378,6 +378,17 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
 
               {totalPages > 1 && (
                 <div className="flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentPage(currentPageSafe - 1)}
+                    disabled={currentPageSafe === 1}
+                    aria-label="Previous page"
+                    className="flex h-10 items-center justify-center gap-1 rounded-[0.9rem] border border-border/40 bg-card/55 px-3 font-display text-sm font-bold text-foreground/78 transition hover:border-primary/30 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border/40 disabled:hover:text-foreground/78"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Previous
+                  </button>
+
                   {paginationItems.map((item) => {
                     if (typeof item === "string") {
                       return (
@@ -408,6 +419,17 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                       </button>
                     );
                   })}
+
+                  <button
+                    type="button"
+                    onClick={() => setCurrentPage(currentPageSafe + 1)}
+                    disabled={currentPageSafe === totalPages}
+                    aria-label="Next page"
+                    className="flex h-10 items-center justify-center gap-1 rounded-[0.9rem] border border-border/40 bg-card/55 px-3 font-display text-sm font-bold text-foreground/78 transition hover:border-primary/30 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border/40 disabled:hover:text-foreground/78"
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
                 </div>
               )}
             </div>
