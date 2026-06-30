@@ -86,7 +86,10 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
       const matchesSearch =
         !normalizedSearch ||
         product.code.toLowerCase().includes(normalizedSearch) ||
-        product.rank.toLowerCase().includes(normalizedSearch);
+        product.rank.toLowerCase().includes(normalizedSearch) ||
+        product.skins.some((skin) =>
+          skin.toLowerCase().includes(normalizedSearch),
+        );
 
       const matchesRank = rankFilter === "all" || product.rank === rankFilter;
       const matchesRegion =
