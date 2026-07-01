@@ -262,29 +262,31 @@
   z-index: 2;
   margin-top: 8px;
   width: 100%;
-  height: 32px;
-  border-radius: var(--radius-sm);
+  height: 38px;
+  border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: var(--text-1);
+  color: var(--fuze-text-primary);
   text-decoration: none;
   font-family: var(--font-display), sans-serif;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   border: none;
   cursor: pointer;
-  background: #22C55E;
-  box-shadow: 0 12px 24px rgba(34, 197, 94, 0.22);
+  background: linear-gradient(180deg, var(--fuze-btn-whatsapp) 0%, var(--fuze-btn-whatsapp-hover) 100%);
+  box-shadow: 0 8px 20px rgba(22, 199, 132, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.16);
   transition:
     filter 0.25s ease,
-    transform 0.25s ease;
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .cta:hover {
-  filter: brightness(1.04);
+  filter: brightness(1.06);
   transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(22, 199, 132, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 @media (max-width: 768px) {

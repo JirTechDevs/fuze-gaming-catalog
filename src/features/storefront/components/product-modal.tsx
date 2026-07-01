@@ -173,7 +173,7 @@ export default function ProductModal({
                   href={buildWhatsAppLink(product)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 rounded-[1.15rem] bg-primary px-5 py-3 font-display text-[11px] font-bold tracking-[0.15em] text-primary-foreground transition-all duration-300 hover:box-glow-strong hover:gap-3"
+                  className="flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(180deg,#16C784,#12A76F)] px-5 py-3 font-display text-[11px] font-semibold tracking-[0.15em] text-white shadow-[0_8px_20px_rgba(22,199,132,0.32),inset_0_1px_0_rgba(255,255,255,0.16)] transition-all duration-300 hover:brightness-105 hover:gap-3"
                 >
                   <MessageCircle size={16} />
                   BELI AKUN INI
