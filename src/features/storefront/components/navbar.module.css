@@ -115,22 +115,22 @@
   padding: 10px 18px;
   margin-left: 4px;
   border-radius: 999px;
-  border: 1px solid var(--fuze-blue-primary);
-  color: var(--fuze-blue-primary);
+  border: none;
+  color: var(--fuze-text-primary);
   font-family: var(--font-body), sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
-  background: transparent;
-  box-shadow: 0 0 16px rgba(0, 183, 255, 0.22), inset 0 0 12px rgba(0, 183, 255, 0.08);
-  transition: color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  background: linear-gradient(180deg, var(--fuze-btn-whatsapp) 0%, var(--fuze-btn-whatsapp-hover) 100%);
+  box-shadow: 0 8px 20px rgba(22, 199, 132, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transition: filter 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .navWhatsapp:hover {
-  color: var(--fuze-blue-glow);
-  background: rgba(0, 183, 255, 0.06);
-  box-shadow: 0 0 22px rgba(0, 183, 255, 0.4), inset 0 0 14px rgba(0, 183, 255, 0.14);
+  filter: brightness(1.06);
+  box-shadow: 0 10px 24px rgba(22, 199, 132, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
 }
 
 .navWhatsapp svg {
@@ -163,14 +163,15 @@
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
-  background: linear-gradient(135deg, var(--fuze-btn-whatsapp) 0%, var(--fuze-btn-whatsapp-hover) 100%);
-  box-shadow: 0 0 20px rgba(22, 199, 132, 0.4);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: linear-gradient(180deg, var(--fuze-btn-whatsapp) 0%, var(--fuze-btn-whatsapp-hover) 100%);
+  box-shadow: 0 8px 20px rgba(22, 199, 132, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transition: filter 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .whatsappBtn:hover {
+  filter: brightness(1.06);
   transform: translateY(-1px);
-  box-shadow: 0 0 24px rgba(22, 199, 132, 0.55);
+  box-shadow: 0 10px 24px rgba(22, 199, 132, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 .whatsappBtn svg {

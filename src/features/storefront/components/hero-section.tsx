@@ -146,7 +146,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           </h1>
 
           <p className={styles.heroLede}>
-            Fuzevalo adalah marketplace jual beli akun Valorant aman &amp; bergaransi. Hackback 100%, proses cepat, transaksi aman.
+            Jual beli akun Valorant murah, aman, dan bergaransi. Katalog ready sesuai budget, proses cepat, dan garansi hackback 100%.
           </p>
 
           <div className={styles.heroStats}>
@@ -166,7 +166,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
               className={`${styles.heroActionButton} ${styles.heroActionPrimary}`}
             >
               <WhatsAppGlyph />
-              Chat WhatsApp Sekarang
+              Jual Akun Sekarang
             </a>
             <button
               type="button"
@@ -237,7 +237,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
 
       {/* Ticker */}
       <div className={styles.tickerBar}>
-        <div className="hero-shop-mask overflow-hidden py-2.5 sm:py-3">
+        <div className="hero-shop-mask overflow-hidden py-4 sm:py-5">
           <div
             className={`${prefersReducedMotion ? "" : "hero-shop-track"} flex w-max items-center whitespace-nowrap`}
             style={prefersReducedMotion ? undefined : { animationDuration: "28s" }}

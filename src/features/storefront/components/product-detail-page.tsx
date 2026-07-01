@@ -281,7 +281,7 @@ export default function ProductDetailPage({
                         href={buildWhatsAppLink(product)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-[1.2rem] bg-[linear-gradient(180deg,#22D3EE,#0EA5E9)] px-5 py-4 text-center font-display text-sm font-bold text-[#020617] shadow-[0_16px_34px_rgba(14,165,233,0.22)] transition hover:brightness-105 sm:text-base"
+                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(180deg,#16C784,#12A76F)] px-5 py-4 text-center font-display text-sm font-semibold text-white shadow-[0_10px_24px_rgba(22,199,132,0.32),inset_0_1px_0_rgba(255,255,255,0.16)] transition hover:brightness-105 sm:text-base"
                       >
                         <WhatsAppGlyph />
                         Beli Sekarang

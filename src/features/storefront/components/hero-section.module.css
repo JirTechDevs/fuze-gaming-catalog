@@ -205,12 +205,12 @@
 
 .heroActionPrimary {
   color: var(--fuze-text-primary);
-  background: linear-gradient(135deg, var(--fuze-btn-whatsapp) 0%, var(--fuze-btn-whatsapp-hover) 100%);
-  box-shadow: 0 8px 24px rgba(22, 199, 132, 0.4);
+  background: linear-gradient(180deg, var(--fuze-btn-whatsapp) 0%, var(--fuze-btn-whatsapp-hover) 100%);
+  box-shadow: 0 8px 24px rgba(22, 199, 132, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 .heroActionPrimary:hover {
-  box-shadow: 0 12px 28px rgba(22, 199, 132, 0.55);
+  box-shadow: 0 12px 28px rgba(22, 199, 132, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 .heroActionSecondary {
@@ -356,16 +356,16 @@
 .tickerItem {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 22px;
+  gap: 14px;
+  padding: 0 28px;
 }
 
 .tickerText {
   color: var(--fuze-text-primary);
   font-family: var(--font-display), sans-serif;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
