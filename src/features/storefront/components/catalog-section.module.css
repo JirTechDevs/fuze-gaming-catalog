@@ -1,13 +1,11 @@
 .catalogShell {
-  background:
-    radial-gradient(circle at 18% 0%, rgb(0 200 255 / 0.05) 0%, transparent 22%),
-    linear-gradient(180deg, rgb(4 10 24 / 0.06) 0%, transparent 12%);
+  background: var(--fuze-bg-main);
 }
 
 .catalogAura {
   background:
-    radial-gradient(circle at 14% 20%, rgb(34 211 238 / 0.09) 0%, transparent 18%),
-    radial-gradient(circle at 86% 22%, rgb(59 130 246 / 0.06) 0%, transparent 16%);
+    radial-gradient(circle at 14% 20%, rgba(0, 183, 255, 0.03) 0%, transparent 20%),
+    radial-gradient(circle at 86% 22%, rgba(12, 73, 196, 0.03) 0%, transparent 18%);
 }
 
 .catalogMesh {
@@ -35,12 +33,12 @@
 }
 
 .catalogGlowTop {
-  background: radial-gradient(circle at center, rgb(0 200 255 / 0.09) 0%, transparent 62%);
+  background: radial-gradient(circle at center, rgba(0, 183, 255, 0.03) 0%, transparent 55%);
   filter: blur(28px);
 }
 
 .catalogGlowBottom {
-  background: radial-gradient(circle at center, rgb(0 200 255 / 0.07) 0%, transparent 62%);
+  background: radial-gradient(circle at center, rgba(0, 183, 255, 0.025) 0%, transparent 55%);
   filter: blur(32px);
 }
 

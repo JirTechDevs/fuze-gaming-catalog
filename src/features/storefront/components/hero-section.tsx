@@ -88,7 +88,6 @@ export default function HeroSection({ banners }: HeroSectionProps) {
 
   const prevIndex = (activeIndex - 1 + heroBanners.length) % heroBanners.length;
   const nextIndex = (activeIndex + 1) % heroBanners.length;
-  const secondNextIndex = (activeIndex + 2) % heroBanners.length;
   const tickerLoop = [...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems];
 
   return (
@@ -138,8 +137,12 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           </div>
 
           <h1 className={styles.heroHeadline}>
-            <span className={styles.heroHeadlineLead}>JUAL AKUN</span>
-            <span className={styles.heroHeadlineAccent}>VALORANT</span>
+            <span className={styles.heroHeadlineLead}>JUAL BELI AKUN</span>
+            <span className={styles.heroHeadlineAccent} aria-label="VALORANT">
+              {"VALORANT".split("").map((char, index) => (
+                <span key={`${char}-${index}`} aria-hidden="true">{char}</span>
+              ))}
+            </span>
           </h1>
 
           <p className={styles.heroLede}>
@@ -183,28 +186,6 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           className={styles.heroVisualPanel}
         >
           <div className={styles.bannerStack}>
-            <button
-              type="button"
-              onClick={() => setActiveIndex(secondNextIndex)}
-              aria-label="Go to banner 3"
-              className={styles.bannerCard3}
-              disabled={heroBanners.length < 2}
-            >
-              <img src={heroBanners[secondNextIndex].src} alt={heroBanners[secondNextIndex].alt} className="h-full w-full object-cover" />
-              <div className={styles.cardShade} />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveIndex(nextIndex)}
-              aria-label="Go to banner 2"
-              className={styles.bannerCard2}
-              disabled={heroBanners.length < 2}
-            >
-              <img src={heroBanners[nextIndex].src} alt={heroBanners[nextIndex].alt} className="h-full w-full object-cover" />
-              <div className={styles.cardShade} />
-            </button>
-
             <div className={styles.bannerCard1}>
               <AnimatePresence mode="wait">
                 <motion.img
@@ -224,7 +205,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 type="button"
                 onClick={() => setActiveIndex(prevIndex)}
                 aria-label="Show previous banner"
-                className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#00b4ff]/35 bg-[#030712]/80 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22d3ff] hover:text-[#22d3ff] sm:left-4 sm:h-10 sm:w-10"
+                className={`${styles.bannerNav} ${styles.bannerNavPrev}`}
               >
                 <ChevronLeft size={18} />
               </button>
@@ -233,23 +214,19 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 type="button"
                 onClick={() => setActiveIndex(nextIndex)}
                 aria-label="Show next banner"
-                className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#00b4ff]/35 bg-[#030712]/80 text-white/92 shadow-[0_10px_28px_rgba(1,8,20,0.45)] transition hover:border-[#22d3ff] hover:text-[#22d3ff] sm:right-4 sm:h-10 sm:w-10"
+                className={`${styles.bannerNav} ${styles.bannerNavNext}`}
               >
                 <ChevronRight size={18} />
               </button>
 
-              <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-[#00b4ff]/25 bg-[#030712]/70 px-2.5 py-1.5 backdrop-blur-md sm:bottom-4 sm:px-3 sm:py-2">
+              <div className={styles.bannerDots}>
                 {heroBanners.map((banner, index) => (
                   <button
                     key={banner.src}
                     type="button"
                     onClick={() => setActiveIndex(index)}
                     aria-label={`Show banner ${index + 1}`}
-                    className={`h-2 rounded-full transition-all ${
-                      index === activeIndex
-                        ? "w-7 bg-[#22d3ff] shadow-[0_0_12px_rgba(34,211,255,0.72)]"
-                        : "w-2 bg-white/28"
-                    }`}
+                    className={`${styles.bannerDot} ${index === activeIndex ? styles.bannerDotActive : ""}`}
                   />
                 ))}
               </div>
