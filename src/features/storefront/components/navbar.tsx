@@ -130,6 +130,15 @@ export default function Navbar() {
               </button>
             );
           })}
+          <a
+            href="https://wa.me/628881462675"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.navWhatsapp}
+          >
+            <WhatsAppGlyph />
+            Chat WhatsApp
+          </a>
         </div>
 
         <button

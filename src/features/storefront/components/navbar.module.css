@@ -8,7 +8,7 @@
   top: 0;
   z-index: 50;
   width: 100%;
-  background: linear-gradient(180deg, rgba(3, 7, 18, 0.55) 0%, rgba(3, 7, 18, 0.18) 70%, transparent 100%);
+  background: linear-gradient(180deg, rgba(0, 3, 15, 0.55) 0%, rgba(0, 3, 15, 0.18) 70%, transparent 100%);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 70%, transparent 100%);
@@ -59,12 +59,12 @@
   font-size: 18px;
   font-weight: 800;
   letter-spacing: 0.02em;
-  color: #fff;
+  color: var(--fuze-text-primary);
   white-space: nowrap;
 }
 
 .logoAccent {
-  color: #22d3ff;
+  color: var(--fuze-blue-primary);
 }
 
 /* ========================
@@ -80,11 +80,11 @@
 .navLink {
   background: transparent;
   border: 1px solid transparent;
-  color: #cbd5e1;
+  color: var(--fuze-text-secondary);
   font-family: var(--font-body), sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  padding: 8px 14px;
+  padding: 10px 18px;
   border-radius: 999px;
   cursor: pointer;
   transition: 0.2s ease;
@@ -92,19 +92,51 @@
 }
 
 .navLink:hover {
-  color: #fff;
-  background: rgba(0, 180, 255, 0.08);
+  color: var(--fuze-text-primary);
+  background: rgba(0, 183, 255, 0.06);
 }
 
 .navLinkActive {
-  background: rgba(0, 180, 255, 0.15);
-  border: 1px solid rgba(0, 180, 255, 0.4);
-  color: #22d3ff;
+  background: transparent;
+  border: 1px solid var(--fuze-blue-primary);
+  color: var(--fuze-blue-primary);
+  box-shadow: 0 0 16px rgba(0, 183, 255, 0.28), inset 0 0 12px rgba(0, 183, 255, 0.12);
 }
 
 .navLinkActive:hover {
-  color: #22d3ff;
-  background: rgba(0, 180, 255, 0.18);
+  color: var(--fuze-blue-glow);
+  background: rgba(0, 183, 255, 0.06);
+}
+
+.navWhatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  margin-left: 4px;
+  border-radius: 999px;
+  border: none;
+  color: var(--fuze-text-primary);
+  font-family: var(--font-body), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  background: linear-gradient(180deg, var(--fuze-btn-whatsapp) 0%, var(--fuze-btn-whatsapp-hover) 100%);
+  box-shadow: 0 8px 20px rgba(22, 199, 132, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transition: filter 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.navWhatsapp:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 10px 24px rgba(22, 199, 132, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+}
+
+.navWhatsapp svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 /* ========================
@@ -125,20 +157,21 @@
   border-radius: 999px;
   border: none;
   cursor: pointer;
-  color: #fff;
+  color: var(--fuze-text-primary);
   font-family: var(--font-display), sans-serif;
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: linear-gradient(180deg, var(--fuze-btn-whatsapp) 0%, var(--fuze-btn-whatsapp-hover) 100%);
+  box-shadow: 0 8px 20px rgba(22, 199, 132, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transition: filter 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .whatsappBtn:hover {
+  filter: brightness(1.06);
   transform: translateY(-1px);
-  box-shadow: 0 0 24px rgba(16, 185, 129, 0.55);
+  box-shadow: 0 10px 24px rgba(22, 199, 132, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 .whatsappBtn svg {
@@ -154,9 +187,9 @@
   border-radius: 999px;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 180, 255, 0.08);
-  border: 1px solid rgba(0, 180, 255, 0.3);
-  color: #22d3ff;
+  background: rgba(0, 183, 255, 0.08);
+  border: 1px solid var(--fuze-blue-primary);
+  color: var(--fuze-blue-primary);
   cursor: pointer;
 }
 
@@ -166,8 +199,8 @@
 
 .mobilePanel {
   overflow: hidden;
-  border-top: 1px solid rgba(0, 180, 255, 0.12);
-  background: rgba(3, 7, 18, 0.92);
+  border-top: 1px solid var(--fuze-border-soft);
+  background: rgba(0, 3, 15, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
@@ -188,7 +221,7 @@
   border-radius: 14px;
   border: 1px solid transparent;
   background: transparent;
-  color: rgba(244, 248, 255, 0.84);
+  color: var(--fuze-text-secondary);
   font-family: var(--font-body), sans-serif;
   font-size: 14px;
   font-weight: 500;
@@ -197,22 +230,22 @@
 }
 
 .mobileLink:hover {
-  color: #fff;
-  background: rgba(0, 180, 255, 0.06);
+  color: var(--fuze-text-primary);
+  background: rgba(0, 183, 255, 0.06);
 }
 
 .mobileLinkActive {
-  color: #22d3ff;
-  background: rgba(0, 180, 255, 0.15);
-  border-color: rgba(0, 180, 255, 0.4);
+  color: var(--fuze-blue-primary);
+  background: rgba(0, 183, 255, 0.12);
+  border-color: var(--fuze-blue-primary);
 }
 
 .mobileLinkActiveIndicator {
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: #22d3ff;
-  box-shadow: 0 0 8px #22d3ff;
+  background: var(--fuze-blue-primary);
+  box-shadow: 0 0 8px var(--fuze-blue-primary);
 }
 
 .mobileSocialGrid {
@@ -228,16 +261,16 @@
   border-radius: 12px;
   display: grid;
   place-items: center;
-  background: rgba(0, 180, 255, 0.06);
-  border: 1px solid rgba(0, 180, 255, 0.2);
-  color: #22d3ff;
+  background: rgba(0, 183, 255, 0.06);
+  border: 1px solid var(--fuze-border-blue);
+  color: var(--fuze-blue-primary);
   text-decoration: none;
   transition: 0.2s ease;
 }
 
 .navSocial:hover {
-  border-color: rgba(0, 180, 255, 0.5);
-  background: rgba(0, 180, 255, 0.12);
+  border-color: var(--fuze-blue-primary);
+  background: rgba(0, 183, 255, 0.12);
 }
 
 .navSocial svg {
