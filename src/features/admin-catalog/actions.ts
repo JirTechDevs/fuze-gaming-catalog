@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { requireAuthenticatedUser } from "@/features/admin-auth/guards";
 import type { CatalogStatus } from "@/features/admin-catalog/types";
 import {
   deleteCatalogImages,
@@ -66,6 +67,8 @@ export async function saveCatalogAction(
   _previousState: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
+  await requireAuthenticatedUser();
+
   const mainImageEntry = formData.get("mainImageFile");
   const mainImageFile = isFileProvided(mainImageEntry) ? mainImageEntry : null;
   const galleryImageFiles = formData
@@ -197,6 +200,8 @@ export async function toggleCatalogStatusAction(
   _previousState: ActionResult,
   _formData: FormData,
 ): Promise<ActionResult> {
+  await requireAuthenticatedUser();
+
   const supabase = await createClient();
   const nextStatus: CatalogStatus = currentStatus === "available" ? "sold" : "available";
 
@@ -218,6 +223,8 @@ export async function deleteCatalogAction(
   _previousState: ActionResult,
   _formData: FormData,
 ): Promise<ActionResult> {
+  await requireAuthenticatedUser();
+
   const supabase = await createClient();
   const { data: record, error: loadError } = await supabase
     .from("catalog_items")

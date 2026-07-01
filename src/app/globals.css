@@ -50,6 +50,41 @@
     --sidebar-accent-foreground: 194 100% 92%;
     --sidebar-border: 219 28% 18%;
     --sidebar-ring: 189 100% 72%;
+
+    /* Fuzevalo brand palette (owner-defined). Prefer these for new UI. */
+    --fuze-bg-main: #00030f;
+    --fuze-bg-secondary: #030a1b;
+    --fuze-bg-card: #071426;
+    --fuze-bg-card-soft: #0b1b33;
+    --fuze-bg-input: #081225;
+
+    --fuze-blue-primary: #00b7ff;
+    --fuze-blue-secondary: #0e91e7;
+    --fuze-blue-deep: #0c49c4;
+    --fuze-blue-glow: #00d1ff;
+    --fuze-blue-border: #0b78c8;
+
+    --fuze-text-primary: #ffffff;
+    --fuze-text-secondary: #c7d2e5;
+    --fuze-text-muted: #7f8ea8;
+    --fuze-text-dark-muted: #58657a;
+
+    --fuze-border-soft: #102a4d;
+    --fuze-border-blue: #0b5fa5;
+    --fuze-border-glow: #00b7ff;
+
+    --fuze-btn-primary: #006dff;
+    --fuze-btn-primary-hover: #008cff;
+    --fuze-btn-whatsapp: #16c784;
+    --fuze-btn-whatsapp-hover: #12a76f;
+
+    --fuze-purple-primary: #a855f7;
+    --fuze-purple-secondary: #7c3aed;
+    --fuze-purple-glow: #c084fc;
+
+    --fuze-status-success: #16c784;
+    --fuze-status-warning: #facc15;
+    --fuze-status-danger: #ef4444;
   }
 }
 
