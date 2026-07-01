@@ -138,12 +138,12 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           </div>
 
           <h1 className={styles.heroHeadline}>
-            <span className={styles.heroHeadlineLead}>JUAL AKUN</span>
-            <span className={styles.heroHeadlineAccent}>FUZEVALO</span>
+            <span className={styles.heroHeadlineLead}>JUAL BELI AKUN VALORANT</span>
+            <span className={styles.heroHeadlineAccent}>AMAN &amp; BERGARANSI</span>
           </h1>
 
           <p className={styles.heroLede}>
-            Marketplace akun FPS kompetitif dengan garansi hackback 100%. Proses cepat, transaksi aman.
+            Fuzevalo adalah marketplace jual beli akun Valorant dengan garansi hackback 100%. Proses cepat, transaksi aman.
           </p>
 
           <div className={styles.heroStats}>
@@ -183,29 +183,27 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           className={styles.heroVisualPanel}
         >
           <div className={styles.bannerStack}>
-            {heroBanners.length > 2 && (
-              <button
-                type="button"
-                onClick={() => setActiveIndex(secondNextIndex)}
-                aria-label="Go to banner 3"
-                className={styles.bannerCard3}
-              >
-                <img src={heroBanners[secondNextIndex].src} alt={heroBanners[secondNextIndex].alt} className="h-full w-full object-cover" />
-                <div className={styles.cardShade} />
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setActiveIndex(secondNextIndex)}
+              aria-label="Go to banner 3"
+              className={styles.bannerCard3}
+              disabled={heroBanners.length < 2}
+            >
+              <img src={heroBanners[secondNextIndex].src} alt={heroBanners[secondNextIndex].alt} className="h-full w-full object-cover" />
+              <div className={styles.cardShade} />
+            </button>
 
-            {heroBanners.length > 1 && (
-              <button
-                type="button"
-                onClick={() => setActiveIndex(nextIndex)}
-                aria-label="Go to banner 2"
-                className={styles.bannerCard2}
-              >
-                <img src={heroBanners[nextIndex].src} alt={heroBanners[nextIndex].alt} className="h-full w-full object-cover" />
-                <div className={styles.cardShade} />
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setActiveIndex(nextIndex)}
+              aria-label="Go to banner 2"
+              className={styles.bannerCard2}
+              disabled={heroBanners.length < 2}
+            >
+              <img src={heroBanners[nextIndex].src} alt={heroBanners[nextIndex].alt} className="h-full w-full object-cover" />
+              <div className={styles.cardShade} />
+            </button>
 
             <div className={styles.bannerCard1}>
               <AnimatePresence mode="wait">
