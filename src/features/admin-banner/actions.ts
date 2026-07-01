@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { requireAuthenticatedUser } from "@/features/admin-auth/guards";
 import { persistBannerImage } from "@/features/admin-banner/storage";
 import {
   createActionError,
@@ -25,6 +26,8 @@ export async function saveBannerSettingsAction(
   _previousState: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
+  await requireAuthenticatedUser();
+
   const supabase = await createClient();
   const { data: existingSettings, error: loadError } = await supabase
     .from("store_settings")
