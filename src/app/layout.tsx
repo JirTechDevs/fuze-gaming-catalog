@@ -24,10 +24,23 @@ const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
 });
 
+const siteTitle = "Jual Beli Akun Valorant Aman & Bergaransi | Fuzevalo";
+const siteDescription =
+  "Fuzevalo adalah marketplace jual beli akun Valorant dengan garansi hackback 100%, proses cepat kurang dari 10 menit, dan transaksi aman terpercaya sejak 2021.";
+
 export const metadata: Metadata = {
-  title: "Fuzevalo",
-  description: "Fuzevalo gaming catalog frontend mockup.",
-  metadataBase: new URL("http://localhost:3000"),
+  title: siteTitle,
+  description: siteDescription,
+  metadataBase: new URL("https://fuzevalo.com"),
+  keywords: [
+    "jual akun valorant",
+    "jual beli akun valorant",
+    "beli akun valorant",
+    "akun valorant murah",
+    "akun valorant garansi",
+    "marketplace valorant",
+    "fuzevalo",
+  ],
   icons: {
     icon: "/images/logo.png",
     shortcut: "/images/logo.png",
@@ -35,15 +48,17 @@ export const metadata: Metadata = {
   },
   authors: [{ name: "Fuzevalo" }],
   openGraph: {
-    title: "Fuzevalo",
-    description: "Fuzevalo gaming catalog frontend mockup.",
+    title: siteTitle,
+    description: siteDescription,
     type: "website",
+    url: "https://fuzevalo.com",
+    siteName: "Fuzevalo",
     images: ["/images/logo.png"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fuzevalo",
-    description: "Fuzevalo gaming catalog frontend mockup.",
+    title: siteTitle,
+    description: siteDescription,
     images: ["/images/logo.png"],
   },
 };
