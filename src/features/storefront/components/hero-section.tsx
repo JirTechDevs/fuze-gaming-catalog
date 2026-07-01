@@ -138,12 +138,12 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           </div>
 
           <h1 className={styles.heroHeadline}>
-            <span className={styles.heroHeadlineLead}>JUAL BELI AKUN VALORANT</span>
-            <span className={styles.heroHeadlineAccent}>AMAN &amp; BERGARANSI</span>
+            <span className={styles.heroHeadlineLead}>JUAL AKUN</span>
+            <span className={styles.heroHeadlineAccent}>VALORANT</span>
           </h1>
 
           <p className={styles.heroLede}>
-            Fuzevalo adalah marketplace jual beli akun Valorant dengan garansi hackback 100%. Proses cepat, transaksi aman.
+            Fuzevalo adalah marketplace jual beli akun Valorant aman &amp; bergaransi. Hackback 100%, proses cepat, transaksi aman.
           </p>
 
           <div className={styles.heroStats}>
