@@ -58,9 +58,11 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
 
   const rankOptions = useMemo(
     () => {
-      const availableRankSet = new Set(availableProducts.map((product) => product.rank));
-      const orderedKnownRanks = valorantRanks.filter((rank) => availableRankSet.has(rank));
-      const unknownRanks = [...availableRankSet].filter(
+      const baseRankSet = new Set(
+        availableProducts.map((product) => product.rank.split(" ")[0]),
+      );
+      const orderedKnownRanks = valorantRanks.filter((rank) => baseRankSet.has(rank));
+      const unknownRanks = [...baseRankSet].filter(
         (rank) => !valorantRanks.includes(rank as (typeof valorantRanks)[number]),
       );
 
@@ -91,7 +93,8 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
           skin.toLowerCase().includes(normalizedSearch),
         );
 
-      const matchesRank = rankFilter === "all" || product.rank === rankFilter;
+      const matchesRank =
+        rankFilter === "all" || product.rank.split(" ")[0] === rankFilter;
       const matchesRegion =
         regionFilter === "all" || product.region === regionFilter;
       const matchesNick =

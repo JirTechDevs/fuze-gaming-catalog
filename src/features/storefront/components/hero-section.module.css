@@ -102,8 +102,8 @@
 }
 
 .heroHeadline {
-  display: inline-grid;
-  grid-template-columns: max-content;
+  display: flex;
+  flex-direction: column;
   margin: 24px 0 16px;
   font-weight: 800;
   line-height: 0.95;
@@ -114,28 +114,23 @@
 .heroHeadlineAccent {
   display: block;
   font-family: var(--font-display), sans-serif;
-  font-size: clamp(2rem, 4.2vw, 4rem);
   line-height: 0.95;
   white-space: nowrap;
 }
 
 .heroHeadlineLead {
+  font-size: clamp(2rem, 4.2vw, 4rem);
   color: var(--fuze-text-primary);
 }
 
 .heroHeadlineAccent {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  filter: drop-shadow(0 0 30px rgba(0, 183, 255, 0.5));
-}
-
-.heroHeadlineAccent > span {
+  font-size: clamp(2.4rem, 5vw, 4.8rem);
   background: linear-gradient(135deg, var(--fuze-blue-glow) 0%, var(--fuze-blue-primary) 40%, var(--fuze-blue-deep) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  filter: drop-shadow(0 0 30px rgba(0, 183, 255, 0.5));
 }
 
 .heroLede {
@@ -398,9 +393,12 @@
     min-height: 0;
   }
 
-  .heroHeadlineLead,
-  .heroHeadlineAccent {
+  .heroHeadlineLead {
     font-size: clamp(1.5rem, 7.2vw, 2.75rem);
+  }
+
+  .heroHeadlineAccent {
+    font-size: clamp(1.85rem, 8.6vw, 3.25rem);
   }
 
   .heroStats {
