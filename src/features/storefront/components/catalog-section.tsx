@@ -61,12 +61,11 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
       const baseRankSet = new Set(
         availableProducts.map((product) => product.rank.split(" ")[0]),
       );
-      const orderedKnownRanks = valorantRanks.filter((rank) => baseRankSet.has(rank));
       const unknownRanks = [...baseRankSet].filter(
         (rank) => !valorantRanks.includes(rank as (typeof valorantRanks)[number]),
       );
 
-      return [...orderedKnownRanks, ...unknownRanks];
+      return [...valorantRanks, ...unknownRanks];
     },
     [availableProducts],
   );
@@ -237,14 +236,14 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div>
+            {/* <div>
               <span className={styles.sectionKicker}>
                 BROWSE OUR COLLECTION
               </span>
               <h2 className={styles.sectionTitle}>
                 ACCOUNT <span className="text-primary">CATALOG</span>
               </h2>
-            </div>
+            </div> */}
 
             <div className={styles.filtersPanel}>
               <div id="catalog-filters-content" className={styles.filtersBody}>
