@@ -138,11 +138,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
 
           <h1 className={styles.heroHeadline}>
             <span className={styles.heroHeadlineLead}>JUAL BELI AKUN</span>
-            <span className={styles.heroHeadlineAccent} aria-label="VALORANT">
-              {"VALORANT".split("").map((char, index) => (
-                <span key={`${char}-${index}`} aria-hidden="true">{char}</span>
-              ))}
-            </span>
+            <span className={styles.heroHeadlineAccent}>VALORANT</span>
           </h1>
 
           <p className={styles.heroLede}>
