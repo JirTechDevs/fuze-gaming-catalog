@@ -58,13 +58,14 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
 
   const rankOptions = useMemo(
     () => {
-      const availableRankSet = new Set(availableProducts.map((product) => product.rank));
-      const orderedKnownRanks = valorantRanks.filter((rank) => availableRankSet.has(rank));
-      const unknownRanks = [...availableRankSet].filter(
+      const baseRankSet = new Set(
+        availableProducts.map((product) => product.rank.split(" ")[0]),
+      );
+      const unknownRanks = [...baseRankSet].filter(
         (rank) => !valorantRanks.includes(rank as (typeof valorantRanks)[number]),
       );
 
-      return [...orderedKnownRanks, ...unknownRanks];
+      return [...valorantRanks, ...unknownRanks];
     },
     [availableProducts],
   );
@@ -91,7 +92,8 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
           skin.toLowerCase().includes(normalizedSearch),
         );
 
-      const matchesRank = rankFilter === "all" || product.rank === rankFilter;
+      const matchesRank =
+        rankFilter === "all" || product.rank.split(" ")[0] === rankFilter;
       const matchesRegion =
         regionFilter === "all" || product.region === regionFilter;
       const matchesNick =
@@ -234,14 +236,14 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div>
+            {/* <div>
               <span className={styles.sectionKicker}>
                 BROWSE OUR COLLECTION
               </span>
               <h2 className={styles.sectionTitle}>
                 ACCOUNT <span className="text-primary">CATALOG</span>
               </h2>
-            </div>
+            </div> */}
 
             <div className={styles.filtersPanel}>
               <div id="catalog-filters-content" className={styles.filtersBody}>
