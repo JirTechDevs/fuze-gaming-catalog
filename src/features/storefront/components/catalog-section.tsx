@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
 import { valorantRanks } from "@/features/catalog/domain/valorant-ranks";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -41,6 +41,8 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
   const [nickFilter, setNickFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
+  const gridRef = useRef<HTMLDivElement | null>(null);
+  const skipScrollRef = useRef(true);
 
   // Keep this block commented so we can quickly restore the extra demo section later.
   // const featured = useMemo(
@@ -154,6 +156,18 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
     }
   }, [currentPage, totalPages]);
 
+  useEffect(() => {
+    if (skipScrollRef.current) {
+      skipScrollRef.current = false;
+      return;
+    }
+
+    gridRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [currentPageSafe]);
+
   const resetFilters = () => {
     setSearch("");
     setRankFilter("all");
@@ -213,8 +227,8 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
           key={`${line.left}-${line.top}`}
           className="pointer-events-none absolute hidden items-center gap-2 lg:flex"
           style={{ left: line.left, top: line.top }}
-          animate={{ opacity: [0.15, 0.48, 0.18], x: [0, 12, 0] }}
-          transition={{
+          animate={isLiteMode ? { opacity: 0.18, x: 0 } : { opacity: [0.15, 0.48, 0.18], x: [0, 12, 0] }}
+          transition={isLiteMode ? {} : {
             duration: 5.4,
             repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
@@ -350,12 +364,13 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
             </div>
           </motion.div>
 
-          <div className={styles.catalogGrid}>
+          <div ref={gridRef} className={styles.catalogGrid} style={{ scrollMarginTop: 96 }}>
             {visibleProducts.map((product, index) => (
               <ProductCard
                 key={product.id}
                 product={product}
-                index={startIndex + index}
+                index={index}
+                isLiteMode={isLiteMode}
               />
             ))}
           </div>

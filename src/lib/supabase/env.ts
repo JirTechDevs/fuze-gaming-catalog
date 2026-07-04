@@ -1,4 +1,10 @@
-function getEnv(name: "NEXT_PUBLIC_SUPABASE_URL" | "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY") {
+function getEnv(
+  name:
+    | "NEXT_PUBLIC_SUPABASE_URL"
+    | "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
+    | "SUPABASE_SERVICE_ROLE_KEY"
+    | "SHEET_SYNC_SECRET",
+) {
   const value = process.env[name];
 
   if (!value) {
@@ -14,4 +20,12 @@ export function getSupabaseUrl() {
 
 export function getSupabasePublishableKey() {
   return getEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY");
+}
+
+export function getSupabaseServiceRoleKey() {
+  return getEnv("SUPABASE_SERVICE_ROLE_KEY");
+}
+
+export function getSheetSyncSecret() {
+  return getEnv("SHEET_SYNC_SECRET");
 }
