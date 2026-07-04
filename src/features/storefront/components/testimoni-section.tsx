@@ -115,7 +115,8 @@ export default function TestimoniSection() {
                       src={item.src}
                       alt={item.alt}
                       className="block h-auto w-[110px] object-cover sm:w-[140px] lg:w-[170px]"
-                      priority={index < testimonials.length}
+                      loading="lazy"
+                      priority={false}
                     />
                   </div>
                 ))}

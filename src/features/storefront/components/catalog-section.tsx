@@ -213,8 +213,8 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
           key={`${line.left}-${line.top}`}
           className="pointer-events-none absolute hidden items-center gap-2 lg:flex"
           style={{ left: line.left, top: line.top }}
-          animate={{ opacity: [0.15, 0.48, 0.18], x: [0, 12, 0] }}
-          transition={{
+          animate={isLiteMode ? { opacity: 0.18, x: 0 } : { opacity: [0.15, 0.48, 0.18], x: [0, 12, 0] }}
+          transition={isLiteMode ? {} : {
             duration: 5.4,
             repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
@@ -356,6 +356,7 @@ export default function CatalogSection({ products }: CatalogSectionProps) {
                 key={product.id}
                 product={product}
                 index={startIndex + index}
+                isLiteMode={isLiteMode}
               />
             ))}
           </div>
