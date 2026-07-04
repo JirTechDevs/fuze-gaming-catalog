@@ -27,10 +27,21 @@ var STATUS_COLUMN = 3; // C
 var CODE_COLUMN = 4;   // D
 var HEADER_ROW = 1;
 
-// Sheet-name pattern: matches Januari 26, Februari 26, ..., Juli 2026, etc.
-// Adjust if owner renames tabs. Case-insensitive.
+// Sheet-name pattern. Matches tabs named after a month + a 2- or 4-digit
+// year. Accepts Indonesian full names (Januari, Oktober, Desember),
+// Indonesian abbreviations (Jan, Okt, Des), English full names
+// (January, October, December), and English abbreviations (Jan, Oct,
+// Dec). Case-insensitive; year separator must be whitespace.
+//
+// Matches: "Januari 26", "October 2026", "Okt 26", "OCT 26",
+//          "Oktober 2026", "Jan 26"
+// Rejects: "Notes 26", "Bulan Oktober 26", "Oktober-26", "TODO"
 var MONTHLY_TAB_REGEX =
-  /^(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)\s+\d{2,4}$/i;
+  /^(january|januari|jan|february|februari|feb|march|maret|mar|april|apr|may|mei|june|juni|jun|july|juli|jul|august|agustus|aug|agu|september|sep|october|oktober|oct|okt|november|nov|december|desember|dec|des)\s+\d{2,4}$/i;
+
+// Product codes are shaped like "FZ1234". This is a safety net so a
+// stray edit in a matched tab (or a header row) can't trigger a sync.
+var CODE_SHAPE_REGEX = /^FZ\d+/i;
 
 // ---- Entry point -----------------------------------------------------
 
@@ -54,6 +65,7 @@ function onFuzeSheetEdit(e) {
     var code = String(sheet.getRange(row, CODE_COLUMN).getValue() || '').trim();
 
     if (!code) return; // no code in this row, nothing to sync
+    if (!CODE_SHAPE_REGEX.test(code)) return; // not an FZ product row
 
     var secret = PropertiesService.getScriptProperties()
       .getProperty('SHEET_SYNC_SECRET');
@@ -125,6 +137,7 @@ function backfillActiveSheet() {
     var status = String(row[0] || '').trim();
     var code = String(row[1] || '').trim();
     if (!code) return;
+    if (!CODE_SHAPE_REGEX.test(code)) return;
 
     var options = {
       method: 'post',
