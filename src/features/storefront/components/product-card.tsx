@@ -95,8 +95,10 @@ export default function ProductCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{
-        delay: isLiteMode ? Math.min(index * 0.02, 0.12) : index * 0.06,
-        duration: isLiteMode ? 0.24 : 0.5,
+        delay: isLiteMode
+          ? Math.min(index * 0.02, 0.12)
+          : Math.min(index * 0.04, 0.28),
+        duration: isLiteMode ? 0.24 : 0.4,
         ease: [0.16, 1, 0.3, 1],
       }}
       whileHover={isLiteMode ? undefined : { y: -4, transition: { type: "spring", stiffness: 350, damping: 18 } }}
