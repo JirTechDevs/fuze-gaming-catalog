@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
@@ -8,12 +8,12 @@ import {
   formatPrice,
   type Product,
 } from "@/features/catalog/domain/product";
-import { useIsMobile } from "@/hooks/use-mobile";
 import styles from "./product-card.module.css";
 
 interface ProductCardProps {
   product: Product;
   index: number;
+  isLiteMode: boolean;
 }
 
 function getRankBadgeClasses(rank: string) {
@@ -81,10 +81,8 @@ function getFeaturedClasses(featured?: Product["featured"]) {
 export default function ProductCard({
   product,
   index,
+  isLiteMode,
 }: ProductCardProps) {
-  const isMobile = useIsMobile();
-  const prefersReducedMotion = useReducedMotion();
-  const isLiteMode = isMobile || prefersReducedMotion;
   const isSold = product.status === "sold";
   const router = useRouter();
   const featuredLabel = getFeaturedLabel(product.featured);
