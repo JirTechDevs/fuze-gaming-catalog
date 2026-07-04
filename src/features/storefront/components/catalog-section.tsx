@@ -5,6 +5,7 @@ import { ChevronDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
 import { valorantRanks } from "@/features/catalog/domain/valorant-ranks";
+import { useRealtimeProducts } from "@/features/catalog/hooks/use-realtime-products";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ProductCard from "@/features/storefront/components/product-card";
 import styles from "./catalog-section.module.css";
@@ -31,7 +32,8 @@ const techLines = [
   { left: "42%", top: "84%", width: "w-24", delay: 0.9 },
 ];
 
-export default function CatalogSection({ products }: CatalogSectionProps) {
+export default function CatalogSection({ products: initialProducts }: CatalogSectionProps) {
+  const products = useRealtimeProducts(initialProducts);
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
   const isLiteMode = isMobile || prefersReducedMotion;
