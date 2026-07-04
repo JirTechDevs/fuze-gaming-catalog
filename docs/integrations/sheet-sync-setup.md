@@ -7,9 +7,17 @@ storefront cache is revalidated within seconds.
 
 ## Behavior
 
-- Only monthly tabs are watched (`Januari 26`, `Februari 26`, ...,
-  `Juli 2026`, and any future month tab). Other tabs (`Master_Status`,
-  `DATA STOK`, `looker_output`) are ignored.
+- Only monthly tabs are watched. A monthly tab is any tab whose name
+  matches a month + a 2- or 4-digit year, separated by a space. The
+  script accepts Indonesian and English names, full or abbreviated,
+  any casing:
+  - `Januari 26`, `Januari 2026`, `januari 26`, `JAN 26`, `Jan 2026`
+  - `Oktober 26`, `Oktober 2026`, `Okt 26`, `October 2026`, `OCT 26`
+  - `Desember 26`, `Des 26`, `December 2026`, `Dec 26`
+- Non-monthly tabs (`Master_Status`, `DATA STOK`, `looker_output`, or
+  anything else that doesn't match the pattern) are ignored.
+- Rows whose code column doesn't look like `FZ####` are skipped as an
+  extra safety net (header rows, empty rows, notes, etc.).
 - Column **C** on each monthly tab must contain the STATUS.
 - Column **D** on each monthly tab must contain the Code (FZ####).
 - Mapping:
