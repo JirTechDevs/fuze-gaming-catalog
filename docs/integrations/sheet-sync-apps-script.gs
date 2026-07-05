@@ -106,6 +106,31 @@ function onFuzeSheetEdit(e) {
 }
 
 /**
+ * Optional: manually re-sync every monthly tab in the workbook.
+ * Use this when many rows drifted (e.g., statuses set before the sync
+ * feature was deployed, or bulk-pasted without firing onEdit).
+ *
+ * Run from the Apps Script editor: select this function, click Run.
+ */
+function backfillAllMonthlyTabs() {
+  var sheets = SpreadsheetApp.getActiveSpreadsheet().getSheets();
+  var monthlyTabs = sheets.filter(function (sheet) {
+    return MONTHLY_TAB_REGEX.test(sheet.getName());
+  });
+
+  if (monthlyTabs.length === 0) {
+    throw new Error('No monthly tabs found. Check MONTHLY_TAB_REGEX.');
+  }
+
+  console.log('Backfilling ' + monthlyTabs.length + ' monthly tabs...');
+  monthlyTabs.forEach(function (sheet) {
+    console.log('-> ' + sheet.getName());
+    backfillSheet(sheet);
+  });
+  console.log('Backfill complete.');
+}
+
+/**
  * Optional: manually re-sync a whole sheet.
  * Useful if the trigger was disabled for a while and things drifted.
  *
@@ -113,11 +138,39 @@ function onFuzeSheetEdit(e) {
  */
 function backfillActiveSheet() {
   var sheet = SpreadsheetApp.getActiveSheet();
-  var name = sheet.getName();
-  if (!MONTHLY_TAB_REGEX.test(name)) {
-    throw new Error('Active tab "' + name + '" is not a monthly tab.');
+  if (!MONTHLY_TAB_REGEX.test(sheet.getName())) {
+    throw new Error('Active tab "' + sheet.getName() + '" is not a monthly tab.');
   }
+  backfillSheet(sheet);
+}
 
+/**
+ * Backfill a specific tab by name. Safer than backfillActiveSheet
+ * because it doesn't depend on which tab is currently focused.
+ *
+ * Use the wrappers below (backfillJuni26, backfillJuli26, etc.) —
+ * pick the wrapper from the function dropdown, click Run.
+ */
+function backfillSheetByName(name) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name);
+  if (!sheet) {
+    throw new Error('Sheet not found: "' + name + '"');
+  }
+  console.log('Backfilling ' + name + ' ...');
+  backfillSheet(sheet);
+  console.log('Done.');
+}
+
+function backfillJanuari26() { backfillSheetByName('Januari 26'); }
+function backfillFebruari26() { backfillSheetByName('Februari 26'); }
+function backfillMaret26() { backfillSheetByName('Maret 26'); }
+function backfillApril26() { backfillSheetByName('April 26'); }
+function backfillMei2026() { backfillSheetByName('Mei 2026'); }
+function backfillJuni2026() { backfillSheetByName('Juni 2026'); }
+function backfillJuli2026() { backfillSheetByName('Juli 2026'); }
+
+function backfillSheet(sheet) {
+  var name = sheet.getName();
   var lastRow = sheet.getLastRow();
   if (lastRow <= HEADER_ROW) return;
 
@@ -133,6 +186,7 @@ function backfillActiveSheet() {
     .getProperty('SHEET_SYNC_SECRET');
   if (!secret) throw new Error('SHEET_SYNC_SECRET script property missing.');
 
+  var synced = 0;
   values.forEach(function (row, index) {
     var status = String(row[0] || '').trim();
     var code = String(row[1] || '').trim();
@@ -153,8 +207,10 @@ function backfillActiveSheet() {
 
     try {
       UrlFetchApp.fetch(WEBHOOK_URL, options);
+      synced++;
     } catch (err) {
       console.error('Backfill row ' + (index + 2) + ' failed: ' + err);
     }
   });
+  console.log('   ' + synced + ' rows synced from ' + name);
 }
