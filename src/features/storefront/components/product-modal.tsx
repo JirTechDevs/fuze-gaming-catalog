@@ -163,7 +163,7 @@ export default function ProductModal({
               </div>
               <ol className="panel-scrollbar mt-4 max-h-64 space-y-2 overflow-y-auto pr-1 text-sm leading-6 text-foreground/84 sm:text-base">
                 {product.skins.map((skin, index) => (
-                  <li key={skin} className="break-words">
+                  <li key={`${index}-${skin}`} className="break-words">
                     {index + 1}. {skin}
                   </li>
                 ))}

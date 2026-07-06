@@ -165,7 +165,7 @@ export default function ProductCard({
           </p>
           <ul className={styles.skinList}>
             {product.skins.map((skin, index) => (
-              <li key={skin}>
+              <li key={`${index}-${skin}`}>
                 <span className={styles.skinNumber}>
                   {index + 1}.
                 </span>
