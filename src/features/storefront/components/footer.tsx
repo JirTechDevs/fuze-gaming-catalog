@@ -76,46 +76,47 @@ export default function Footer({ compact = false }: FooterProps) {
     <footer className="border-t border-white/[0.05] bg-transparent">
       <div className="mx-auto w-full max-w-[1480px] px-4 pb-6 pt-12 sm:px-6 lg:px-8 lg:pt-14">
         <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1.1fr_1fr] lg:gap-8">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2.5">
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center gap-3.5">
               <Image
                 src="/images/logo.png"
                 alt="Fuzevalo"
-                width={36}
-                height={36}
-                className="h-9 w-9 object-contain"
+                width={72}
+                height={72}
+                className="object-contain"
+                style={{ height: 72, width: 72 }}
               />
-              <span className="font-display text-lg font-bold tracking-wider text-white">
+              <span className="font-display text-3xl font-bold tracking-wider text-white sm:text-[2.15rem]">
                 FUZE<span className="text-primary">VALO</span>
               </span>
             </div>
-            <p className="max-w-xs text-sm leading-relaxed text-muted-foreground/70">
+            <p className="max-w-sm text-base leading-relaxed text-muted-foreground/75">
               Marketplace jual beli akun Valorant murah, aman, dan bergaransi.
             </p>
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-3">
               <SocialIconLink
                 href="https://www.instagram.com/fuzevalo/"
                 label="Instagram Fuzevalo"
               >
-                <Instagram size={16} />
+                <Instagram size={20} />
               </SocialIconLink>
               <SocialIconLink
                 href="https://wa.me/628881462675"
                 label="WhatsApp Fuzevalo"
               >
-                <WhatsAppGlyph className="h-4 w-4" />
+                <WhatsAppGlyph className="h-5 w-5" />
               </SocialIconLink>
               <SocialIconLink
                 href="https://www.tiktok.com/@fuzevalo_"
                 label="TikTok Fuzevalo"
               >
-                <TikTokGlyph className="h-4 w-4" />
+                <TikTokGlyph className="h-5 w-5" />
               </SocialIconLink>
               <SocialIconLink
                 href="https://discord.com/invite/fuzevalo-1147449215237226517"
                 label="Discord Fuzevalo"
               >
-                <DiscordGlyph className="h-4 w-4" />
+                <DiscordGlyph className="h-5 w-5" />
               </SocialIconLink>
             </div>
           </div>
@@ -229,7 +230,7 @@ function SocialIconLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.03] text-muted-foreground/80 transition hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+      className="flex h-12 w-12 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.03] text-muted-foreground/80 transition hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
     >
       {children}
     </a>

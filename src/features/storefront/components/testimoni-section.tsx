@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { type StaticImageData } from "next/image";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import testi1 from "@/assets/testi/testi-1.webp";
 import testi2 from "@/assets/testi/testi-2.webp";
@@ -15,42 +15,18 @@ import testi8 from "@/assets/testi/testi-8.webp";
 interface Testimonial {
   src: StaticImageData;
   alt: string;
-  name: string;
-  rank: string;
-  stars: number;
 }
 
 const testimonials: Testimonial[] = [
-  { src: testi1, alt: "Testimoni Rizky Pratama", name: "Rizky Pratama", rank: "Platinum 2", stars: 5 },
-  { src: testi2, alt: "Testimoni Dimas Aditya", name: "Dimas Aditya", rank: "Diamond 1", stars: 5 },
-  { src: testi3, alt: "Testimoni Fahmi Ramadhan", name: "Fahmi Ramadhan", rank: "Gold 3", stars: 5 },
-  { src: testi4, alt: "Testimoni Kevin Sanjaya", name: "Kevin Sanjaya", rank: "Ascendant 1", stars: 5 },
-  { src: testi5, alt: "Testimoni Andi Wijaya", name: "Andi Wijaya", rank: "Silver 3", stars: 5 },
-  { src: testi6, alt: "Testimoni Bima Prakoso", name: "Bima Prakoso", rank: "Immortal 1", stars: 5 },
-  { src: testi7, alt: "Testimoni Rendra Saputra", name: "Rendra Saputra", rank: "Gold 2", stars: 5 },
-  { src: testi8, alt: "Testimoni Yudha Kurniawan", name: "Yudha Kurniawan", rank: "Platinum 1", stars: 5 },
+  { src: testi1, alt: "Testimoni customer 1" },
+  { src: testi2, alt: "Testimoni customer 2" },
+  { src: testi3, alt: "Testimoni customer 3" },
+  { src: testi4, alt: "Testimoni customer 4" },
+  { src: testi5, alt: "Testimoni customer 5" },
+  { src: testi6, alt: "Testimoni customer 6" },
+  { src: testi7, alt: "Testimoni customer 7" },
+  { src: testi8, alt: "Testimoni customer 8" },
 ];
-
-const avatarPalettes = [
-  { bg: "linear-gradient(135deg,#1B4A7A,#0E2540)", ring: "rgba(0,200,255,0.35)" },
-  { bg: "linear-gradient(135deg,#7A2E1B,#3E1408)", ring: "rgba(255,138,90,0.35)" },
-  { bg: "linear-gradient(135deg,#1B7A4E,#0A3820)", ring: "rgba(94,220,150,0.35)" },
-  { bg: "linear-gradient(135deg,#5B1B7A,#2A0938)", ring: "rgba(190,120,255,0.35)" },
-  { bg: "linear-gradient(135deg,#7A6A1B,#3A310A)", ring: "rgba(240,210,90,0.35)" },
-  { bg: "linear-gradient(135deg,#1B5A7A,#08283A)", ring: "rgba(88,180,240,0.35)" },
-  { bg: "linear-gradient(135deg,#7A1B4C,#3B0824)", ring: "rgba(240,110,170,0.35)" },
-  { bg: "linear-gradient(135deg,#1B7A72,#083836)", ring: "rgba(90,220,215,0.35)" },
-];
-
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
 
 export default function TestimoniSection() {
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -131,73 +107,24 @@ export default function TestimoniSection() {
             ref={trackRef}
             className="flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto scroll-smooth pb-2 pl-1 pr-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 [&::-webkit-scrollbar]:hidden"
           >
-            {testimonials.map((item, index) => (
-              <TestimonialCard
-                key={item.name}
-                item={item}
-                palette={avatarPalettes[index % avatarPalettes.length]}
-              />
+            {testimonials.map((item) => (
+              <div
+                key={item.alt}
+                data-testi-card
+                className="w-[52%] shrink-0 snap-start overflow-hidden rounded-[14px] border border-white/[0.08] bg-[#0D1530] shadow-[0_14px_38px_hsl(var(--background)_/_0.28)] sm:w-[34%] md:w-[26%] lg:w-[19%] xl:w-[16%]"
+              >
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  className="block h-auto w-full object-cover"
+                  loading="lazy"
+                  priority={false}
+                />
+              </div>
             ))}
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-interface TestimonialCardProps {
-  item: Testimonial;
-  palette: (typeof avatarPalettes)[number];
-}
-
-function TestimonialCard({ item, palette }: TestimonialCardProps) {
-  const initials = getInitials(item.name);
-
-  return (
-    <div
-      data-testi-card
-      className="flex w-[52%] shrink-0 snap-start flex-col gap-3 sm:w-[34%] md:w-[26%] lg:w-[19%] xl:w-[16%]"
-    >
-      <div className="overflow-hidden rounded-[14px] border border-white/[0.08] bg-[#0D1530] shadow-[0_14px_38px_hsl(var(--background)_/_0.28)]">
-        <Image
-          src={item.src}
-          alt={item.alt}
-          className="block h-auto w-full object-cover"
-          loading="lazy"
-          priority={false}
-        />
-      </div>
-
-      <div className="flex items-center gap-2.5 rounded-[12px] border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
-        <span
-          aria-hidden="true"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-display text-[11px] font-bold tracking-wide text-white/90"
-          style={{
-            background: palette.bg,
-            boxShadow: `inset 0 0 0 1px ${palette.ring}`,
-          }}
-        >
-          {initials}
-        </span>
-        <div className="flex min-w-0 flex-col leading-tight">
-          <span className="truncate font-display text-[13px] font-semibold text-white">
-            {item.name}
-          </span>
-          <span className="truncate text-[11px] text-muted-foreground/70">
-            {item.rank}
-          </span>
-          <div className="mt-1 flex items-center gap-[2px]">
-            {Array.from({ length: item.stars }).map((_, index) => (
-              <Star
-                key={index}
-                size={10}
-                className="fill-yellow-400 text-yellow-400"
-                strokeWidth={0}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }
