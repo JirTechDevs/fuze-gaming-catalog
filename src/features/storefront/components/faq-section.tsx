@@ -49,13 +49,13 @@ export default function FAQSection() {
       <div className="relative mx-auto w-full max-w-[1480px] px-4 sm:px-6 lg:px-8">
         <div className="mb-8 px-1 sm:mb-10">
           <div className="flex flex-col items-center gap-2">
-            <span className="font-display text-[10px] tracking-[0.36em] text-muted-foreground/60 sm:text-xs">
+            <span className="font-display text-[10px] tracking-[0.36em] text-muted-foreground/90 sm:text-xs">
               PUNYA PERTANYAAN?
             </span>
             <h2 className="text-center font-display text-2xl font-bold tracking-wide text-foreground sm:text-3xl md:text-4xl">
               FAQ JUAL BELI AKUN <span className="text-primary">VALORANT</span>
             </h2>
-            <p className="text-center text-sm text-muted-foreground/70">
+            <p className="text-center text-sm text-muted-foreground">
               Temukan jawaban dari pertanyaan yang sering ditanyakan.
             </p>
           </div>

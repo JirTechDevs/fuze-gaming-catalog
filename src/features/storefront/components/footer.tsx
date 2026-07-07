@@ -94,10 +94,7 @@ export default function Footer({ compact = false }: FooterProps) {
               Marketplace jual beli akun Valorant murah, aman, dan bergaransi.
             </p>
             <div className="flex items-center gap-3">
-              <SocialIconLink
-                href="https://www.instagram.com/fuzevalo/"
-                label="Instagram Fuzevalo"
-              >
+              <SocialIconLink label="Instagram Fuzevalo">
                 <Instagram size={20} />
               </SocialIconLink>
               <SocialIconLink
@@ -165,7 +162,6 @@ export default function Footer({ compact = false }: FooterProps) {
                 icon={<Instagram size={16} />}
                 title="Instagram"
                 value="@fuzevalo"
-                href="https://www.instagram.com/fuzevalo/"
                 iconBg="linear-gradient(135deg,#F58529,#DD2A7B,#8134AF)"
                 iconColor="#FFFFFF"
               />
@@ -220,17 +216,28 @@ function SocialIconLink({
   label,
   children,
 }: {
-  href: string;
+  href?: string;
   label: string;
   children: React.ReactNode;
 }) {
+  const className =
+    "flex h-12 w-12 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.03] text-muted-foreground/80 transition hover:border-primary/40 hover:bg-primary/10 hover:text-primary";
+
+  if (!href) {
+    return (
+      <span aria-label={label} className={className}>
+        {children}
+      </span>
+    );
+  }
+
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="flex h-12 w-12 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.03] text-muted-foreground/80 transition hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+      className={className}
     >
       {children}
     </a>
@@ -248,10 +255,19 @@ function ContactRow({
   icon: React.ReactNode;
   title: string;
   value: string;
-  href: string;
+  href?: string;
   iconBg: string;
   iconColor: string;
 }) {
+  const content = (
+    <>
+      <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground/55">
+        {title}
+      </span>
+      <span className="text-sm text-white/85">{value}</span>
+    </>
+  );
+
   return (
     <li className="flex items-start gap-3">
       <span
@@ -260,17 +276,18 @@ function ContactRow({
       >
         {icon}
       </span>
-      <a
-        href={href}
-        target={href.startsWith("http") ? "_blank" : undefined}
-        rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-        className="flex flex-col leading-tight transition hover:text-primary"
-      >
-        <span className="text-xs uppercase tracking-[0.14em] text-muted-foreground/55">
-          {title}
-        </span>
-        <span className="text-sm text-white/85">{value}</span>
-      </a>
+      {href ? (
+        <a
+          href={href}
+          target={href.startsWith("http") ? "_blank" : undefined}
+          rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+          className="flex flex-col leading-tight transition hover:text-primary"
+        >
+          {content}
+        </a>
+      ) : (
+        <div className="flex flex-col leading-tight">{content}</div>
+      )}
     </li>
   );
 }
