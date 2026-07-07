@@ -379,6 +379,7 @@
 
   .heroVisualPanel {
     justify-content: center;
+    padding-right: 0;
   }
 }
 
@@ -402,8 +403,15 @@
     font-size: clamp(1.85rem, 8.6vw, 3.25rem);
   }
 
+  .heroLede {
+    font-size: 7px;
+    line-height: 1.5;
+    margin: 0 0 12px;
+  }
+
   .heroStats {
-    gap: 20px;
+    gap: 16px;
+    margin-bottom: 12px;
   }
 
   .heroStatValue {
