@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { ChevronDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Filter as FilterIcon, Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
 import { valorantRanks } from "@/features/catalog/domain/valorant-ranks";
@@ -43,6 +43,7 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
   const [nickFilter, setNickFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const gridRef = useRef<HTMLDivElement | null>(null);
   const skipScrollRef = useRef(true);
 
@@ -284,104 +285,122 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
 
             <div className={styles.filtersPanel}>
               <div id="catalog-filters-content" className={styles.filtersBody}>
-                <div className={styles.filtersGrid}>
-                  <label className={styles.filterGroup}>
-                    <span className={styles.filterLabel}>
-                      Cari Kode / Skin
-                    </span>
-                    <span className={styles.filterField}>
-                      <input
-                        type="text"
-                        placeholder="Contoh: Vandal, Oni..."
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                        className={styles.filterInput}
-                      />
-                    </span>
+                <div className="flex flex-col gap-2 sm:gap-3">
+                  <label className="block">
+                    <input
+                      type="text"
+                      placeholder="Cari kode / skin / nama akun..."
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                      className="h-9 w-full rounded-[0.75rem] border border-border/45 bg-card/55 px-3 text-[13px] text-foreground outline-none transition placeholder:text-muted-foreground/55 focus:border-primary/45 focus:ring-2 focus:ring-primary/15 sm:h-11 sm:rounded-[0.9rem] sm:px-4 sm:text-sm"
+                    />
                   </label>
 
-                  <label className={styles.filterGroup}>
-                    <span className={styles.filterLabel}>
-                      Cari Rank
-                    </span>
-                    <span className={`${styles.filterField} ${styles.selectWrap}`}>
-                      <select
-                        value={rankFilter}
-                        onChange={(event) => setRankFilter(event.target.value)}
-                        className={styles.selectField}
+                  <div className="flex gap-2 sm:gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setIsFilterOpen((current) => !current)}
+                      aria-expanded={isFilterOpen}
+                      className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-[0.75rem] bg-primary px-3 font-display text-[12px] font-bold tracking-[0.06em] text-primary-foreground transition hover:brightness-105 sm:h-11 sm:gap-2 sm:rounded-[0.9rem] sm:px-4 sm:text-sm"
+                    >
+                      <FilterIcon size={13} className="sm:hidden" />
+                      <FilterIcon size={16} className="hidden sm:block" />
+                      Filter
+                      <FilterIcon size={13} className="sm:hidden" />
+                      <FilterIcon size={16} className="hidden sm:block" />
+                    </button>
+
+                    <div className="flex h-9 flex-1 items-center gap-1 rounded-[0.75rem] border border-border/45 bg-card/55 pl-2.5 pr-1.5 sm:h-11 sm:flex-none sm:min-w-[220px] sm:gap-2 sm:rounded-[0.9rem] sm:pl-4 sm:pr-3">
+                      <span className="hidden whitespace-nowrap text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70 sm:inline">
+                        Urutkan
+                      </span>
+                      <div className="relative min-w-0 flex-1">
+                        <select
+                          value={sortBy}
+                          onChange={(event) => setSortBy(event.target.value)}
+                          className="h-9 w-full appearance-none truncate bg-transparent pr-4 text-[12px] text-foreground outline-none sm:h-11 sm:pr-5 sm:text-sm"
+                        >
+                          <option value="default">Terbaru</option>
+                          <option value="price-asc">Termurah</option>
+                          <option value="price-desc">Termahal</option>
+                        </select>
+                        <ChevronDown
+                          size={13}
+                          className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-muted-foreground/70 sm:hidden"
+                        />
+                        <ChevronDown
+                          size={16}
+                          className="pointer-events-none absolute right-0 top-1/2 hidden -translate-y-1/2 text-muted-foreground/70 sm:block"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {isFilterOpen && (
+                    <div className="grid gap-3 rounded-[1rem] border border-border/35 bg-card/40 p-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto]">
+                      <label className={styles.filterGroup}>
+                        <span className={styles.filterLabel}>Rank</span>
+                        <span className={`${styles.filterField} ${styles.selectWrap}`}>
+                          <select
+                            value={rankFilter}
+                            onChange={(event) => setRankFilter(event.target.value)}
+                            className={styles.selectField}
+                          >
+                            <option value="all">Semua Rank</option>
+                            {rankOptions.map((rank) => (
+                              <option key={rank} value={rank}>{rank}</option>
+                            ))}
+                          </select>
+                          <ChevronDown size={16} className={styles.selectIcon} />
+                        </span>
+                      </label>
+
+                      <label className={styles.filterGroup}>
+                        <span className={styles.filterLabel}>Region</span>
+                        <span className={`${styles.filterField} ${styles.selectWrap}`}>
+                          <select
+                            value={regionFilter}
+                            onChange={(event) => setRegionFilter(event.target.value)}
+                            className={styles.selectField}
+                          >
+                            <option value="all">Semua Region</option>
+                            {regionOptions.map((region) => (
+                              <option key={region} value={region}>{region}</option>
+                            ))}
+                          </select>
+                          <ChevronDown size={16} className={styles.selectIcon} />
+                        </span>
+                      </label>
+
+                      {/*
+                      Ganti Nick filter — hidden per owner ask. Restore the block below to bring it back.
+                      <label className={styles.filterGroup}>
+                        <span className={styles.filterLabel}>Ganti Nick</span>
+                        <span className={`${styles.filterField} ${styles.selectWrap}`}>
+                          <select
+                            value={nickFilter}
+                            onChange={(event) => setNickFilter(event.target.value)}
+                            className={styles.selectField}
+                          >
+                            <option value="all">Semua Status</option>
+                            {nickOptions.map((option) => (
+                              <option key={option} value={option}>{option}</option>
+                            ))}
+                          </select>
+                          <ChevronDown size={16} className={styles.selectIcon} />
+                        </span>
+                      </label>
+                      */}
+
+                      <button
+                        type="button"
+                        onClick={resetFilters}
+                        className={`${styles.resetButton} self-end`}
                       >
-                        <option value="all">Semua Rank</option>
-                        {rankOptions.map((rank) => (
-                          <option key={rank} value={rank}>{rank}</option>
-                        ))}
-                      </select>
-                      <ChevronDown size={16} className={styles.selectIcon} />
-                    </span>
-                  </label>
-
-                  <label className={styles.filterGroup}>
-                    <span className={styles.filterLabel}>
-                      Region
-                    </span>
-                    <span className={`${styles.filterField} ${styles.selectWrap}`}>
-                      <select
-                        value={regionFilter}
-                        onChange={(event) => setRegionFilter(event.target.value)}
-                        className={styles.selectField}
-                      >
-                        <option value="all">Semua Region</option>
-                        {regionOptions.map((region) => (
-                          <option key={region} value={region}>{region}</option>
-                        ))}
-                      </select>
-                      <ChevronDown size={16} className={styles.selectIcon} />
-                    </span>
-                  </label>
-
-                  <label className={styles.filterGroup}>
-                    <span className={styles.filterLabel}>
-                      Ganti Nick
-                    </span>
-                    <span className={`${styles.filterField} ${styles.selectWrap}`}>
-                      <select
-                        value={nickFilter}
-                        onChange={(event) => setNickFilter(event.target.value)}
-                        className={styles.selectField}
-                      >
-                        <option value="all">Semua Status</option>
-                        {nickOptions.map((option) => (
-                          <option key={option} value={option}>{option}</option>
-                        ))}
-                      </select>
-                      <ChevronDown size={16} className={styles.selectIcon} />
-                    </span>
-                  </label>
-
-                  <label className={styles.filterGroup}>
-                    <span className={styles.filterLabel}>
-                      Urutkan Harga
-                    </span>
-                    <span className={`${styles.filterField} ${styles.selectWrap}`}>
-                      <select
-                        value={sortBy}
-                        onChange={(event) => setSortBy(event.target.value)}
-                        className={styles.selectField}
-                      >
-                        <option value="default">Terbaru (Default)</option>
-                        <option value="price-asc">Harga Termurah</option>
-                        <option value="price-desc">Harga Termahal</option>
-                      </select>
-                      <ChevronDown size={16} className={styles.selectIcon} />
-                    </span>
-                  </label>
-
-                  <button
-                    type="button"
-                    onClick={resetFilters}
-                    className={styles.resetButton}
-                  >
-                    Reset Filter
-                  </button>
+                        Reset Filter
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
