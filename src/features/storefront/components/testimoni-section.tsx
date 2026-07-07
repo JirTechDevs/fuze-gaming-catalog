@@ -1,8 +1,6 @@
 "use client";
 
 import Image, { type StaticImageData } from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
 import testi1 from "@/assets/testi/testi-1.webp";
 import testi2 from "@/assets/testi/testi-2.webp";
 import testi3 from "@/assets/testi/testi-3.webp";
@@ -28,40 +26,9 @@ const testimonials: Testimonial[] = [
   { src: testi8, alt: "Testimoni customer 8" },
 ];
 
+const loopedTestimonials = [...testimonials, ...testimonials];
+
 export default function TestimoniSection() {
-  const trackRef = useRef<HTMLDivElement | null>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-
-  const updateScrollState = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    const maxScroll = el.scrollWidth - el.clientWidth;
-    setCanScrollLeft(el.scrollLeft > 4);
-    setCanScrollRight(el.scrollLeft < maxScroll - 4);
-  }, []);
-
-  useEffect(() => {
-    updateScrollState();
-    const el = trackRef.current;
-    if (!el) return;
-    el.addEventListener("scroll", updateScrollState, { passive: true });
-    window.addEventListener("resize", updateScrollState);
-    return () => {
-      el.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
-    };
-  }, [updateScrollState]);
-
-  const scrollByOnePage = (direction: "left" | "right") => {
-    const el = trackRef.current;
-    if (!el) return;
-    const cardWidth = el.querySelector<HTMLElement>("[data-testi-card]")?.offsetWidth ?? 220;
-    const gap = 20;
-    const delta = (cardWidth + gap) * (direction === "left" ? -3 : 3);
-    el.scrollBy({ left: delta, behavior: "smooth" });
-  };
-
   return (
     <section
       id="testimoni"
@@ -82,36 +49,12 @@ export default function TestimoniSection() {
           </p>
         </div>
 
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() => scrollByOnePage("left")}
-            disabled={!canScrollLeft}
-            aria-label="Testimoni sebelumnya"
-            className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-x-2 -translate-y-1/2 items-center justify-center rounded-full border border-white/[0.08] bg-[#0A1128]/85 text-white/85 shadow-[0_10px_30px_hsl(var(--background)_/_0.4)] backdrop-blur transition hover:border-primary/40 hover:text-primary disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/[0.08] disabled:hover:text-white/85 md:flex"
-          >
-            <ChevronLeft size={20} />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => scrollByOnePage("right")}
-            disabled={!canScrollRight}
-            aria-label="Testimoni berikutnya"
-            className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 translate-x-2 items-center justify-center rounded-full border border-white/[0.08] bg-[#0A1128]/85 text-white/85 shadow-[0_10px_30px_hsl(var(--background)_/_0.4)] backdrop-blur transition hover:border-primary/40 hover:text-primary disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/[0.08] disabled:hover:text-white/85 md:flex"
-          >
-            <ChevronRight size={20} />
-          </button>
-
-          <div
-            ref={trackRef}
-            className="flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto scroll-smooth pb-2 pl-1 pr-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-5 [&::-webkit-scrollbar]:hidden"
-          >
-            {testimonials.map((item) => (
+        <div className="testimoni-strip-mask relative overflow-hidden">
+          <div className="testimoni-strip-track flex w-max gap-4 sm:gap-5">
+            {loopedTestimonials.map((item, index) => (
               <div
-                key={item.alt}
-                data-testi-card
-                className="w-[52%] shrink-0 snap-start overflow-hidden rounded-[14px] border border-white/[0.08] bg-[#0D1530] shadow-[0_14px_38px_hsl(var(--background)_/_0.28)] sm:w-[34%] md:w-[26%] lg:w-[19%] xl:w-[16%]"
+                key={`${item.alt}-${index}`}
+                className="w-[180px] shrink-0 overflow-hidden rounded-[14px] border border-white/[0.08] bg-[#0D1530] shadow-[0_14px_38px_hsl(var(--background)_/_0.28)] sm:w-[220px] md:w-[240px]"
               >
                 <Image
                   src={item.src}
