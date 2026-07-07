@@ -128,7 +128,28 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
       return [1];
     }
 
-    const pages = new Set<number>([1, totalPages, currentPageSafe - 1, currentPageSafe, currentPageSafe + 1]);
+    const windowSize = 5;
+    const half = Math.floor(windowSize / 2);
+
+    let windowStart: number;
+    let windowEnd: number;
+
+    if (currentPageSafe - half <= 1) {
+      windowStart = 1;
+      windowEnd = Math.min(windowSize, totalPages);
+    } else if (currentPageSafe + half >= totalPages) {
+      windowStart = Math.max(1, totalPages - windowSize + 1);
+      windowEnd = totalPages;
+    } else {
+      windowStart = currentPageSafe - half;
+      windowEnd = currentPageSafe + half;
+    }
+
+    const pages = new Set<number>([1, totalPages]);
+    for (let page = windowStart; page <= windowEnd; page++) {
+      pages.add(page);
+    }
+
     const sortedPages = [...pages]
       .filter((page) => page >= 1 && page <= totalPages)
       .sort((left, right) => left - right);
