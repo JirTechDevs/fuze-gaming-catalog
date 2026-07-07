@@ -126,6 +126,58 @@ function FileTriggerButton({
   );
 }
 
+function DropZone({
+  onFiles,
+  disabled = false,
+  className = "",
+  children,
+}: {
+  onFiles: (files: File[]) => void;
+  disabled?: boolean;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    if (disabled) return;
+    if (!isDragOver) setIsDragOver(true);
+  }
+
+  function handleDragLeave(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    if (event.currentTarget.contains(event.relatedTarget as Node)) return;
+    setIsDragOver(false);
+  }
+
+  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    setIsDragOver(false);
+    if (disabled) return;
+    const files = Array.from(event.dataTransfer.files).filter((file) =>
+      file.type.startsWith("image/"),
+    );
+    if (files.length) onFiles(files);
+  }
+
+  return (
+    <div
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      className={`transition ${
+        isDragOver
+          ? "border-primary/60 bg-primary/[0.06] ring-2 ring-primary/25"
+          : ""
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
 function PreviewCard({
   imagePath,
   title,
@@ -281,9 +333,7 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
     setMainFile(file);
   }
 
-  function handleGalleryFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const incomingFiles = Array.from(event.target.files ?? []);
-
+  function addFilesToGallery(incomingFiles: File[]) {
     if (!incomingFiles.length) {
       return;
     }
@@ -296,6 +346,22 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
 
     setGalleryFiles(mergedFiles);
     syncFileInputFiles(galleryInputRef, mergedFiles);
+  }
+
+  function handleGalleryFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    addFilesToGallery(Array.from(event.target.files ?? []));
+  }
+
+  function handleMainDrop(files: File[]) {
+    const first = files[0];
+    if (!first) return;
+    setClientError(null);
+    setMainFile(first);
+    if (mainInputRef.current) {
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(first);
+      mainInputRef.current.files = dataTransfer.files;
+    }
   }
 
   function handleClearMainFile() {
@@ -398,10 +464,10 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
           />
         ))}
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div>
+        <div className="mx-auto grid max-w-2xl gap-3 md:grid-cols-2">
+          <div className="md:col-span-2">
             <FieldLabel>KODE AKUN</FieldLabel>
-            <div className="flex items-center overflow-hidden rounded-[1rem] border border-border/45 bg-background/55 focus-within:border-primary/45 focus-within:ring-2 focus-within:ring-primary/15">
+            <div className="flex max-w-xs items-center overflow-hidden rounded-[1rem] border border-border/45 bg-background/55 focus-within:border-primary/45 focus-within:ring-2 focus-within:ring-primary/15">
               <span className="inline-flex h-11 items-center border-r border-border/35 px-4 font-display text-sm tracking-[0.16em] text-primary">
                 FZ
               </span>
@@ -415,6 +481,21 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
                 className="h-11 w-full bg-transparent px-4 text-sm text-foreground outline-none"
               />
             </div>
+          </div>
+
+          <div className="md:col-span-2">
+            <FieldLabel>DAFTAR SKIN</FieldLabel>
+            <TextArea
+              name="skins"
+              rows={5}
+              required
+              defaultValue={record?.skins.join("\n")}
+              placeholder={"Reaver Vandal\nPrime Phantom\nIon Sheriff"}
+              onChange={() => setClientError(null)}
+            />
+            <p className="mt-1.5 text-xs text-muted-foreground/62">
+              Satu skin per baris.
+            </p>
           </div>
 
           <div>
@@ -431,125 +512,6 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
                 </option>
               ))}
             </Select>
-          </div>
-
-          <div>
-            <FieldLabel>HARGA</FieldLabel>
-            <input type="hidden" name="price" value={priceValue || "0"} />
-            <TextInput
-              inputMode="numeric"
-              required
-              value={formatRupiahValue(priceValue)}
-              onChange={handlePriceChange}
-              placeholder="Rp 650.000"
-            />
-            <p className="mt-2 text-xs text-muted-foreground/62">
-              Harga otomatis diformat ke rupiah saat diketik.
-            </p>
-          </div>
-
-          <div>
-            <FieldLabel>STATUS JUAL</FieldLabel>
-            <Select name="status" defaultValue={record?.status ?? "available"}>
-              <option value="available">available</option>
-              <option value="sold">sold</option>
-            </Select>
-          </div>
-
-          <div className="space-y-4 sm:col-span-2">
-            <div>
-              <FieldLabel>FOTO UTAMA (THUMBNAIL)</FieldLabel>
-              <div className="rounded-[1.3rem] border border-border/35 bg-background/30 p-4">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-sm text-foreground">
-                      Pilih 1 gambar utama untuk tampilan card catalog.
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground/65">
-                      JPG/PNG/WebP diterima. Sistem akan auto resize dan convert ke WebP.
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <FileTriggerButton icon={Upload} onClick={handleOpenMainPicker}>
-                      Upload Thumbnail
-                    </FileTriggerButton>
-                    {mainFile && (
-                      <button
-                        type="button"
-                        onClick={handleClearMainFile}
-                        className="inline-flex h-11 items-center justify-center gap-2 rounded-[1rem] border border-border/40 bg-background/55 px-4 text-sm text-foreground transition hover:bg-background/75"
-                      >
-                        <X className="size-4" />
-                        Batal File Baru
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {mainPreviewPath ? (
-                  <div className="mt-4 max-w-[220px]">
-                    <PreviewCard
-                      imagePath={mainPreviewPath}
-                      title={mainFile ? mainFile.name : "Thumbnail saat ini"}
-                      removable={false}
-                    />
-                  </div>
-                ) : (
-                  <div className="mt-4 flex aspect-[4/5] max-w-[220px] items-center justify-center rounded-[1.2rem] border border-dashed border-border/40 bg-background/35 text-center text-sm text-muted-foreground/62">
-                    Thumbnail belum dipilih
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <FieldLabel>FOTO TAMBAHAN</FieldLabel>
-              <div className="rounded-[1.3rem] border border-border/35 bg-background/30 p-4">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-sm text-foreground">
-                      Tambahkan foto detail akun sampai maksimal {MAX_GALLERY_IMAGES} gambar.
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground/65">
-                      Total aktif sekarang: {totalGalleryCount}/{MAX_GALLERY_IMAGES} gambar.
-                    </p>
-                  </div>
-                  <FileTriggerButton
-                    icon={ImagePlus}
-                    onClick={handleOpenGalleryPicker}
-                    disabled={gallerySlotsLeft <= 0}
-                  >
-                    Upload Foto Tambahan
-                  </FileTriggerButton>
-                </div>
-
-                {totalGalleryCount > 0 ? (
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                    {existingGalleryPaths.map((imagePath, index) => (
-                      <PreviewCard
-                        key={`${imagePath}-${index}`}
-                        imagePath={imagePath}
-                        title={`Gambar tersimpan ${index + 1}`}
-                        onRemove={() => handleRemoveExistingGallery(index)}
-                      />
-                    ))}
-
-                    {galleryPreviewPaths.map((imagePath, index) => (
-                      <PreviewCard
-                        key={`${imagePath}-${index}`}
-                        imagePath={imagePath}
-                        title={galleryFiles[index]?.name ?? `Upload baru ${index + 1}`}
-                        onRemove={() => handleRemoveGalleryFile(index)}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="mt-4 flex min-h-32 items-center justify-center rounded-[1.2rem] border border-dashed border-border/40 bg-background/35 text-center text-sm text-muted-foreground/62">
-                    Belum ada foto tambahan. Upload kalau memang perlu.
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
 
           <div>
@@ -582,6 +544,17 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
           </div>
 
           <div>
+            <FieldLabel>AGENT UNLOCK</FieldLabel>
+            <TextInput
+              name="agentUnlock"
+              required
+              defaultValue={record?.agentUnlock ?? "Full Unlock"}
+              placeholder="Full Unlock"
+              onChange={() => setClientError(null)}
+            />
+          </div>
+
+          <div>
             <FieldLabel>CHANGE NICK</FieldLabel>
             <Select
               name="changeNickStatus"
@@ -594,14 +567,18 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
           </div>
 
           <div>
-            <FieldLabel>AGENT UNLOCK</FieldLabel>
+            <FieldLabel>HARGA</FieldLabel>
+            <input type="hidden" name="price" value={priceValue || "0"} />
             <TextInput
-              name="agentUnlock"
+              inputMode="numeric"
               required
-              defaultValue={record?.agentUnlock ?? "Full Unlock"}
-              placeholder="Full Unlock"
-              onChange={() => setClientError(null)}
+              value={formatRupiahValue(priceValue)}
+              onChange={handlePriceChange}
+              placeholder="Rp 650.000"
             />
+            <p className="mt-1.5 text-xs text-muted-foreground/62">
+              Diformat otomatis ke rupiah.
+            </p>
           </div>
 
           <div>
@@ -615,16 +592,103 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
             />
           </div>
 
-          <div className="sm:col-span-2">
-            <FieldLabel>DAFTAR SKIN</FieldLabel>
-            <TextArea
-              name="skins"
-              rows={8}
-              required
-              defaultValue={record?.skins.join("\n")}
-              placeholder={"Reaver Vandal\nPrime Phantom\nIon Sheriff"}
-              onChange={() => setClientError(null)}
-            />
+          <div>
+            <FieldLabel>STATUS JUAL</FieldLabel>
+            <Select name="status" defaultValue={record?.status ?? "available"}>
+              <option value="available">available</option>
+              <option value="sold">sold</option>
+            </Select>
+          </div>
+
+          <div>
+            <FieldLabel>FOTO UTAMA (THUMBNAIL)</FieldLabel>
+            <DropZone
+              onFiles={handleMainDrop}
+              className="flex h-full flex-col rounded-[1.3rem] border border-border/35 bg-background/30 p-4"
+            >
+              <div className="flex flex-col gap-2">
+                <p className="text-sm text-foreground">
+                  Drag &amp; drop atau klik untuk pilih gambar utama.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <FileTriggerButton icon={Upload} onClick={handleOpenMainPicker}>
+                    Upload Thumbnail
+                  </FileTriggerButton>
+                  {mainFile && (
+                    <button
+                      type="button"
+                      onClick={handleClearMainFile}
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-[1rem] border border-border/40 bg-background/55 px-4 text-sm text-foreground transition hover:bg-background/75"
+                    >
+                      <X className="size-4" />
+                      Batal
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {mainPreviewPath ? (
+                <div className="mt-3 max-w-[180px]">
+                  <PreviewCard
+                    imagePath={mainPreviewPath}
+                    title={mainFile ? mainFile.name : "Thumbnail saat ini"}
+                    removable={false}
+                  />
+                </div>
+              ) : (
+                <div className="mt-3 flex aspect-[4/5] max-w-[180px] items-center justify-center rounded-[1.2rem] border border-dashed border-border/40 bg-background/35 text-center text-xs text-muted-foreground/62">
+                  Drop gambar di sini
+                </div>
+              )}
+            </DropZone>
+          </div>
+
+          <div>
+            <FieldLabel>FOTO TAMBAHAN</FieldLabel>
+            <DropZone
+              onFiles={addFilesToGallery}
+              disabled={gallerySlotsLeft <= 0}
+              className="flex h-full flex-col rounded-[1.3rem] border border-border/35 bg-background/30 p-4"
+            >
+              <div className="flex flex-col gap-2">
+                <p className="text-sm text-foreground">
+                  Drag &amp; drop sampai {MAX_GALLERY_IMAGES} gambar. ({totalGalleryCount}/{MAX_GALLERY_IMAGES})
+                </p>
+                <FileTriggerButton
+                  icon={ImagePlus}
+                  onClick={handleOpenGalleryPicker}
+                  disabled={gallerySlotsLeft <= 0}
+                >
+                  Upload Foto Tambahan
+                </FileTriggerButton>
+              </div>
+
+              {totalGalleryCount > 0 ? (
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {existingGalleryPaths.map((imagePath, index) => (
+                    <PreviewCard
+                      key={`${imagePath}-${index}`}
+                      imagePath={imagePath}
+                      title={`Tersimpan ${index + 1}`}
+                      onRemove={() => handleRemoveExistingGallery(index)}
+                    />
+                  ))}
+
+                  {galleryPreviewPaths.map((imagePath, index) => (
+                    <PreviewCard
+                      key={`${imagePath}-${index}`}
+                      imagePath={imagePath}
+                      title={galleryFiles[index]?.name ?? `Upload baru ${index + 1}`}
+                      onRemove={() => handleRemoveGalleryFile(index)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-3 flex min-h-24 items-center justify-center rounded-[1.2rem] border border-dashed border-border/40 bg-background/35 text-center text-xs text-muted-foreground/62">
+                  Drop gambar tambahan di sini
+                </div>
+              )}
+            </DropZone>
           </div>
         </div>
 
