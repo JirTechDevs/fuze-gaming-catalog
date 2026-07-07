@@ -138,6 +138,23 @@
     animation: hero-shop-marquee 22s linear infinite;
   }
 
+  .testimoni-strip-mask {
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 4%,
+      black 96%,
+      transparent 100%
+    );
+  }
+
+  .testimoni-strip-track {
+    animation: testimoni-strip-marquee 22s linear infinite;
+  }
+
+  .testimoni-strip-track:hover {
+    animation-play-state: paused;
+  }
 
   .box-glow {
     box-shadow: 0 0 15px hsl(189 100% 72% / 0.24),
@@ -233,6 +250,16 @@
 
   to {
     transform: translateX(calc(-50% - 1rem));
+  }
+}
+
+@keyframes testimoni-strip-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 0.625rem));
   }
 }
 
