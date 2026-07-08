@@ -285,8 +285,8 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
 
             <div className={styles.filtersPanel}>
               <div id="catalog-filters-content" className={styles.filtersBody}>
-                <div className="flex flex-col gap-2 sm:gap-3">
-                  <label className="block">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                  <label className="block sm:flex-1">
                     <input
                       type="text"
                       placeholder="Cari kode / skin / nama akun..."
@@ -296,12 +296,12 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
                     />
                   </label>
 
-                  <div className="flex gap-2 sm:gap-3">
+                  <div className="flex gap-2 sm:contents">
                     <button
                       type="button"
                       onClick={() => setIsFilterOpen((current) => !current)}
                       aria-expanded={isFilterOpen}
-                      className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-[0.75rem] bg-primary px-3 font-display text-[12px] font-bold tracking-[0.06em] text-primary-foreground transition hover:brightness-105 sm:h-11 sm:gap-2 sm:rounded-[0.9rem] sm:px-4 sm:text-sm"
+                      className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-[0.75rem] bg-primary px-3 font-display text-[12px] font-bold tracking-[0.06em] text-primary-foreground transition hover:brightness-105 sm:h-11 sm:flex-none sm:gap-2 sm:rounded-[0.9rem] sm:px-6 sm:text-sm"
                     >
                       <FilterIcon size={13} className="sm:hidden" />
                       <FilterIcon size={16} className="hidden sm:block" />
