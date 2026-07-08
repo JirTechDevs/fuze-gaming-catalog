@@ -285,7 +285,8 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
 
             <div className={styles.filtersPanel}>
               <div id="catalog-filters-content" className={styles.filtersBody}>
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
                   <label className="block sm:flex-1">
                     <input
                       type="text"
@@ -336,69 +337,75 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
                     </div>
                   </div>
 
+                  </div>
+
                   {isFilterOpen && (
-                    <div className="grid gap-3 rounded-[1rem] border border-border/35 bg-card/40 p-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto]">
-                      <label className={styles.filterGroup}>
-                        <span className={styles.filterLabel}>Rank</span>
-                        <span className={`${styles.filterField} ${styles.selectWrap}`}>
-                          <select
-                            value={rankFilter}
-                            onChange={(event) => setRankFilter(event.target.value)}
-                            className={styles.selectField}
-                          >
-                            <option value="all">Semua Rank</option>
-                            {rankOptions.map((rank) => (
-                              <option key={rank} value={rank}>{rank}</option>
-                            ))}
-                          </select>
-                          <ChevronDown size={16} className={styles.selectIcon} />
-                        </span>
-                      </label>
+                    <div className="rounded-[1rem] border border-border/35 bg-card/40 p-4">
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <label className={styles.filterGroup}>
+                          <span className={styles.filterLabel}>Rank</span>
+                          <span className={`${styles.filterField} ${styles.selectWrap}`}>
+                            <select
+                              value={rankFilter}
+                              onChange={(event) => setRankFilter(event.target.value)}
+                              className={styles.selectField}
+                            >
+                              <option value="all">Semua Rank</option>
+                              {rankOptions.map((rank) => (
+                                <option key={rank} value={rank}>{rank}</option>
+                              ))}
+                            </select>
+                            <ChevronDown size={16} className={styles.selectIcon} />
+                          </span>
+                        </label>
 
-                      <label className={styles.filterGroup}>
-                        <span className={styles.filterLabel}>Region</span>
-                        <span className={`${styles.filterField} ${styles.selectWrap}`}>
-                          <select
-                            value={regionFilter}
-                            onChange={(event) => setRegionFilter(event.target.value)}
-                            className={styles.selectField}
-                          >
-                            <option value="all">Semua Region</option>
-                            {regionOptions.map((region) => (
-                              <option key={region} value={region}>{region}</option>
-                            ))}
-                          </select>
-                          <ChevronDown size={16} className={styles.selectIcon} />
-                        </span>
-                      </label>
+                        <label className={styles.filterGroup}>
+                          <span className={styles.filterLabel}>Region</span>
+                          <span className={`${styles.filterField} ${styles.selectWrap}`}>
+                            <select
+                              value={regionFilter}
+                              onChange={(event) => setRegionFilter(event.target.value)}
+                              className={styles.selectField}
+                            >
+                              <option value="all">Semua Region</option>
+                              {regionOptions.map((region) => (
+                                <option key={region} value={region}>{region}</option>
+                              ))}
+                            </select>
+                            <ChevronDown size={16} className={styles.selectIcon} />
+                          </span>
+                        </label>
 
-                      {/*
-                      Ganti Nick filter — hidden per owner ask. Restore the block below to bring it back.
-                      <label className={styles.filterGroup}>
-                        <span className={styles.filterLabel}>Ganti Nick</span>
-                        <span className={`${styles.filterField} ${styles.selectWrap}`}>
-                          <select
-                            value={nickFilter}
-                            onChange={(event) => setNickFilter(event.target.value)}
-                            className={styles.selectField}
-                          >
-                            <option value="all">Semua Status</option>
-                            {nickOptions.map((option) => (
-                              <option key={option} value={option}>{option}</option>
-                            ))}
-                          </select>
-                          <ChevronDown size={16} className={styles.selectIcon} />
-                        </span>
-                      </label>
-                      */}
+                        {/*
+                        Ganti Nick filter — hidden per owner ask. Restore the block below to bring it back.
+                        <label className={styles.filterGroup}>
+                          <span className={styles.filterLabel}>Ganti Nick</span>
+                          <span className={`${styles.filterField} ${styles.selectWrap}`}>
+                            <select
+                              value={nickFilter}
+                              onChange={(event) => setNickFilter(event.target.value)}
+                              className={styles.selectField}
+                            >
+                              <option value="all">Semua Status</option>
+                              {nickOptions.map((option) => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </select>
+                            <ChevronDown size={16} className={styles.selectIcon} />
+                          </span>
+                        </label>
+                        */}
+                      </div>
 
-                      <button
-                        type="button"
-                        onClick={resetFilters}
-                        className={`${styles.resetButton} self-end`}
-                      >
-                        Reset Filter
-                      </button>
+                      <div className="mt-4 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={resetFilters}
+                          className={`${styles.resetButton} px-6`}
+                        >
+                          Reset Filter
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
