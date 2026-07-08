@@ -2,7 +2,6 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import type { StorefrontBanner } from "@/features/storefront/server";
 import styles from "./hero-section.module.css";
@@ -29,8 +28,6 @@ const tickerItems = [
 ] as const;
 
 type TickerIconName = (typeof tickerItems)[number]["icon"];
-
-const STAR_COUNT = 50;
 
 function WhatsAppGlyph({ size = 16 }: { size?: number }) {
   return (
@@ -95,34 +92,23 @@ export default function HeroSection({ banners }: HeroSectionProps) {
 
   return (
     <section className={`relative isolate overflow-hidden ${styles.heroSection}`}>
-      {/* Aurora background */}
-      <div className={styles.heroAurora} aria-hidden="true" />
-
-      {/* SVG grid + radial mask */}
-      <svg className={styles.heroGrid} aria-hidden="true">
-        <defs>
-          <pattern id="auroraGrid" width="48" height="48" patternUnits="userSpaceOnUse">
-            <path d="M48 0 L0 0 0 48" stroke="#00b4ff" strokeWidth="0.5" fill="none" />
-          </pattern>
-          <radialGradient id="auroraGridMask" cx="50%" cy="50%">
-            <stop offset="0%" stopColor="#000" stopOpacity="0" />
-            <stop offset="100%" stopColor="#000" stopOpacity="1" />
-          </radialGradient>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#auroraGrid)" />
-        <rect width="100%" height="100%" fill="url(#auroraGridMask)" />
-      </svg>
-
-      {/* Stars */}
-      <div className={styles.heroStars} aria-hidden="true">
-        {Array.from({ length: STAR_COUNT }, (_, i) => {
-          const starStyle: CSSProperties = {
-            left: `${(i * 37) % 100}%`,
-            top: `${(i * 73) % 100}%`,
-            opacity: 0.3 + (i % 4) * 0.15,
-          };
-          return <span key={i} className={styles.heroStar} style={starStyle} />;
-        })}
+      {/* Layered beam composition — Types A (wide glow), B (medium core), C (thin bloom), D (broken) */}
+      <div className={styles.heroBackdrop} aria-hidden="true">
+        {/* Type A — wide blurred cyan glows */}
+        <span className={`${styles.beamA} ${styles.beamA1}`} />
+        <span className={`${styles.beamA} ${styles.beamA2}`} />
+        <span className={`${styles.beamA} ${styles.beamA3}`} />
+        {/* Type B — medium beams with visible cyan cores */}
+        <span className={`${styles.beamB} ${styles.beamB1}`} />
+        <span className={`${styles.beamB} ${styles.beamB2}`} />
+        <span className={`${styles.beamB} ${styles.beamB3}`} />
+        {/* Type C — ultra thin white highlights with strong bloom */}
+        <span className={`${styles.beamC} ${styles.beamC1}`} />
+        <span className={`${styles.beamC} ${styles.beamC2}`} />
+        <span className={`${styles.beamC} ${styles.beamC3}`} />
+        {/* Type D — broken beams (visible in fragments) */}
+        <span className={`${styles.beamD} ${styles.beamD1}`} />
+        <span className={`${styles.beamD} ${styles.beamD2}`} />
       </div>
 
       {/* Hero content split layout */}
