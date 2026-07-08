@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import {
   buildWhatsAppLink,
   formatPrice,
@@ -95,8 +96,14 @@ export default function ProductCard({
 }: ProductCardProps) {
   const isSold = product.status === "sold";
   const router = useRouter();
+  const detailHref = `/catalog/${product.id}`;
   const featuredLabel = getFeaturedLabel(product.featured);
   const productImage = product.image;
+
+  useEffect(() => {
+    if (isSold) return;
+    router.prefetch(detailHref);
+  }, [detailHref, isSold, router]);
   // const productImage = "/images/catalog/mock_image.jpg";
 
   return (
@@ -116,7 +123,7 @@ export default function ProductCard({
       style={{ contentVisibility: "auto", containIntrinsicSize: "320px 360px" }}
       role="link"
       tabIndex={isSold ? -1 : 0}
-      onClick={() => !isSold && router.push(`/catalog/${product.id}`)}
+      onClick={() => !isSold && router.push(detailHref)}
       onKeyDown={(event) => {
         if (isSold) {
           return;
@@ -124,7 +131,7 @@ export default function ProductCard({
 
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          router.push(`/catalog/${product.id}`);
+          router.push(detailHref);
         }
       }}
     >
