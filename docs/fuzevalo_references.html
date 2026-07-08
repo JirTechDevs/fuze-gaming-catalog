@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>FuzeValo — Jual Beli Akun Valorant</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #22b8ff;
+    --text: #ffffff;
+    --text-muted: #9aa6bd;
+    --text-dim: #6b7893;
+    --border: rgba(120, 170, 255, 0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #00030f;
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* ==========================================================
+     PHONE FRAME (delete for real site — this centers a mobile
+     viewport when viewing on desktop)
+     ========================================================== */
+  .phone {
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ==========================================================
+     HERO BACKGROUND (Mas Faza's approach)
+     ========================================================== */
+  .fv-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 22% 38%, rgba(0, 180, 255, 0.10), transparent 34%),
+      radial-gradient(circle at 82% 42%, rgba(0, 105, 255, 0.09), transparent 38%),
+      linear-gradient(180deg, #01040b 0%, #01050e 48%, #000206 100%);
+  }
+
+  /* grid removed — was causing the "cross" pattern against diagonals */
+
+  /* soft central glow — dimmed for darker feel */
+  .fv-hero::after {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    background:
+      radial-gradient(ellipse at 35% 45%, rgba(0, 183, 255, 0.12), transparent 36%),
+      radial-gradient(ellipse at 78% 55%, rgba(0, 110, 255, 0.12), transparent 42%);
+    filter: blur(42px);
+    opacity: 0.75;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* diagonal streak layer */
+  .fv-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* big diagonal streak — direction: top-right to bottom-left (/) */
+  .fv-hero-bg::before {
+    content: "";
+    position: absolute;
+    top: -20%;
+    right: -35%;
+    width: 120%;
+    height: 120%;
+    transform: rotate(48deg);
+    background:
+      linear-gradient(
+        90deg,
+        transparent 0%,
+        transparent 38%,
+        rgba(0, 183, 255, 0.03) 41%,
+        rgba(0, 183, 255, 0.20) 42%,
+        rgba(0, 183, 255, 0.04) 44%,
+        transparent 48%,
+        transparent 58%,
+        rgba(0, 123, 255, 0.04) 61%,
+        rgba(0, 183, 255, 0.18) 62%,
+        rgba(0, 183, 255, 0.03) 64%,
+        transparent 68%
+      );
+    filter: blur(0.4px);
+    opacity: 0.85;
+  }
+
+  /* sharp neon streak — same direction */
+  .fv-hero-bg::after {
+    content: "";
+    position: absolute;
+    top: 12%;
+    right: -25%;
+    width: 95%;
+    height: 70%;
+    transform: rotate(48deg);
+    background:
+      linear-gradient(
+        90deg,
+        transparent 0%,
+        transparent 48%,
+        rgba(0, 213, 255, 0.65) 49%,
+        rgba(0, 213, 255, 0.08) 50%,
+        transparent 52%
+      );
+    box-shadow:
+      0 0 18px rgba(0, 183, 255, 0.32),
+      0 0 42px rgba(0, 183, 255, 0.16);
+    opacity: 0.55;
+  }
+
+  /* content must sit above all background layers */
+  .fv-hero-content {
+    position: relative;
+    z-index: 3;
+  }
+
+  /* mobile tuning */
+  @media (max-width: 768px) {
+    .fv-hero {
+      background:
+        radial-gradient(circle at 18% 36%, rgba(0, 183, 255, 0.12), transparent 35%),
+        radial-gradient(circle at 88% 40%, rgba(0, 105, 255, 0.10), transparent 38%),
+        linear-gradient(180deg, #01040b 0%, #01050e 52%, #000206 100%);
+    }
+    .fv-hero::after {
+      filter: blur(36px);
+      opacity: 0.6;
+    }
+    .fv-hero-bg::before {
+      top: -10%;
+      right: -55%;
+      width: 145%;
+      height: 110%;
+      opacity: 0.72;
+    }
+    .fv-hero-bg::after {
+      top: 16%;
+      right: -42%;
+      width: 125%;
+      height: 70%;
+      opacity: 0.48;
+    }
+  }
+
+  /* ==========================================================
+     STATUS BAR (mock — remove for real deploy)
+     ========================================================== */
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 24px 6px;
+    font-size: 17px;
+    font-weight: 600;
+  }
+  .status-bar .icons { display: flex; gap: 6px; align-items: center; }
+  .battery {
+    background: #f5c518;
+    color: #000;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-left: 4px;
+  }
+
+  /* ==========================================================
+     TOP NAV
+     ========================================================== */
+  .top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px 4px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0e1a2e 0%, #0a1220 100%);
+    border: 1px solid rgba(80, 140, 220, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 0 20px rgba(30, 120, 220, 0.25);
+  }
+  .brand-logo .fv { font-weight: 800; font-size: 18px; letter-spacing: -1px; }
+  .brand-logo .fv .f { color: #fff; }
+  .brand-logo .fv .v { color: var(--accent); }
+  .brand-logo .tag {
+    position: absolute;
+    bottom: 3px;
+    font-size: 5px;
+    letter-spacing: 2px;
+    color: #6b7893;
+    font-weight: 600;
+  }
+  .brand-name { font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+  .brand-name .valo { color: var(--accent); }
+  .menu-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(80, 170, 255, 0.5);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .menu-btn svg { color: var(--accent); }
+
+  /* ==========================================================
+     CONTENT
+     ========================================================== */
+  .content { padding: 22px 22px 100px; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px 10px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(80, 170, 255, 0.35);
+    background: rgba(15, 30, 60, 0.35);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 2.5px;
+    margin-bottom: 28px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  h1.hero {
+    font-size: 42px;
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+  }
+  h1.hero .white { color: #fff; display: block; }
+  h1.hero .accent { color: var(--accent); display: block; }
+
+  p.lead {
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.55;
+    margin-bottom: 32px;
+    max-width: 92%;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  .stat .value {
+    color: var(--accent);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  .stat .label {
+    color: var(--text-dim);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+  }
+
+  .ctas {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 22px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    flex: 1;
+    min-width: 150px;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+    color: #fff;
+    box-shadow:
+      0 0 0 1px rgba(74, 222, 128, 0.6),
+      0 0 20px rgba(34, 197, 94, 0.55),
+      0 0 40px rgba(34, 197, 94, 0.35);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+    box-shadow: 0 0 20px rgba(34, 184, 255, 0.15);
+  }
+
+  .carousel {
+    position: relative;
+    height: 220px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .arrow {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.03);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .dots {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.02);
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.25); }
+  .dot.active {
+    width: 28px;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+  }
+
+  .bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 18px 22px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    background: rgba(5, 10, 20, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .bottom-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .bottom-item .icon-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(80, 170, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+  }
+
+  .fab {
+    position: fixed;
+    right: max(18px, calc((100vw - 430px) / 2 + 18px));
+    bottom: 78px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 0 0 1px rgba(74, 222, 128, 0.6),
+      0 0 25px rgba(34, 197, 94, 0.65),
+      0 0 50px rgba(34, 197, 94, 0.4);
+    cursor: pointer;
+    z-index: 10;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.6), 0 0 25px rgba(34, 197, 94, 0.65), 0 0 50px rgba(34, 197, 94, 0.4); }
+    50%      { box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.8), 0 0 35px rgba(34, 197, 94, 0.85), 0 0 65px rgba(34, 197, 94, 0.55); }
+  }
+
+  .browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px 20px;
+    background: rgba(5, 10, 20, 0.8);
+    border-top: 1px solid rgba(255,255,255,0.04);
+    position: relative;
+    z-index: 4;
+  }
+  .browser-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9aa6bd;
+  }
+  .url-bar {
+    flex: 1;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #cbd5e1;
+    font-size: 14px;
+    position: relative;
+  }
+  .url-bar .aA { position: absolute; left: 12px; color: #9aa6bd; font-size: 12px; }
+  .url-bar .reload { position: absolute; right: 12px; color: #9aa6bd; }
+
+  @media (max-width: 380px) {
+    h1.hero { font-size: 36px; }
+    .stat .value { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <section class="fv-hero">
+      <!-- diagonal streak layer (behind content) -->
+      <div class="fv-hero-bg"></div>
+
+      <!-- everything below is above the background -->
+      <div class="fv-hero-content">
+
+        <!-- Mock status bar -->
+        <div class="status-bar">
+          <span>09.39</span>
+          <div class="icons">
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1" opacity="0.4"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 3c2.2 0 4.2.9 5.7 2.3l1.4-1.4C13.2 2 10.7 1 8 1S2.8 2 .9 3.9l1.4 1.4C3.8 3.9 5.8 3 8 3zm0 4c1.1 0 2.1.4 2.8 1.2l1.4-1.4C11.1 5.7 9.6 5 8 5S4.9 5.7 3.8 6.8l1.4 1.4C5.9 7.4 6.9 7 8 7z"/><circle cx="8" cy="10" r="1.5"/></svg>
+            <span class="battery">30</span>
+          </div>
+        </div>
+
+        <!-- Top nav -->
+        <nav class="top-nav">
+          <div class="brand">
+            <div class="brand-logo">
+              <div class="fv"><span class="f">F</span><span class="v">V</span></div>
+              <div class="tag">FUZEVALO</div>
+            </div>
+            <div class="brand-name">FUZE<span class="valo">VALO</span></div>
+          </div>
+          <button class="menu-btn" aria-label="Open menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7"  x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+          </button>
+        </nav>
+
+        <!-- Main content -->
+        <main class="content">
+          <div class="badge"><span class="dot"></span>STORE RESMI &amp; TERPERCAYA</div>
+
+          <h1 class="hero">
+            <span class="white">JUAL BELI AKUN</span>
+            <span class="accent">VALORANT</span>
+          </h1>
+
+          <p class="lead">
+            Jual beli akun Valorant murah, aman, dan bergaransi.
+            Katalog ready sesuai budget, proses cepat, dan garansi hackback&nbsp;100%.
+          </p>
+
+          <div class="stats">
+            <div class="stat"><div class="value">100%</div><div class="label">GARANSI HACKBACK</div></div>
+            <div class="stat"><div class="value">&lt;10 Menit</div><div class="label">PROSES CEPAT</div></div>
+            <div class="stat"><div class="value">24/7</div><div class="label">FAST RESPONSE</div></div>
+          </div>
+
+          <div class="ctas">
+            <a href="#" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m0 18.15c-1.53 0-3.03-.41-4.34-1.19l-.31-.18-3.24.85.87-3.16-.2-.32a8.24 8.24 0 0 1-1.26-4.24c0-4.54 3.69-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.24 8.23m4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.16.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14 0-.31-.02-.48-.02-.17 0-.43.06-.66.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28z"/></svg>
+              Jual Akun Sekarang
+            </a>
+            <a href="#" class="btn btn-outline">Lihat Katalog →</a>
+          </div>
+
+          <div class="carousel">
+            <button class="arrow" aria-label="Previous">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="arrow" aria-label="Next">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <div class="dots">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot active"></div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Bottom info bar -->
+        <div class="bottom-bar">
+          <div class="bottom-item">
+            <div class="icon-circle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+            </div>
+            PROSES CEPAT &lt;10 MENIT
+          </div>
+          <div class="bottom-item">
+            <div class="icon-circle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><path d="M21 14a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2v2z"/><path d="M3 14a2 2 0 0 0 2 2h1v-6H5a2 2 0 0 0-2 2v2z"/></svg>
+            </div>
+            CS 24/7
+          </div>
+        </div>
+
+      </div><!-- /.fv-hero-content -->
+    </section>
+
+    <!-- Floating WhatsApp -->
+    <a href="#" class="fab" aria-label="WhatsApp">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.16.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14 0-.31-.02-.48-.02-.17 0-.43.06-.66.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28z"/></svg>
+    </a>
+
+    <!-- Mock Safari chrome (remove for real deploy) -->
+    <div class="browser-bar">
+      <div class="browser-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <div class="url-bar">
+        <span class="aA">≡</span>
+        fuzevalo.com
+        <span class="reload">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        </span>
+      </div>
+      <div class="browser-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
