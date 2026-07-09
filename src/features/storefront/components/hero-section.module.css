@@ -39,13 +39,31 @@
   z-index: 1;
 }
 
-/* Beam layer container */
+/* Beam layer container.
+   The mask is a soft ellipse centered at the upper-left (where the logo, badge,
+   headline, description, stats and CTA sit) that fades the beams to transparent
+   there, keeping them at full intensity on the right side and lower-right area
+   so they frame the content instead of crossing it. */
 .heroBackdrop {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
   overflow: hidden;
+  -webkit-mask-image: radial-gradient(
+    ellipse 78% 55% at 18% 30%,
+    transparent 22%,
+    rgba(0, 0, 0, 0.35) 55%,
+    rgba(0, 0, 0, 0.8) 78%,
+    #000 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 78% 55% at 18% 30%,
+    transparent 22%,
+    rgba(0, 0, 0, 0.35) 55%,
+    rgba(0, 0, 0, 0.8) 78%,
+    #000 100%
+  );
 }
 
 /* ========== Type A — wide blurred cyan glow (soft, low opacity) ========== */
@@ -656,6 +674,25 @@
   .heroSection::after {
     filter: blur(30px);
     opacity: 0.75;
+  }
+
+  /* Wider clear zone since content spans full width on mobile;
+     ellipse still fades gradually so beams remain rich lower-right and around the carousel. */
+  .heroBackdrop {
+    -webkit-mask-image: radial-gradient(
+      ellipse 108% 46% at 32% 28%,
+      transparent 24%,
+      rgba(0, 0, 0, 0.4) 58%,
+      rgba(0, 0, 0, 0.85) 80%,
+      #000 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 108% 46% at 32% 28%,
+      transparent 24%,
+      rgba(0, 0, 0, 0.4) 58%,
+      rgba(0, 0, 0, 0.85) 80%,
+      #000 100%
+    );
   }
 
   /* Type A shrink */
