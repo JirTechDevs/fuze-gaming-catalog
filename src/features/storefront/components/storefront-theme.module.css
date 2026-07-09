@@ -137,6 +137,13 @@
   opacity: 0;
 }
 
+.storefrontThemeLite::before,
+.storefrontThemeLite::after {
+  position: absolute;
+  inset: auto;
+  content: none;
+}
+
 .floatingWhatsapp {
   position: fixed;
   right: 22px;
@@ -161,6 +168,11 @@
 .floatingWhatsapp:hover {
   filter: brightness(1.04);
   transform: translateY(-1px) scale(1.03);
+}
+
+.storefrontThemeLite .floatingWhatsapp {
+  animation: none;
+  box-shadow: 0 10px 24px rgba(22, 199, 132, 0.24);
 }
 
 .floatingWhatsapp svg {

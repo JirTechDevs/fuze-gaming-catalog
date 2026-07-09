@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { StorefrontBanner } from "@/features/storefront/server";
@@ -8,6 +8,7 @@ import styles from "./hero-section.module.css";
 
 interface HeroSectionProps {
   banners: StorefrontBanner[];
+  isLiteMode?: boolean;
 }
 
 const fallbackHeroBanners: StorefrontBanner[] = [
@@ -69,18 +70,17 @@ function TickerItemIcon({ icon }: { icon: TickerIconName }) {
   );
 }
 
-export default function HeroSection({ banners }: HeroSectionProps) {
+export default function HeroSection({ banners, isLiteMode = false }: HeroSectionProps) {
   const heroBanners = banners.length > 0 ? banners : fallbackHeroBanners;
   const [activeIndex, setActiveIndex] = useState(0);
-  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (heroBanners.length < 2) return;
+    if (heroBanners.length < 2 || isLiteMode) return;
     const timer = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % heroBanners.length);
-    }, prefersReducedMotion ? 5600 : 4200);
+    }, 4200);
     return () => window.clearInterval(timer);
-  }, [heroBanners.length, prefersReducedMotion]);
+  }, [heroBanners.length, isLiteMode]);
 
   const scrollToCatalog = () => {
     document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -88,36 +88,40 @@ export default function HeroSection({ banners }: HeroSectionProps) {
 
   const prevIndex = (activeIndex - 1 + heroBanners.length) % heroBanners.length;
   const nextIndex = (activeIndex + 1) % heroBanners.length;
-  const tickerLoop = [...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems];
+  const tickerLoop = isLiteMode
+    ? [...tickerItems, ...tickerItems]
+    : [...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems];
 
   return (
-    <section className={`relative isolate overflow-hidden ${styles.heroSection}`}>
+    <section className={`relative isolate overflow-hidden ${styles.heroSection} ${isLiteMode ? styles.heroSectionLite : ""}`}>
       {/* Layered beam composition — Types A (wide glow), B (medium core), C (thin bloom), D (broken) */}
-      <div className={styles.heroBackdrop} aria-hidden="true">
-        {/* Type A — wide blurred cyan glows */}
-        <span className={`${styles.beamA} ${styles.beamA1}`} />
-        <span className={`${styles.beamA} ${styles.beamA2}`} />
-        <span className={`${styles.beamA} ${styles.beamA3}`} />
-        {/* Type B — medium beams with visible cyan cores */}
-        <span className={`${styles.beamB} ${styles.beamB1}`} />
-        <span className={`${styles.beamB} ${styles.beamB2}`} />
-        <span className={`${styles.beamB} ${styles.beamB3}`} />
-        {/* Type C — ultra thin white highlights with strong bloom */}
-        <span className={`${styles.beamC} ${styles.beamC1}`} />
-        <span className={`${styles.beamC} ${styles.beamC2}`} />
-        <span className={`${styles.beamC} ${styles.beamC3}`} />
-        {/* Type D — broken beams (visible in fragments) */}
-        <span className={`${styles.beamD} ${styles.beamD1}`} />
-        <span className={`${styles.beamD} ${styles.beamD2}`} />
-      </div>
+      {!isLiteMode && (
+        <div className={styles.heroBackdrop} aria-hidden="true">
+          {/* Type A — wide blurred cyan glows */}
+          <span className={`${styles.beamA} ${styles.beamA1}`} />
+          <span className={`${styles.beamA} ${styles.beamA2}`} />
+          <span className={`${styles.beamA} ${styles.beamA3}`} />
+          {/* Type B — medium beams with visible cyan cores */}
+          <span className={`${styles.beamB} ${styles.beamB1}`} />
+          <span className={`${styles.beamB} ${styles.beamB2}`} />
+          <span className={`${styles.beamB} ${styles.beamB3}`} />
+          {/* Type C — ultra thin white highlights with strong bloom */}
+          <span className={`${styles.beamC} ${styles.beamC1}`} />
+          <span className={`${styles.beamC} ${styles.beamC2}`} />
+          <span className={`${styles.beamC} ${styles.beamC3}`} />
+          {/* Type D — broken beams (visible in fragments) */}
+          <span className={`${styles.beamD} ${styles.beamD1}`} />
+          <span className={`${styles.beamD} ${styles.beamD2}`} />
+        </div>
+      )}
 
       {/* Hero content split layout */}
       <div className={styles.heroLayout}>
         {/* LEFT: Copy panel */}
         <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, x: -28 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: prefersReducedMotion ? 0 : 0.65, ease: [0.16, 1, 0.3, 1] }}
+          initial={isLiteMode ? false : { opacity: 0, x: -28 }}
+          animate={isLiteMode ? undefined : { opacity: 1, x: 0 }}
+          transition={isLiteMode ? undefined : { duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
           className={styles.heroCopy}
         >
           <div className={styles.heroBadge}>
@@ -128,6 +132,7 @@ export default function HeroSection({ banners }: HeroSectionProps) {
           <h1 className={styles.heroHeadline}>
             <span className={styles.heroHeadlineLead}>JUAL BELI AKUN</span>
             <span className={styles.heroHeadlineAccent}>VALORANT</span>
+            <span className="sr-only"> Murah & Bergaransi</span>
           </h1>
 
           <p className={styles.heroLede}>
@@ -165,25 +170,30 @@ export default function HeroSection({ banners }: HeroSectionProps) {
 
         {/* RIGHT: Stacked banners */}
         <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, x: 32 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: prefersReducedMotion ? 0 : 0.72, ease: [0.16, 1, 0.3, 1], delay: prefersReducedMotion ? 0 : 0.08 }}
+          initial={isLiteMode ? false : { opacity: 0, x: 32 }}
+          animate={isLiteMode ? undefined : { opacity: 1, x: 0 }}
+          transition={isLiteMode ? undefined : { duration: 0.72, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
           className={styles.heroVisualPanel}
         >
           <div className={styles.bannerStack}>
             <div className={styles.bannerCard1}>
-              <AnimatePresence mode="wait">
+              {isLiteMode ? (
+                <img
+                  src={heroBanners[activeIndex].src}
+                  alt={heroBanners[activeIndex].alt}
+                  className="absolute inset-0 h-full w-full object-cover object-center"
+                />
+              ) : (
                 <motion.img
                   key={heroBanners[activeIndex].src}
                   src={heroBanners[activeIndex].src}
                   alt={heroBanners[activeIndex].alt}
                   className="absolute inset-0 h-full w-full object-cover object-center"
-                  initial={prefersReducedMotion ? false : { opacity: 0, scale: 1.04 }}
+                  initial={{ opacity: 0, scale: 1.04 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
-                  transition={{ duration: prefersReducedMotion ? 0.2 : 0.55, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                 />
-              </AnimatePresence>
+              )}
               <div className={`absolute inset-0 ${styles.bannerScreenGlow}`} />
 
               <button
@@ -224,8 +234,8 @@ export default function HeroSection({ banners }: HeroSectionProps) {
       <div className={styles.tickerBar}>
         <div className="hero-shop-mask overflow-hidden py-4 sm:py-5">
           <div
-            className={`${prefersReducedMotion ? "" : "hero-shop-track"} flex w-max items-center whitespace-nowrap`}
-            style={prefersReducedMotion ? undefined : { animationDuration: "28s" }}
+            className={`${isLiteMode ? "" : "hero-shop-track"} flex w-max items-center whitespace-nowrap`}
+            style={isLiteMode ? undefined : { animationDuration: "28s" }}
           >
             {tickerLoop.map((item, index) => (
               <span key={`${item.label}-${index}`} className={styles.tickerItem}>
