@@ -33,7 +33,8 @@ interface TestimoniSectionProps {
 }
 
 export default function TestimoniSection({ isLiteMode = false }: TestimoniSectionProps) {
-  const visibleTestimonials = isLiteMode ? testimonials : loopedTestimonials;
+  // Marquee keyframe translates -50%, so content must be doubled to loop seamlessly on both modes.
+  const visibleTestimonials = loopedTestimonials;
 
   return (
     <section
@@ -57,8 +58,9 @@ export default function TestimoniSection({ isLiteMode = false }: TestimoniSectio
           </p>
         </div>
 
-        <div className={`${isLiteMode ? "horizontal-scrollbar" : "testimoni-strip-mask"} relative overflow-x-auto overflow-y-hidden`}>
-          <div className={`${isLiteMode ? "w-max pb-2" : "testimoni-strip-track"} flex w-max gap-4 sm:gap-5`}>
+        {/* ponytail: drop mask-image on lite so mask + animating child doesn't force per-frame recomposite on iOS. Marquee itself is pure translateX — cheap. */}
+        <div className={`${isLiteMode ? "" : "testimoni-strip-mask"} relative overflow-hidden`}>
+          <div className="testimoni-strip-track flex w-max gap-4 sm:gap-5">
             {visibleTestimonials.map((item, index) => (
               <div
                 key={`${item.alt}-${index}`}

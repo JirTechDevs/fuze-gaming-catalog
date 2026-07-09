@@ -232,10 +232,11 @@ export default function HeroSection({ banners, isLiteMode = false }: HeroSection
 
       {/* Ticker */}
       <div className={styles.tickerBar}>
-        <div className="hero-shop-mask overflow-hidden py-4 sm:py-5">
+        {/* ponytail: drop mask on lite so mask + animating child doesn't trigger per-frame recomposite on iOS. Animation itself (translateX) is cheap. */}
+        <div className={`${isLiteMode ? "" : "hero-shop-mask"} overflow-hidden py-4 sm:py-5`}>
           <div
-            className={`${isLiteMode ? "" : "hero-shop-track"} flex w-max items-center whitespace-nowrap`}
-            style={isLiteMode ? undefined : { animationDuration: "28s" }}
+            className="hero-shop-track flex w-max items-center whitespace-nowrap"
+            style={{ animationDuration: "28s" }}
           >
             {tickerLoop.map((item, index) => (
               <span key={`${item.label}-${index}`} className={styles.tickerItem}>
