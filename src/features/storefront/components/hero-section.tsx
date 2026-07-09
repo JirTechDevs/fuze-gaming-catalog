@@ -94,25 +94,26 @@ export default function HeroSection({ banners, isLiteMode = false }: HeroSection
 
   return (
     <section className={`relative isolate overflow-hidden ${styles.heroSection} ${isLiteMode ? styles.heroSectionLite : ""}`}>
-      {/* Layered beam composition — Types A (wide glow), B (medium core), C (thin bloom), D (broken).
-          ponytail: render on mobile too — test whether the 11-beam composition alone still crashes iOS. */}
-      <div className={styles.heroBackdrop} aria-hidden="true">
-        {/* Type A — wide blurred cyan glows */}
-        <span className={`${styles.beamA} ${styles.beamA1}`} />
-        <span className={`${styles.beamA} ${styles.beamA2}`} />
-        <span className={`${styles.beamA} ${styles.beamA3}`} />
-        {/* Type B — medium beams with visible cyan cores */}
-        <span className={`${styles.beamB} ${styles.beamB1}`} />
-        <span className={`${styles.beamB} ${styles.beamB2}`} />
-        <span className={`${styles.beamB} ${styles.beamB3}`} />
-        {/* Type C — ultra thin white highlights with strong bloom */}
-        <span className={`${styles.beamC} ${styles.beamC1}`} />
-        <span className={`${styles.beamC} ${styles.beamC2}`} />
-        <span className={`${styles.beamC} ${styles.beamC3}`} />
-        {/* Type D — broken beams (visible in fragments) */}
-        <span className={`${styles.beamD} ${styles.beamD1}`} />
-        <span className={`${styles.beamD} ${styles.beamD2}`} />
-      </div>
+      {/* Layered beam composition — Types A (wide glow), B (medium core), C (thin bloom), D (broken) */}
+      {!isLiteMode && (
+        <div className={styles.heroBackdrop} aria-hidden="true">
+          {/* Type A — wide blurred cyan glows */}
+          <span className={`${styles.beamA} ${styles.beamA1}`} />
+          <span className={`${styles.beamA} ${styles.beamA2}`} />
+          <span className={`${styles.beamA} ${styles.beamA3}`} />
+          {/* Type B — medium beams with visible cyan cores */}
+          <span className={`${styles.beamB} ${styles.beamB1}`} />
+          <span className={`${styles.beamB} ${styles.beamB2}`} />
+          <span className={`${styles.beamB} ${styles.beamB3}`} />
+          {/* Type C — ultra thin white highlights with strong bloom */}
+          <span className={`${styles.beamC} ${styles.beamC1}`} />
+          <span className={`${styles.beamC} ${styles.beamC2}`} />
+          <span className={`${styles.beamC} ${styles.beamC3}`} />
+          {/* Type D — broken beams (visible in fragments) */}
+          <span className={`${styles.beamD} ${styles.beamD1}`} />
+          <span className={`${styles.beamD} ${styles.beamD2}`} />
+        </div>
+      )}
 
       {/* Hero content split layout */}
       <div className={styles.heroLayout}>
