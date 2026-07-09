@@ -22,7 +22,7 @@ const featureStats = [
 ] as const;
 
 const tickerItems = [
-  { icon: "transactions", label: "1000+ TRANSAKSI BERHASIL" },
+  { icon: "transactions", label: "5000+ TRANSAKSI BERHASIL" },
   { icon: "shield", label: "GARANSI HACKBACK 100%" },
   { icon: "zap", label: "PROSES CEPAT <10 MENIT" },
   { icon: "headphones", label: "CS AKTIF 24/7" },

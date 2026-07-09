@@ -53,7 +53,7 @@ export default function TestimoniSection({ isLiteMode = false }: TestimoniSectio
             TESTIMONI PEMBELI <span className="text-primary">FUZEVALO</span>
           </h2>
           <p className="text-center text-sm text-muted-foreground/70">
-            Ratusan pembeli sudah bertransaksi aman di Fuzevalo.
+            Ribuan pembeli sudah bertransaksi aman di Fuzevalo.
           </p>
         </div>
 
