@@ -26,12 +26,13 @@ const rajdhani = Rajdhani({
 
 const siteTitle = "Jual Beli Akun Valorant Aman & Bergaransi | Fuzevalo";
 const siteDescription =
-  "Fuzevalo adalah marketplace jual beli akun Valorant dengan garansi hackback 100%, proses cepat kurang dari 10 menit, dan transaksi aman terpercaya sejak 2021.";
+  "Fuzevalo: Jual Beli Akun Valorant murah, aman, dan bergaransi hackback 100%. Katalog akun ready, proses cepat, transaksi terpercaya.";
 
 export const metadata: Metadata = {
   title: siteTitle,
   description: siteDescription,
-  metadataBase: new URL("https://fuzevalo.com"),
+  metadataBase: new URL("https://www.fuzevalo.com"),
+  alternates: { canonical: "https://www.fuzevalo.com/" },
   keywords: [
     "jual akun valorant",
     "jual beli akun valorant",
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
     title: siteTitle,
     description: siteDescription,
     type: "website",
-    url: "https://fuzevalo.com",
+    url: "https://www.fuzevalo.com/",
     siteName: "Fuzevalo",
     images: ["/images/logo.png"],
   },
@@ -69,7 +70,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${jakartasans.variable} ${rajdhani.variable}`}>
+    <html lang="id" className={`${inter.variable} ${jakartasans.variable} ${rajdhani.variable}`}>
       <body>
         {children}
         <Toaster />

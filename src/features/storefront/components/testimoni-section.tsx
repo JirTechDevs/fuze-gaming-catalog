@@ -28,13 +28,21 @@ const testimonials: Testimonial[] = [
 
 const loopedTestimonials = [...testimonials, ...testimonials];
 
-export default function TestimoniSection() {
+interface TestimoniSectionProps {
+  isLiteMode?: boolean;
+}
+
+export default function TestimoniSection({ isLiteMode = false }: TestimoniSectionProps) {
+  const visibleTestimonials = isLiteMode ? testimonials : loopedTestimonials;
+
   return (
     <section
       id="testimoni"
       className="relative scroll-mt-24 overflow-hidden py-12 sm:scroll-mt-28 sm:py-14"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-10 h-40 bg-[radial-gradient(circle_at_top,hsl(var(--primary)_/_0.18),transparent_62%)] blur-3xl" />
+      {!isLiteMode && (
+        <div className="pointer-events-none absolute inset-x-0 top-10 h-40 bg-[radial-gradient(circle_at_top,hsl(var(--primary)_/_0.18),transparent_62%)] blur-3xl" />
+      )}
 
       <div className="relative mx-auto w-full max-w-[1480px] px-4 sm:px-6 lg:px-8">
         <div className="mb-6 flex flex-col items-center gap-2 sm:mb-8">
@@ -42,16 +50,16 @@ export default function TestimoniSection() {
             APA KATA MEREKA?
           </span>
           <h2 className="text-center font-display text-2xl font-bold tracking-wide text-foreground sm:text-3xl md:text-4xl">
-            TESTIMONI <span className="text-primary">CUSTOMER</span>
+            TESTIMONI PEMBELI <span className="text-primary">FUZEVALO</span>
           </h2>
           <p className="text-center text-sm text-muted-foreground/70">
             Ratusan pembeli sudah bertransaksi aman di Fuzevalo.
           </p>
         </div>
 
-        <div className="testimoni-strip-mask relative overflow-hidden">
-          <div className="testimoni-strip-track flex w-max gap-4 sm:gap-5">
-            {loopedTestimonials.map((item, index) => (
+        <div className={`${isLiteMode ? "horizontal-scrollbar" : "testimoni-strip-mask"} relative overflow-x-auto overflow-y-hidden`}>
+          <div className={`${isLiteMode ? "w-max pb-2" : "testimoni-strip-track"} flex w-max gap-4 sm:gap-5`}>
+            {visibleTestimonials.map((item, index) => (
               <div
                 key={`${item.alt}-${index}`}
                 className="w-[180px] shrink-0 overflow-hidden rounded-[14px] border border-white/[0.08] bg-[#0D1530] shadow-[0_14px_38px_hsl(var(--background)_/_0.28)] sm:w-[220px] md:w-[240px]"

@@ -12,6 +12,7 @@ import styles from "./catalog-section.module.css";
 
 interface CatalogSectionProps {
   products: Product[];
+  forceLiteMode?: boolean;
 }
 
 const ACCOUNTS_PER_PAGE = 12;
@@ -32,11 +33,11 @@ const techLines = [
   { left: "42%", top: "84%", width: "w-24", delay: 0.9 },
 ];
 
-export default function CatalogSection({ products: initialProducts }: CatalogSectionProps) {
+export default function CatalogSection({ products: initialProducts, forceLiteMode = false }: CatalogSectionProps) {
   const products = useRealtimeProducts(initialProducts);
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
-  const isLiteMode = isMobile || prefersReducedMotion;
+  const isLiteMode = forceLiteMode || isMobile || prefersReducedMotion;
   const [search, setSearch] = useState("");
   const [rankFilter, setRankFilter] = useState("all");
   const [regionFilter, setRegionFilter] = useState("all");
@@ -202,7 +203,8 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
   };
 
   return (
-    <section id="catalog" className="relative isolate overflow-hidden pb-14 pt-3 sm:pb-16 sm:pt-4 lg:pb-20 lg:pt-4">
+    <section id="catalog" className={`relative isolate overflow-hidden pb-14 pt-3 sm:pb-16 sm:pt-4 lg:pb-20 lg:pt-4 ${isLiteMode ? styles.catalogLite : ""}`}>
+      <h2 className="sr-only">Katalog Akun Valorant Ready</h2>
       <div className={`absolute inset-0 ${styles.catalogShell}`} />
       <div className={`absolute inset-0 opacity-90 ${styles.catalogAura}`} />
       <div className={`absolute inset-0 ${styles.catalogMesh}`} />
@@ -213,7 +215,7 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
       <div className={`absolute left-0 right-0 ${styles.catalogStripTop}`} />
       <div className={`absolute left-0 right-0 ${styles.catalogStripBottom}`} />
 
-      {visibleAmbientParticles.map((particle) => (
+      {!isLiteMode && visibleAmbientParticles.map((particle) => (
         <motion.span
           key={`${particle.left}-${particle.top}`}
           className={styles.ambientParticle}
@@ -246,7 +248,7 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
         />
       ))}
 
-      {techLines.map((line) => (
+      {!isLiteMode && techLines.map((line) => (
         <motion.div
           key={`${line.left}-${line.top}`}
           className="pointer-events-none absolute hidden items-center gap-2 lg:flex"

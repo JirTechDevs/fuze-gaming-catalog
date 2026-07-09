@@ -7,12 +7,12 @@ import { useState } from "react";
 import styles from "./navbar.module.css";
 
 const navLinks = [
-  { label: "Beranda", href: "#", active: true },
-  { label: "Katalog", href: "#catalog" },
-  { label: "Tukar Tambah", href: "#" },
-  { label: "Cara Beli", href: "#" },
-  { label: "Testimoni", href: "#testimoni" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Beranda", href: "/", active: true },
+  { label: "Katalog", href: "/#catalog" },
+  { label: "Tukar Tambah", href: "https://wa.me/628881462675?text=Hai%20min!%20Mau%20Tukar%20Tambah" },
+  { label: "Cara Beli", href: "/cara-beli" },
+  { label: "Testimoni", href: "/#testimoni" },
+  { label: "FAQ", href: "/#faq" },
 ] as const;
 
 const socialLinks = [
@@ -74,37 +74,36 @@ function TikTokGlyph() {
   );
 }
 
-function scrollToSection(href: string) {
-  if (typeof window === "undefined") {
-    return;
-  }
+// If the href points to an anchor on the home page ("/" or "/#foo") AND we're already on home, smooth-scroll instead of full navigation.
+// Any other case: let the browser follow the href normally so crawlers + right-click/copy-link get real URLs.
+function handleNavClick(event: React.MouseEvent<HTMLAnchorElement>, href: string) {
+  if (typeof window === "undefined") return;
+  if (window.location.pathname !== "/") return;
 
-  if (href === "#") {
-    if (window.location.pathname !== "/") {
-      window.location.assign("/");
-      return;
-    }
-
+  if (href === "/") {
+    event.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
     return;
   }
 
-  const id = href.replace("#", "");
-  const target = document.getElementById(id);
-
-  if (window.location.pathname === "/" && target) {
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
-    return;
+  if (href.startsWith("/#")) {
+    const target = document.getElementById(href.slice(2));
+    if (target) {
+      event.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
-
-  window.location.assign(`/${href}`);
 }
 
-export default function Navbar() {
+interface NavbarProps {
+  isLiteMode?: boolean;
+}
+
+export default function Navbar({ isLiteMode = false }: NavbarProps) {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className={styles.navbar}>
+    <header className={`${styles.navbar} ${isLiteMode ? styles.navbarLite : ""}`}>
       <div className={styles.navInner}>
         <Link href="/" className={styles.logo}>
           <span className={styles.logoMark}>
@@ -120,14 +119,16 @@ export default function Navbar() {
             const isActive = "active" in link && Boolean(link.active);
 
             return (
-              <button
+              <a
                 key={link.label}
-                type="button"
-                onClick={() => scrollToSection(link.href)}
+                href={link.href}
+                target={link.href.startsWith("http") ? "_blank" : undefined}
+                rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                onClick={(event) => handleNavClick(event, link.href)}
                 className={`${styles.navLink} ${isActive ? styles.navLinkActive : ""}`}
               >
                 {link.label}
-              </button>
+              </a>
             );
           })}
           <a
@@ -157,25 +158,27 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className={styles.mobilePanel}
+            className={`${styles.mobilePanel} ${isLiteMode ? styles.mobilePanelLite : ""}`}
           >
             <div className={styles.mobileInner}>
               {navLinks.map((link) => {
                 const isActive = "active" in link && Boolean(link.active);
 
                 return (
-                  <button
+                  <a
                     key={link.label}
-                    type="button"
-                    onClick={() => {
-                      scrollToSection(link.href);
+                    href={link.href}
+                    target={link.href.startsWith("http") ? "_blank" : undefined}
+                    rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    onClick={(event) => {
+                      handleNavClick(event, link.href);
                       setOpen(false);
                     }}
                     className={`${styles.mobileLink} ${isActive ? styles.mobileLinkActive : ""}`}
                   >
                     <span>{link.label}</span>
                     {isActive && <span className={styles.mobileLinkActiveIndicator} />}
-                  </button>
+                  </a>
                 );
               })}
 
