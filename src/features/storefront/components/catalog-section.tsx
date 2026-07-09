@@ -285,8 +285,8 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
 
             <div className={styles.filtersPanel}>
               <div id="catalog-filters-content" className={styles.filtersBody}>
-                <div className="flex flex-col gap-2 sm:gap-3">
-                  <label className="block">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                  <label className="block sm:order-1 sm:flex-1">
                     <input
                       type="text"
                       placeholder="Cari kode / skin / nama akun..."
@@ -296,21 +296,19 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
                     />
                   </label>
 
-                  <div className="flex gap-2 sm:gap-3">
+                  <div className="flex gap-2 sm:contents">
                     <button
                       type="button"
                       onClick={() => setIsFilterOpen((current) => !current)}
                       aria-expanded={isFilterOpen}
-                      className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-[0.75rem] bg-primary px-3 font-display text-[12px] font-bold tracking-[0.06em] text-primary-foreground transition hover:brightness-105 sm:h-11 sm:gap-2 sm:rounded-[0.9rem] sm:px-4 sm:text-sm"
+                      className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-[0.75rem] bg-primary px-3 font-display text-[12px] font-bold tracking-[0.06em] text-primary-foreground transition hover:brightness-105 sm:hidden"
                     >
-                      <FilterIcon size={13} className="sm:hidden" />
-                      <FilterIcon size={16} className="hidden sm:block" />
+                      <FilterIcon size={13} />
                       Filter
-                      <FilterIcon size={13} className="sm:hidden" />
-                      <FilterIcon size={16} className="hidden sm:block" />
+                      <FilterIcon size={13} />
                     </button>
 
-                    <div className="flex h-9 flex-1 items-center gap-1 rounded-[0.75rem] border border-border/45 bg-card/55 pl-2.5 pr-1.5 sm:h-11 sm:flex-none sm:min-w-[220px] sm:gap-2 sm:rounded-[0.9rem] sm:pl-4 sm:pr-3">
+                    <div className="flex h-9 flex-1 items-center gap-1 rounded-[0.75rem] border border-border/45 bg-card/55 pl-2.5 pr-1.5 sm:order-5 sm:h-11 sm:flex-none sm:min-w-[200px] sm:gap-2 sm:rounded-[0.9rem] sm:pl-4 sm:pr-3">
                       <span className="hidden whitespace-nowrap text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70 sm:inline">
                         Urutkan
                       </span>
@@ -336,10 +334,13 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
                     </div>
                   </div>
 
-                  {isFilterOpen && (
-                    <div className="grid gap-3 rounded-[1rem] border border-border/35 bg-card/40 p-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto]">
-                      <label className={styles.filterGroup}>
-                        <span className={styles.filterLabel}>Rank</span>
+                  {/* Rank + Region + Reset — mobile: collapsible drawer, desktop: sm:contents flattens into the flex row (order 2/3/4) */}
+                  <div
+                    className={`${isFilterOpen ? "rounded-[1rem] border border-border/35 bg-card/40 p-4" : "hidden"} sm:!contents`}
+                  >
+                    <div className="grid gap-3 sm:contents">
+                      <label className={`${styles.filterGroup} sm:order-2 sm:min-w-[160px] sm:flex-1`}>
+                        <span className={`${styles.filterLabel} sm:sr-only`}>Rank</span>
                         <span className={`${styles.filterField} ${styles.selectWrap}`}>
                           <select
                             value={rankFilter}
@@ -355,8 +356,8 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
                         </span>
                       </label>
 
-                      <label className={styles.filterGroup}>
-                        <span className={styles.filterLabel}>Region</span>
+                      <label className={`${styles.filterGroup} sm:order-3 sm:min-w-[160px] sm:flex-1`}>
+                        <span className={`${styles.filterLabel} sm:sr-only`}>Region</span>
                         <span className={`${styles.filterField} ${styles.selectWrap}`}>
                           <select
                             value={regionFilter}
@@ -371,36 +372,18 @@ export default function CatalogSection({ products: initialProducts }: CatalogSec
                           <ChevronDown size={16} className={styles.selectIcon} />
                         </span>
                       </label>
+                    </div>
 
-                      {/*
-                      Ganti Nick filter — hidden per owner ask. Restore the block below to bring it back.
-                      <label className={styles.filterGroup}>
-                        <span className={styles.filterLabel}>Ganti Nick</span>
-                        <span className={`${styles.filterField} ${styles.selectWrap}`}>
-                          <select
-                            value={nickFilter}
-                            onChange={(event) => setNickFilter(event.target.value)}
-                            className={styles.selectField}
-                          >
-                            <option value="all">Semua Status</option>
-                            {nickOptions.map((option) => (
-                              <option key={option} value={option}>{option}</option>
-                            ))}
-                          </select>
-                          <ChevronDown size={16} className={styles.selectIcon} />
-                        </span>
-                      </label>
-                      */}
-
+                    <div className="mt-4 flex justify-end sm:contents">
                       <button
                         type="button"
                         onClick={resetFilters}
-                        className={`${styles.resetButton} self-end`}
+                        className={`${styles.resetButton} px-6 sm:order-4`}
                       >
                         Reset Filter
                       </button>
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>
