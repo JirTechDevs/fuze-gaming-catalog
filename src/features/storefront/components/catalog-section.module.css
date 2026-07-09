@@ -42,6 +42,16 @@
   filter: blur(32px);
 }
 
+.catalogLite .catalogGlowTop,
+.catalogLite .catalogGlowBottom,
+.catalogLite .ambientParticle {
+  display: none;
+}
+
+.catalogLite .catalogMesh {
+  mask-image: none;
+}
+
 .catalogStripTop,
 .catalogStripBottom {
   height: 1px;

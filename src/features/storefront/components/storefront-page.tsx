@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
+import { useStorefrontLiteMode } from "@/hooks/use-storefront-lite-mode";
 import type { StorefrontBanner } from "@/features/storefront/server";
 import CatalogSection from "@/features/storefront/components/catalog-section";
 import Footer from "@/features/storefront/components/footer";
@@ -30,6 +31,18 @@ function FloatingWhatsAppGlyph() {
 
 export default function StorefrontPage({ products, banners }: StorefrontPageProps) {
   const [introComplete, setIntroComplete] = useState(false);
+  const { isLiteMode, resolved } = useStorefrontLiteMode();
+  const shouldRenderLiteMode = !resolved || isLiteMode;
+  // ponytail: guard so the animated intro (Framer + useReducedMotion) only mounts after hydration.
+  // Main content still SSRs so crawlers/SEO see the DOM; the overlay just skips the SSR pass.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (resolved && isLiteMode) {
+      setIntroComplete(true);
+    }
+  }, [isLiteMode, resolved]);
 
   useEffect(() => {
     if (!introComplete) {
@@ -50,29 +63,37 @@ export default function StorefrontPage({ products, banners }: StorefrontPageProp
 
   return (
     <>
-      {!introComplete && <IntroScreen onComplete={() => setIntroComplete(true)} />}
-      {introComplete && (
-        <div className={`${themeStyles.storefrontTheme} min-h-screen bg-background`}>
-          <Navbar />
-          <div>
-            <HeroSection banners={banners} />
-            <CatalogSection products={products} />
-            <div className="mx-auto h-[2px] w-[90%] max-w-[1480px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-            <TestimoniSection />
-            <div className="mx-auto h-[2px] w-[90%] max-w-[1480px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-            <FAQSection />
-            <Footer />
-            <a
-              href="https://wa.me/628881462675"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Chat via WhatsApp"
-              className={themeStyles.floatingWhatsapp}
-            >
-              <FloatingWhatsAppGlyph />
-            </a>
-          </div>
+      {/* ponytail: main content always rendered so crawlers get the full DOM on SSR; intro overlays with position: fixed until dismissed */}
+      <div className={`${themeStyles.storefrontTheme} ${shouldRenderLiteMode ? themeStyles.storefrontThemeLite : ""} min-h-screen bg-background`}>
+        <Navbar isLiteMode={shouldRenderLiteMode} />
+        <div>
+          <HeroSection banners={banners} isLiteMode={shouldRenderLiteMode} />
+          <CatalogSection products={products} forceLiteMode={shouldRenderLiteMode} />
+          {/* ponytail: sr-only landmark so crawlers see the H2 + /#tukar-tambah resolves. Expand to a real section when there's more to say. */}
+          <section id="tukar-tambah" className="sr-only">
+            <h2>Tukar Tambah Akun Valorant</h2>
+            <p>
+              Layanan tukar tambah akun Valorant di Fuzevalo. Chat admin via WhatsApp untuk proses tukar tambah yang cepat, aman, dan bergaransi.
+            </p>
+          </section>
+          <div className="mx-auto h-[2px] w-[90%] max-w-[1480px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+          <TestimoniSection isLiteMode={shouldRenderLiteMode} />
+          <div className="mx-auto h-[2px] w-[90%] max-w-[1480px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+          <FAQSection />
+          <Footer />
+          <a
+            href="https://wa.me/628881462675"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Chat via WhatsApp"
+            className={themeStyles.floatingWhatsapp}
+          >
+            <FloatingWhatsAppGlyph />
+          </a>
         </div>
+      </div>
+      {mounted && resolved && !isLiteMode && !introComplete && (
+        <IntroScreen onComplete={() => setIntroComplete(true)} />
       )}
     </>
   );

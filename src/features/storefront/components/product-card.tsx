@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import {
   buildWhatsAppLink,
   formatPrice,
@@ -100,10 +99,12 @@ export default function ProductCard({
   const featuredLabel = getFeaturedLabel(product.featured);
   const productImage = product.image;
 
-  useEffect(() => {
+  // ponytail: prefetch on first interaction hint instead of on mount, so 12 cards don't fire 12 parallel prefetches
+  // during hydration and blow iOS Safari's memory ceiling. Pointerenter fires on hover (desktop) or first touch (mobile).
+  const prefetchDetail = () => {
     if (isSold) return;
     router.prefetch(detailHref);
-  }, [detailHref, isSold, router]);
+  };
   // const productImage = "/images/catalog/mock_image.jpg";
 
   return (
@@ -123,6 +124,8 @@ export default function ProductCard({
       style={{ contentVisibility: "auto", containIntrinsicSize: "320px 360px" }}
       role="link"
       tabIndex={isSold ? -1 : 0}
+      onPointerEnter={prefetchDetail}
+      onFocus={prefetchDetail}
       onClick={() => !isSold && router.push(detailHref)}
       onKeyDown={(event) => {
         if (isSold) {
@@ -182,6 +185,11 @@ export default function ProductCard({
           </ul>
         </div>
       </div>
+
+      {/* ponytail: hidden real link so crawlers see /catalog/{id} as an internal link; users still get fast client-side router.push via the card onClick above. */}
+      <a href={detailHref} className="sr-only" tabIndex={-1} aria-hidden="true">
+        Lihat detail akun {product.code}
+      </a>
 
       <div className={styles.footer}>
         <p className={styles.price}>
