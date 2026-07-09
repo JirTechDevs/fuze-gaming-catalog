@@ -33,7 +33,7 @@ Detail akan diberikan saat di WhatsApp.`,
   },
   {
     question: "Kenapa harus beli akun di Fuzevalo?",
-    answer: `✔ 1000+ transaksi berhasil
+    answer: `✔ 5000+ transaksi berhasil
 ✔ Garansi hackback
 ✔ Proses cepat
 ✔ Banyak pilihan akun`,
