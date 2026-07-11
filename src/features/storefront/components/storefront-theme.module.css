@@ -104,7 +104,7 @@
   position: relative;
   isolation: isolate;
   min-height: 100vh;
-  overflow-x: hidden;
+  /* ponytail: horizontal clip lives on <body> so this stacking context doesn't paint-contain and break backdrop-filter on descendants like the sticky navbar. */
   color: var(--text-1);
   background-color: var(--fuze-bg-main);
   background-image:
