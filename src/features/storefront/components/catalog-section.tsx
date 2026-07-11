@@ -17,6 +17,12 @@ interface CatalogSectionProps {
 
 const ACCOUNTS_PER_PAGE = 12;
 
+const sortOptions = [
+  { value: "default", label: "Terbaru" },
+  { value: "price-asc", label: "Termurah" },
+  { value: "price-desc", label: "Termahal" },
+] as const;
+
 const ambientParticles = [
   { left: "5%", top: "14%", size: 180, delay: 0, duration: 14, opacity: 0.14 },
   { left: "82%", top: "10%", size: 130, delay: 1.1, duration: 16, opacity: 0.12 },
@@ -43,10 +49,31 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   const [regionFilter, setRegionFilter] = useState("all");
   const [nickFilter, setNickFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
+  const [sortOpen, setSortOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const gridRef = useRef<HTMLDivElement | null>(null);
+  const sortRef = useRef<HTMLDivElement | null>(null);
   const skipScrollRef = useRef(true);
+
+  // Close sort dropdown on outside click / Escape.
+  useEffect(() => {
+    if (!sortOpen) return;
+    const onPointer = (event: PointerEvent) => {
+      if (!sortRef.current?.contains(event.target as Node)) setSortOpen(false);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSortOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [sortOpen]);
+
+  const sortLabel = sortOptions.find((option) => option.value === sortBy)?.label ?? "Terbaru";
 
   // Keep this block commented so we can quickly restore the extra demo section later.
   // const featured = useMemo(
@@ -310,29 +337,55 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                       <FilterIcon size={13} />
                     </button>
 
-                    <div className="flex h-9 flex-1 items-center gap-1 rounded-[0.75rem] border border-border/45 bg-card/55 pl-2.5 pr-1.5 sm:order-5 sm:h-11 sm:flex-none sm:min-w-[200px] sm:gap-2 sm:rounded-[0.9rem] sm:pl-4 sm:pr-3">
+                    <div
+                      ref={sortRef}
+                      className="relative flex h-9 flex-1 items-center gap-1 rounded-[0.75rem] border border-border/45 bg-card/55 pl-2.5 pr-1.5 sm:order-5 sm:h-11 sm:flex-none sm:min-w-[200px] sm:gap-2 sm:rounded-[0.9rem] sm:pl-4 sm:pr-3"
+                    >
                       <span className="hidden whitespace-nowrap text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70 sm:inline">
                         Urutkan
                       </span>
-                      <div className="relative min-w-0 flex-1">
-                        <select
-                          value={sortBy}
-                          onChange={(event) => setSortBy(event.target.value)}
-                          className="h-9 w-full appearance-none truncate bg-transparent pr-4 text-[12px] text-foreground outline-none sm:h-11 sm:pr-5 sm:text-sm"
-                        >
-                          <option value="default">Terbaru</option>
-                          <option value="price-asc">Termurah</option>
-                          <option value="price-desc">Termahal</option>
-                        </select>
+                      <button
+                        type="button"
+                        onClick={() => setSortOpen((current) => !current)}
+                        aria-haspopup="listbox"
+                        aria-expanded={sortOpen}
+                        className="flex h-9 w-full min-w-0 items-center justify-between gap-2 bg-transparent pr-1 text-[12px] text-foreground outline-none sm:h-11 sm:text-sm"
+                      >
+                        <span className="truncate">{sortLabel}</span>
                         <ChevronDown
                           size={13}
-                          className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-muted-foreground/70 sm:hidden"
+                          className={`shrink-0 text-muted-foreground/70 transition-transform sm:hidden ${sortOpen ? "rotate-180" : ""}`}
                         />
                         <ChevronDown
                           size={16}
-                          className="pointer-events-none absolute right-0 top-1/2 hidden -translate-y-1/2 text-muted-foreground/70 sm:block"
+                          className={`hidden shrink-0 text-muted-foreground/70 transition-transform sm:block ${sortOpen ? "rotate-180" : ""}`}
                         />
-                      </div>
+                      </button>
+                      {sortOpen && (
+                        <ul
+                          role="listbox"
+                          className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 overflow-hidden rounded-[0.75rem] border border-border/45 bg-card/95 shadow-[0_18px_44px_rgba(0,3,15,0.55)] backdrop-blur-md sm:rounded-[0.9rem]"
+                        >
+                          {sortOptions.map((option) => {
+                            const isActive = option.value === sortBy;
+                            return (
+                              <li key={option.value} role="option" aria-selected={isActive}>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSortBy(option.value);
+                                    setSortOpen(false);
+                                  }}
+                                  className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-[12px] transition sm:text-sm ${isActive ? "bg-primary/15 text-primary" : "text-foreground hover:bg-white/[0.04]"}`}
+                                >
+                                  {option.label}
+                                  {isActive && <span className="text-primary">•</span>}
+                                </button>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
                     </div>
                   </div>
 
