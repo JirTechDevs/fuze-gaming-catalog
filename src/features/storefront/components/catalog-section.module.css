@@ -132,6 +132,7 @@
 
 .filtersPanel {
   position: relative;
+  z-index: 20;
   isolation: isolate;
   margin-top: 4px;
   padding: 14px 16px;
@@ -154,7 +155,8 @@
 }
 
 .filtersBody {
-  overflow: hidden;
+  /* ponytail: was overflow: hidden — clipped the custom sort dropdown panel below the pill. */
+  overflow: visible;
 }
 
 .filtersGrid {
