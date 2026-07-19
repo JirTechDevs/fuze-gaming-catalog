@@ -24,9 +24,9 @@ const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
 });
 
-const siteTitle = "Jual Beli Akun Valorant Aman & Bergaransi | Fuzevalo";
+const siteTitle = "Jual Beli Akun Valorant Murah & Bergaransi | Fuzevalo";
 const siteDescription =
-  "Fuzevalo: Jual Beli Akun Valorant murah, aman, dan bergaransi hackback 100%. Katalog akun ready, proses cepat, transaksi terpercaya.";
+  "Jual beli akun Valorant murah, aman, dan bergaransi hackback 100% di Fuzevalo. Katalog akun ready, proses cepat, transaksi terpercaya.";
 
 export const metadata: Metadata = {
   title: siteTitle,

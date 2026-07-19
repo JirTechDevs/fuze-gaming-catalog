@@ -80,6 +80,19 @@ storefront cache is revalidated within seconds.
    - Failure notification: `Immediately` (so we see errors)
 7. Authorize when Google prompts — the script needs `Spreadsheet` read
    and `External requests` (URL Fetch) scopes.
+8. **Add a time-based safety-net trigger** so any missed edit gets picked
+   up automatically. Triggers → **Add Trigger**:
+   - Function to run: `scheduledBackfill`
+   - Deployment: `Head`
+   - Event source: `Time-driven`
+   - Type of time based trigger: `Minutes timer`
+   - Minute interval: `Every 15 minutes` (or `Every 30 minutes`)
+   - Failure notification: `Immediately`
+
+   This re-syncs the **current month tab** on every tick. It's cheap
+   (one tab, one HTTP post per row) and guarantees any onEdit misses
+   (bulk paste, formula-driven changes, transient errors) are caught
+   within 15–30 minutes without anyone having to press a button.
 
 ## Testing
 
