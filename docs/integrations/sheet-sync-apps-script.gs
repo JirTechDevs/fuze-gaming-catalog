@@ -55,53 +55,70 @@ function onFuzeSheetEdit(e) {
     // Only react to edits inside monthly tabs.
     if (!MONTHLY_TAB_REGEX.test(sheetName)) return;
 
-    // Only react to edits in the STATUS column.
-    if (e.range.getColumn() !== STATUS_COLUMN) return;
+    // Range dimensions of the edit (handles paste / fill-down / multi-cell).
+    var startCol = e.range.getColumn();
+    var endCol = startCol + e.range.getNumColumns() - 1;
+    var startRow = e.range.getRow();
+    var numRows = e.range.getNumRows();
 
-    var row = e.range.getRow();
-    if (row <= HEADER_ROW) return; // skip header edits
-
-    var status = String(e.value || '').trim();
-    var code = String(sheet.getRange(row, CODE_COLUMN).getValue() || '').trim();
-
-    if (!code) return; // no code in this row, nothing to sync
-    if (!CODE_SHAPE_REGEX.test(code)) return; // not an FZ product row
+    // Only react if the STATUS column is somewhere in the edited range.
+    if (STATUS_COLUMN < startCol || STATUS_COLUMN > endCol) return;
 
     var secret = PropertiesService.getScriptProperties()
       .getProperty('SHEET_SYNC_SECRET');
-
     if (!secret) {
       console.error('SHEET_SYNC_SECRET script property is not set.');
       return;
     }
 
-    var payload = {
+    // Read the STATUS + CODE columns for every affected row in one fetch,
+    // then post one payload per row. Single-cell edits become a 1-row loop.
+    var statusValues = sheet
+      .getRange(startRow, STATUS_COLUMN, numRows, 1)
+      .getValues();
+    var codeValues = sheet
+      .getRange(startRow, CODE_COLUMN, numRows, 1)
+      .getValues();
+
+    for (var i = 0; i < numRows; i++) {
+      var row = startRow + i;
+      if (row <= HEADER_ROW) continue;
+
+      var code = String(codeValues[i][0] || '').trim();
+      if (!code) continue;
+      if (!CODE_SHAPE_REGEX.test(code)) continue;
+
+      var status = String(statusValues[i][0] || '').trim();
+      postSyncRow(secret, sheetName, code, status);
+    }
+  } catch (err) {
+    console.error('onFuzeSheetEdit error: ' + err);
+  }
+}
+
+function postSyncRow(secret, sheetName, code, status) {
+  var options = {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { 'x-sheet-secret': secret },
+    payload: JSON.stringify({
       code: code,
       status: status,
       sheet: sheetName,
-    };
-
-    var options = {
-      method: 'post',
-      contentType: 'application/json',
-      headers: {
-        'x-sheet-secret': secret,
-      },
-      payload: JSON.stringify(payload),
-      muteHttpExceptions: true,
-    };
-
+    }),
+    muteHttpExceptions: true,
+  };
+  try {
     var response = UrlFetchApp.fetch(WEBHOOK_URL, options);
     var code_ = response.getResponseCode();
     var body = response.getContentText();
-
     if (code_ >= 200 && code_ < 300) {
       console.log('Sync OK for ' + code + ' (' + status + '): ' + body);
     } else {
       console.error('Sync FAILED ' + code_ + ' for ' + code + ': ' + body);
     }
   } catch (err) {
-    console.error('onFuzeSheetEdit error: ' + err);
+    console.error('postSyncRow error for ' + code + ': ' + err);
   }
 }
 
@@ -159,6 +176,47 @@ function backfillSheetByName(name) {
   console.log('Backfilling ' + name + ' ...');
   backfillSheet(sheet);
   console.log('Done.');
+}
+
+/**
+ * Auto-refresh safety net: backfills the CURRENT month tab only.
+ *
+ * Install as a time-based trigger (Triggers -> Add Trigger):
+ *   - Function to run: scheduledBackfill
+ *   - Event source: Time-driven
+ *   - Type: Minutes / Hour timer (recommended: every 15 minutes)
+ *
+ * Cheap because it only touches one tab. Catches any onEdit misses
+ * (bulk paste, formula-driven changes, transient network errors)
+ * within the trigger interval.
+ */
+function scheduledBackfill() {
+  var monthNames = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+  ];
+  var today = new Date();
+  var monthName = monthNames[today.getMonth()];
+  var year = today.getFullYear();
+  var yearShort = String(year).slice(-2);
+
+  // Try both "Juli 2026" and "Juli 26" naming.
+  var candidates = [monthName + ' ' + year, monthName + ' ' + yearShort];
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = null;
+  for (var i = 0; i < candidates.length; i++) {
+    sheet = ss.getSheetByName(candidates[i]);
+    if (sheet) break;
+  }
+
+  if (!sheet) {
+    console.warn('scheduledBackfill: no current-month tab found (looked for ' +
+      candidates.join(' / ') + ')');
+    return;
+  }
+
+  console.log('scheduledBackfill: syncing ' + sheet.getName());
+  backfillSheet(sheet);
 }
 
 function backfillJanuari26() { backfillSheetByName('Januari 26'); }
