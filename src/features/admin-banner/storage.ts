@@ -89,9 +89,12 @@ async function uploadBannerImage(
 ) {
   const output = await convertImageToWebp(file);
   const objectPath = `storefront-banners/banner-${slot}.webp`;
+  // Wrap Buffer as Blob so the Supabase SDK takes the FormData branch —
+  // the Buffer branch silently drops cacheControl on persist.
+  const uploadable = new Blob([output], { type: "image/webp" });
   const { error } = await supabase.storage
     .from(BANNER_IMAGE_BUCKET)
-    .upload(objectPath, output, {
+    .upload(objectPath, uploadable, {
       cacheControl: "31536000",
       contentType: "image/webp",
       upsert: true,
