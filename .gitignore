@@ -29,3 +29,6 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# One-off maintenance scripts (contain no secrets, but should not ship)
+scripts/backfill-*.mjs

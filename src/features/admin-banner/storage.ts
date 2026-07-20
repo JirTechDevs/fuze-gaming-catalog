@@ -92,6 +92,7 @@ async function uploadBannerImage(
   const { error } = await supabase.storage
     .from(BANNER_IMAGE_BUCKET)
     .upload(objectPath, output, {
+      cacheControl: "31536000",
       contentType: "image/webp",
       upsert: true,
     });
