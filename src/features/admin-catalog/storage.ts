@@ -151,10 +151,13 @@ async function uploadCatalogImage(
   targetObjectPath: string,
 ) {
   const output = await convertImageToWebp(file);
+  // Wrap Buffer as Blob so the Supabase SDK takes the FormData branch —
+  // the Buffer branch silently drops cacheControl on persist.
+  const uploadable = new Blob([output], { type: "image/webp" });
 
   const { error } = await supabase.storage
     .from(CATALOG_IMAGE_BUCKET)
-    .upload(targetObjectPath, output, {
+    .upload(targetObjectPath, uploadable, {
       cacheControl: "31536000",
       contentType: "image/webp",
       upsert: true,
