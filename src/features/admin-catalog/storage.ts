@@ -155,6 +155,7 @@ async function uploadCatalogImage(
   const { error } = await supabase.storage
     .from(CATALOG_IMAGE_BUCKET)
     .upload(targetObjectPath, output, {
+      cacheControl: "31536000",
       contentType: "image/webp",
       upsert: true,
     });
