@@ -1,36 +1,22 @@
 import sharp from "sharp";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { getSupabaseUrl } from "@/lib/supabase/env";
 import { isFileProvided } from "@/features/admin-catalog/storage";
+import {
+  buildImagePublicUrl,
+  deleteR2Object,
+  extractManagedObjectKey,
+  putR2Object,
+} from "@/lib/r2/client";
 
-const BANNER_IMAGE_BUCKET = "catalog-images";
 const MAX_INPUT_FILE_BYTES = 12 * 1024 * 1024;
 const MAX_OUTPUT_FILE_BYTES = 5 * 1024 * 1024;
 const MAX_IMAGE_WIDTH = 1840;
 const WEBP_QUALITY = 82;
 
-function getBucketPublicPrefix() {
-  return `${getSupabaseUrl()}/storage/v1/object/public/${BANNER_IMAGE_BUCKET}/`;
-}
-
-function getManagedBannerObjectPath(imagePath: string) {
-  const prefix = getBucketPublicPrefix();
-
-  if (!imagePath.startsWith(prefix)) {
-    return null;
-  }
-
-  const objectPath = decodeURIComponent(imagePath.slice(prefix.length));
-
-  if (!objectPath.startsWith("storefront-banners/")) {
-    return null;
-  }
-
-  return objectPath;
-}
-
-function getPublicBannerImageUrl(supabase: SupabaseClient, objectPath: string) {
-  return supabase.storage.from(BANNER_IMAGE_BUCKET).getPublicUrl(objectPath).data.publicUrl;
+function getManagedBannerObjectKey(imagePath: string) {
+  const key = extractManagedObjectKey(imagePath);
+  if (!key || !key.startsWith("storefront-banners/")) return null;
+  return key;
 }
 
 async function convertImageToWebp(file: File) {
@@ -43,13 +29,8 @@ async function convertImageToWebp(file: File) {
   const buffer = Buffer.from(await file.arrayBuffer());
   const output = await sharp(buffer)
     .rotate()
-    .resize({
-      width: MAX_IMAGE_WIDTH,
-      withoutEnlargement: true,
-    })
-    .webp({
-      quality: WEBP_QUALITY,
-    })
+    .resize({ width: MAX_IMAGE_WIDTH, withoutEnlargement: true })
+    .webp({ quality: WEBP_QUALITY })
     .toBuffer();
 
   if (output.byteLength > MAX_OUTPUT_FILE_BYTES) {
@@ -61,50 +42,18 @@ async function convertImageToWebp(file: File) {
   return output;
 }
 
-async function deleteManagedBannerImage(
-  supabase: SupabaseClient,
-  imagePath: string | null | undefined,
-) {
-  if (!imagePath) {
-    return;
-  }
-
-  const objectPath = getManagedBannerObjectPath(imagePath);
-
-  if (!objectPath) {
-    return;
-  }
-
-  const { error } = await supabase.storage.from(BANNER_IMAGE_BUCKET).remove([objectPath]);
-
-  if (error) {
-    throw new Error(`Gagal menghapus banner lama: ${error.message}`);
-  }
+async function deleteManagedBannerImage(imagePath: string | null | undefined) {
+  if (!imagePath) return;
+  const key = getManagedBannerObjectKey(imagePath);
+  if (!key) return;
+  await deleteR2Object(key);
 }
 
-async function uploadBannerImage(
-  supabase: SupabaseClient,
-  file: File,
-  slot: number,
-) {
+async function uploadBannerImage(file: File, slot: number) {
   const output = await convertImageToWebp(file);
-  const objectPath = `storefront-banners/banner-${slot}.webp`;
-  // Wrap Buffer as Blob so the Supabase SDK takes the FormData branch —
-  // the Buffer branch silently drops cacheControl on persist.
-  const uploadable = new Blob([output], { type: "image/webp" });
-  const { error } = await supabase.storage
-    .from(BANNER_IMAGE_BUCKET)
-    .upload(objectPath, uploadable, {
-      cacheControl: "31536000",
-      contentType: "image/webp",
-      upsert: true,
-    });
-
-  if (error) {
-    throw new Error(`Gagal upload banner ${slot}: ${error.message}`);
-  }
-
-  return getPublicBannerImageUrl(supabase, objectPath);
+  const objectKey = `storefront-banners/banner-${slot}.webp`;
+  await putR2Object(objectKey, output, "image/webp");
+  return buildImagePublicUrl(objectKey);
 }
 
 export type PersistBannerImageInput = {
@@ -116,7 +65,6 @@ export type PersistBannerImageInput = {
 };
 
 export async function persistBannerImage({
-  supabase,
   slot,
   previousImagePath,
   nextImageEntry,
@@ -124,17 +72,15 @@ export async function persistBannerImage({
 }: PersistBannerImageInput) {
   if (isFileProvided(nextImageEntry)) {
     if (previousImagePath) {
-      await deleteManagedBannerImage(supabase, previousImagePath);
+      await deleteManagedBannerImage(previousImagePath);
     }
-
-    return uploadBannerImage(supabase, nextImageEntry, slot);
+    return uploadBannerImage(nextImageEntry, slot);
   }
 
   if (shouldRemove) {
     if (previousImagePath) {
-      await deleteManagedBannerImage(supabase, previousImagePath);
+      await deleteManagedBannerImage(previousImagePath);
     }
-
     return null;
   }
 
