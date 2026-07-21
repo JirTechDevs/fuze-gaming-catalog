@@ -1,8 +1,13 @@
 import sharp from "sharp";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { getSupabaseUrl } from "@/lib/supabase/env";
+import {
+  buildImagePublicUrl,
+  deleteR2Objects,
+  extractManagedObjectKey,
+  moveR2Object,
+  putR2Object,
+} from "@/lib/r2/client";
 
-const CATALOG_IMAGE_BUCKET = "catalog-images";
 const MAX_INPUT_FILE_BYTES = 12 * 1024 * 1024;
 const MAX_OUTPUT_FILE_BYTES = 5 * 1024 * 1024;
 const MAX_GALLERY_IMAGES = 5;
@@ -10,14 +15,8 @@ const MAX_IMAGE_WIDTH = 1600;
 const WEBP_QUALITY = 82;
 
 type CatalogImageSource =
-  | {
-      kind: "existing";
-      path: string;
-    }
-  | {
-      kind: "upload";
-      file: File;
-    };
+  | { kind: "existing"; path: string }
+  | { kind: "upload"; file: File };
 
 export type PersistCatalogImagesInput = {
   supabase: SupabaseClient;
@@ -45,7 +44,6 @@ export function isFileProvided(value: FormDataEntryValue | null): value is File 
 
 export function sanitizeCatalogCode(code: string) {
   const normalized = code.toUpperCase().replace(/[^A-Z0-9]/g, "");
-
   return normalized || "CATALOG";
 }
 
@@ -53,22 +51,12 @@ export function buildCatalogImageObjectPath(code: string, imageNumber: number) {
   return `${sanitizeCatalogCode(code)}IMG${imageNumber}.webp`;
 }
 
-function getBucketPublicPrefix() {
-  return `${getSupabaseUrl()}/storage/v1/object/public/${CATALOG_IMAGE_BUCKET}/`;
-}
-
 export function getManagedCatalogImageObjectPath(imagePath: string) {
-  const prefix = getBucketPublicPrefix();
-
-  if (!imagePath.startsWith(prefix)) {
-    return null;
-  }
-
-  return decodeURIComponent(imagePath.slice(prefix.length));
+  return extractManagedObjectKey(imagePath);
 }
 
 function isManagedCatalogImage(imagePath: string) {
-  return Boolean(getManagedCatalogImageObjectPath(imagePath));
+  return Boolean(extractManagedObjectKey(imagePath));
 }
 
 async function convertImageToWebp(file: File) {
@@ -81,13 +69,8 @@ async function convertImageToWebp(file: File) {
   const buffer = Buffer.from(await file.arrayBuffer());
   const output = await sharp(buffer)
     .rotate()
-    .resize({
-      width: MAX_IMAGE_WIDTH,
-      withoutEnlargement: true,
-    })
-    .webp({
-      quality: WEBP_QUALITY,
-    })
+    .resize({ width: MAX_IMAGE_WIDTH, withoutEnlargement: true })
+    .webp({ quality: WEBP_QUALITY })
     .toBuffer();
 
   if (output.byteLength > MAX_OUTPUT_FILE_BYTES) {
@@ -99,98 +82,48 @@ async function convertImageToWebp(file: File) {
   return output;
 }
 
-function getPublicCatalogImageUrl(supabase: SupabaseClient, objectPath: string) {
-  return supabase.storage.from(CATALOG_IMAGE_BUCKET).getPublicUrl(objectPath).data.publicUrl;
-}
-
-async function deleteManagedCatalogImages(supabase: SupabaseClient, imagePaths: string[]) {
-  const objectPaths = imagePaths
-    .map(getManagedCatalogImageObjectPath)
+async function deleteManagedCatalogImages(imagePaths: string[]) {
+  const keys = imagePaths
+    .map(extractManagedObjectKey)
     .filter((value): value is string => Boolean(value));
-
-  if (!objectPaths.length) {
-    return;
-  }
-
-  const { error } = await supabase.storage.from(CATALOG_IMAGE_BUCKET).remove(objectPaths);
-
-  if (error) {
-    throw new Error(`Gagal menghapus gambar lama: ${error.message}`);
-  }
+  if (!keys.length) return;
+  await deleteR2Objects(keys);
 }
 
-async function moveManagedCatalogImage(
-  supabase: SupabaseClient,
-  currentImagePath: string,
-  targetObjectPath: string,
-) {
-  const currentObjectPath = getManagedCatalogImageObjectPath(currentImagePath);
+async function moveManagedCatalogImage(currentImagePath: string, targetObjectKey: string) {
+  const currentKey = extractManagedObjectKey(currentImagePath);
+  if (!currentKey) return currentImagePath;
+  if (currentKey === targetObjectKey) return currentImagePath;
 
-  if (!currentObjectPath) {
-    return currentImagePath;
-  }
-
-  if (currentObjectPath === targetObjectPath) {
-    return currentImagePath;
-  }
-
-  const { error } = await supabase.storage
-    .from(CATALOG_IMAGE_BUCKET)
-    .move(currentObjectPath, targetObjectPath);
-
-  if (error) {
-    throw new Error(`Gagal merapikan nama gambar: ${error.message}`);
-  }
-
-  return getPublicCatalogImageUrl(supabase, targetObjectPath);
+  await moveR2Object(currentKey, targetObjectKey);
+  return buildImagePublicUrl(targetObjectKey);
 }
 
-async function uploadCatalogImage(
-  supabase: SupabaseClient,
-  file: File,
-  targetObjectPath: string,
-) {
+async function uploadCatalogImage(file: File, targetObjectKey: string) {
   const output = await convertImageToWebp(file);
-  // Wrap Buffer as Blob so the Supabase SDK takes the FormData branch —
-  // the Buffer branch silently drops cacheControl on persist.
-  const uploadable = new Blob([output], { type: "image/webp" });
-
-  const { error } = await supabase.storage
-    .from(CATALOG_IMAGE_BUCKET)
-    .upload(targetObjectPath, uploadable, {
-      cacheControl: "31536000",
-      contentType: "image/webp",
-      upsert: true,
-    });
-
-  if (error) {
-    throw new Error(`Gagal upload gambar ${file.name}: ${error.message}`);
-  }
-
-  return getPublicCatalogImageUrl(supabase, targetObjectPath);
+  await putR2Object(targetObjectKey, output, "image/webp");
+  return buildImagePublicUrl(targetObjectKey);
 }
 
 async function resolveCatalogImageSource(
-  supabase: SupabaseClient,
   code: string,
   imageNumber: number,
   source: CatalogImageSource,
 ) {
-  const targetObjectPath = buildCatalogImageObjectPath(code, imageNumber);
+  const targetObjectKey = buildCatalogImageObjectPath(code, imageNumber);
 
   if (source.kind === "upload") {
-    return uploadCatalogImage(supabase, source.file, targetObjectPath);
+    return uploadCatalogImage(source.file, targetObjectKey);
   }
 
   if (!isManagedCatalogImage(source.path)) {
     return source.path;
   }
 
-  return moveManagedCatalogImage(supabase, source.path, targetObjectPath);
+  return moveManagedCatalogImage(source.path, targetObjectKey);
 }
 
 export async function persistCatalogImages({
-  supabase,
   code,
   previousMainImagePath,
   previousGalleryImagePaths = [],
@@ -212,7 +145,7 @@ export async function persistCatalogImages({
   const removedImages = previousImages.filter((imagePath) => !retainedImages.has(imagePath));
 
   if (removedImages.length) {
-    await deleteManagedCatalogImages(supabase, removedImages);
+    await deleteManagedCatalogImages(removedImages);
   }
 
   const mainSource: CatalogImageSource | null = mainImageFile
@@ -225,35 +158,23 @@ export async function persistCatalogImages({
     throw new Error("Foto Utama (Thumbnail) wajib diisi.");
   }
 
-  const mainImagePath = await resolveCatalogImageSource(supabase, code, 1, mainSource);
+  const mainImagePath = await resolveCatalogImageSource(code, 1, mainSource);
 
   const gallerySources: CatalogImageSource[] = [
-    ...existingGalleryImagePaths.map((path) => ({
-      kind: "existing" as const,
-      path,
-    })),
-    ...galleryImageFiles.map((file) => ({
-      kind: "upload" as const,
-      file,
-    })),
+    ...existingGalleryImagePaths.map((path) => ({ kind: "existing" as const, path })),
+    ...galleryImageFiles.map((file) => ({ kind: "upload" as const, file })),
   ];
 
   const galleryImagePaths: string[] = [];
 
   for (const [index, source] of gallerySources.entries()) {
-    const imagePath = await resolveCatalogImageSource(supabase, code, index + 2, source);
+    const imagePath = await resolveCatalogImageSource(code, index + 2, source);
     galleryImagePaths.push(imagePath);
   }
 
-  return {
-    mainImagePath,
-    galleryImagePaths,
-  };
+  return { mainImagePath, galleryImagePaths };
 }
 
-export async function deleteCatalogImages(
-  supabase: SupabaseClient,
-  imagePaths: string[],
-) {
-  await deleteManagedCatalogImages(supabase, imagePaths);
+export async function deleteCatalogImages(_supabase: SupabaseClient, imagePaths: string[]) {
+  await deleteManagedCatalogImages(imagePaths);
 }
