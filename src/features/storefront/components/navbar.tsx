@@ -10,7 +10,7 @@ const navLinks = [
   { label: "Beranda", href: "/", active: true },
   { label: "Katalog", href: "/#catalog" },
   { label: "Tukar Tambah", href: "https://wa.me/628881462675?text=Hai%20min!%20Mau%20Tukar%20Tambah" },
-  { label: "Cara Beli", href: "/cara-beli" },
+  { label: "Cara Beli", href: "/#faq" },
   { label: "Testimoni", href: "/#testimoni" },
   { label: "FAQ", href: "/#faq" },
 ] as const;
