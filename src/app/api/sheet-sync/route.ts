@@ -128,9 +128,10 @@ export async function POST(request: NextRequest) {
   }
 
   revalidatePath("/");
-  revalidatePath(`/catalog/${existing.id}`);
+  revalidatePath(`/jual-beli-akun/${code}`);
   revalidateTag("catalog-products");
   revalidateTag(`catalog-product-${existing.id}`);
+  revalidateTag(`catalog-product-code-${code}`);
 
   return NextResponse.json({
     ok: true,

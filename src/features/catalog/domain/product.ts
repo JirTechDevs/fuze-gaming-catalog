@@ -21,6 +21,7 @@ export interface Product {
 export interface ProductRepository {
   list(): Promise<Product[]>;
   getById(id: string): Promise<Product | null>;
+  getByCode(code: string): Promise<Product | null>;
 }
 
 export function formatPrice(price: number): string {

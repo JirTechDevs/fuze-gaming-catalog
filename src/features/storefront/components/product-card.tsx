@@ -95,7 +95,7 @@ export default function ProductCard({
 }: ProductCardProps) {
   const isSold = product.status === "sold";
   const router = useRouter();
-  const detailHref = `/catalog/${product.id}`;
+  const detailHref = `/jual-beli-akun/${product.code}`;
   const featuredLabel = getFeaturedLabel(product.featured);
   const productImage = product.image;
 
@@ -186,7 +186,7 @@ export default function ProductCard({
         </div>
       </div>
 
-      {/* ponytail: hidden real link so crawlers see /catalog/{id} as an internal link; users still get fast client-side router.push via the card onClick above. */}
+      {/* ponytail: hidden real link so crawlers see /jual-beli-akun/{code} as an internal link; users still get fast client-side router.push via the card onClick above. */}
       <a href={detailHref} className="sr-only" tabIndex={-1} aria-hidden="true">
         Lihat detail akun {product.code}
       </a>
