@@ -116,6 +116,22 @@ async function fetchProductById(id: string): Promise<Product | null> {
   return mapCatalogRowToProduct(data as CatalogProductRow);
 }
 
+async function fetchProductByCode(code: string): Promise<Product | null> {
+  const supabase = createPublicClient();
+  const { data, error } = await supabase
+    .from("catalog_items")
+    .select(catalogProductSelect)
+    .eq("code", code)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to load storefront product by code: ${error.message}`);
+  }
+
+  if (!data) return null;
+  return mapCatalogRowToProduct(data as CatalogProductRow);
+}
+
 const getCachedProductList = unstable_cache(
   fetchProductList,
   ["catalog-products"],
@@ -132,6 +148,16 @@ class SupabaseProductRepository implements ProductRepository {
       () => fetchProductById(id),
       [`catalog-product-${id}`],
       { revalidate: 60, tags: ["catalog-products", `catalog-product-${id}`] },
+    );
+
+    return getCachedProduct();
+  }
+
+  async getByCode(code: string): Promise<Product | null> {
+    const getCachedProduct = unstable_cache(
+      () => fetchProductByCode(code),
+      [`catalog-product-code-${code}`],
+      { revalidate: 60, tags: ["catalog-products", `catalog-product-code-${code}`] },
     );
 
     return getCachedProduct();

@@ -42,7 +42,8 @@ export function buildImagePublicUrl(objectKey: string) {
 
 // Extract object key from a URL we manage. Handles both new /img/ URLs and
 // legacy Supabase Storage URLs (until legacy data is fully cleaned up).
-export function extractManagedObjectKey(url: string): string | null {
+export function extractManagedObjectKey(url: string | null | undefined): string | null {
+  if (!url || typeof url !== "string") return null;
   if (url.startsWith(IMAGE_URL_PREFIX)) {
     return decodeURIComponent(url.slice(IMAGE_URL_PREFIX.length));
   }
@@ -93,14 +94,14 @@ export async function deleteR2Objects(keys: string[]) {
 export async function moveR2Object(fromKey: string, toKey: string) {
   if (fromKey === toKey) return;
 
-  // R2 has no native move — copy then delete. Use PutObject with CopySource header
-  // via the S3 CopyObjectCommand.
+  // R2 has no native move — copy then delete via S3 CopyObjectCommand.
+  // CopySource is `bucket/key` with only the key path-encoded (slashes preserved).
   const { CopyObjectCommand } = await import("@aws-sdk/client-s3");
   await getR2Client().send(
     new CopyObjectCommand({
       Bucket: getR2Bucket(),
       Key: toKey,
-      CopySource: encodeURIComponent(`${getR2Bucket()}/${fromKey}`),
+      CopySource: `${getR2Bucket()}/${fromKey.split("/").map(encodeURIComponent).join("/")}`,
       CacheControl: "public, max-age=31536000, immutable",
       MetadataDirective: "REPLACE",
     }),
