@@ -20,7 +20,11 @@
 
 // ---- Config ----------------------------------------------------------
 
-var WEBHOOK_URL = 'https://fuzevalo.com/api/sheet-sync';
+// Must include the www subdomain. The apex (fuzevalo.com) 307-redirects to
+// www, and Google Apps Script's UrlFetchApp is not guaranteed to preserve
+// the x-sheet-secret header across cross-host redirects → 401 Unauthorized
+// at the final hop and the sync silently no-ops.
+var WEBHOOK_URL = 'https://www.fuzevalo.com/api/sheet-sync';
 
 // Column layout on every monthly tab (1 = A, 2 = B, ...)
 var STATUS_COLUMN = 3; // C
