@@ -8,9 +8,8 @@ export interface StorefrontBanner {
 }
 
 export const fallbackStorefrontBanners: StorefrontBanner[] = [
-  { src: "/images/banners/pink.webp", alt: "Fuzevalo banner pink edition" },
-  { src: "/images/banners/red.webp", alt: "Fuzevalo banner red edition" },
-  { src: "/images/banners/yellow.webp", alt: "Fuzevalo banner yellow edition" },
+  { src: "/images/banners/banner-1.jpeg", alt: "Fuzevalo banner 1" },
+  { src: "/images/banners/banner-2.png", alt: "Fuzevalo banner 2" },
 ];
 
 function normalizeBannerSource(value: unknown) {
