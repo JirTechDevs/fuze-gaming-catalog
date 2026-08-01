@@ -43,14 +43,12 @@ export const metadata: Metadata = {
     "fuzevalo",
   ],
   icons: {
-    // Browser tab: high-res "logo fixed" PNG (500x500). Google Search
-    // prefers the 48x48 favicon, so the .ico (arrow logo) hits their
-    // preference and ships to search results while the tab keeps the FV.
-    icon: [
-      { url: "/images/logo.png", type: "image/png", sizes: "500x500" },
-      { url: "/favicon.ico", type: "image/x-icon", sizes: "48x48" },
-    ],
-    shortcut: "/favicon.ico",
+    // Only declare the "logo fixed" PNG so the browser tab picks it
+    // deterministically. /favicon.ico (arrow logo) still sits at the
+    // site root — Google's crawler probes that path independently and
+    // uses it as the search-result icon.
+    icon: "/images/logo.png",
+    shortcut: "/images/logo.png",
     apple: "/images/logo.png",
   },
   authors: [{ name: "Fuzevalo" }],
