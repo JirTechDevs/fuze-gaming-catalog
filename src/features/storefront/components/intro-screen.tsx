@@ -43,7 +43,7 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
             <motion.img
               src="/images/logo.png"
               alt="Fuzevalo"
-              className={`h-20 w-20 sm:h-24 sm:w-24 ${styles.introLogo}`}
+              className={`h-28 w-28 sm:h-32 sm:w-32 ${styles.introLogo}`}
               animate={
                 prefersReducedMotion
                   ? undefined
