@@ -43,13 +43,14 @@ export const metadata: Metadata = {
     "fuzevalo",
   ],
   icons: {
-    // Only declare the "logo fixed" PNG so the browser tab picks it
-    // deterministically. /favicon.ico (arrow logo) still sits at the
-    // site root — Google's crawler probes that path independently and
-    // uses it as the search-result icon.
+    // Desktop browsers (Chrome/Firefox/Edge/Safari on Win/Linux/Mac) read
+    // rel="icon" for the tab bar and ignore apple-touch-icon. Google's
+    // crawler reads all rel types and prefers the largest / apple-touch
+    // for search-result thumbnails. So: tab = logo fixed (transparent),
+    // Google search + iOS home screen = dark rounded square (app-icon look).
     icon: "/images/logo.png",
     shortcut: "/images/logo.png",
-    apple: "/images/logo.png",
+    apple: "/images/logo-search.png",
   },
   authors: [{ name: "Fuzevalo" }],
   openGraph: {
