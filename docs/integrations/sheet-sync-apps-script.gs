@@ -230,6 +230,7 @@ function backfillApril26() { backfillSheetByName('April 26'); }
 function backfillMei2026() { backfillSheetByName('Mei 2026'); }
 function backfillJuni2026() { backfillSheetByName('Juni 2026'); }
 function backfillJuli2026() { backfillSheetByName('Juli 2026'); }
+function backfillAgustus2026() { backfillSheetByName('Agustus 2026'); }
 
 function backfillSheet(sheet) {
   var name = sheet.getName();
