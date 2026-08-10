@@ -9,6 +9,8 @@ import testi5 from "@/assets/testi/testi-5.webp";
 import testi6 from "@/assets/testi/testi-6.webp";
 import testi7 from "@/assets/testi/testi-7.webp";
 import testi8 from "@/assets/testi/testi-8.webp";
+import testi9 from "@/assets/testi/testi-9.webp";
+import testi10 from "@/assets/testi/testi-10.webp";
 
 interface Testimonial {
   src: StaticImageData;
@@ -24,6 +26,8 @@ const testimonials: Testimonial[] = [
   { src: testi6, alt: "Testimoni customer 6" },
   { src: testi7, alt: "Testimoni customer 7" },
   { src: testi8, alt: "Testimoni customer 8" },
+  { src: testi9, alt: "Testimoni customer 9" },
+  { src: testi10, alt: "Testimoni customer 10" },
 ];
 
 const loopedTestimonials = [...testimonials, ...testimonials];
