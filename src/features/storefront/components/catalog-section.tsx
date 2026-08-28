@@ -251,8 +251,8 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     value >= 1_000_000
       ? `${(value / 1_000_000).toFixed(value % 1_000_000 === 0 ? 0 : 1)}jt`
       : value >= 1_000
-      ? `${(value / 1_000).toFixed(0)}rb`
-      : `${value}`;
+        ? `${(value / 1_000).toFixed(0)}rb`
+        : `${value}`;
 
   const available = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -440,21 +440,21 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
             isLiteMode
               ? { opacity: particle.opacity, y: 0, x: 0, scale: 1 }
               : {
-                  opacity: [particle.opacity, particle.opacity * 1.4, particle.opacity],
-                  y: [0, -18, 0],
-                  x: [0, 10, 0],
-                  scale: [1, 1.06, 0.98],
-                }
+                opacity: [particle.opacity, particle.opacity * 1.4, particle.opacity],
+                y: [0, -18, 0],
+                x: [0, 10, 0],
+                scale: [1, 1.06, 0.98],
+              }
           }
           transition={
             isLiteMode
               ? { duration: 0.2 }
               : {
-                  duration: particle.duration,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: particle.delay,
-                }
+                duration: particle.duration,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: particle.delay,
+              }
           }
         />
       ))}
@@ -502,23 +502,26 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
 
                   {/* Row 1 (mobile) / Order 1 (desktop): Search with opaque prefix */}
-                  <div className="relative block sm:order-1 sm:flex-1">
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 select-none text-[13px] text-foreground/70 sm:left-4 sm:text-sm"
-                    >
-                      Cari skin&nbsp;:
-                    </span>
-                    <input
-                      type="text"
-                      placeholder="Vandal Kuronami"
-                      value={search}
-                      onChange={(event) => setSearch(event.target.value)}
-                      aria-label="Cari skin"
-                      className="h-9 w-full rounded-[0.75rem] border border-border/45 bg-card/55 pl-[88px] pr-3 text-[13px] text-foreground outline-none transition placeholder:text-muted-foreground/35 focus:border-primary/45 focus:ring-2 focus:ring-primary/15 sm:h-11 sm:rounded-[0.9rem] sm:pl-[96px] sm:pr-4 sm:text-sm"
-                    />
-                  </div>
+                  <label className={`${styles.filterGroup} relative block w-full sm:order-1 sm:flex-1`}>
+                    <span className="sr-only">Cari Skin</span>
+                    <span className={`${styles.filterField} relative flex h-10 w-full items-center sm:h-11`}>
+                      <input
+                        type="text"
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                        aria-label="Cari skin"
+                        className="h-full w-full appearance-none border-none bg-transparent px-3 text-[13px] text-foreground outline-none sm:px-4 sm:text-sm"
+                      />
 
+                      {/* Custom Overlay Placeholder */}
+                      {!search && (
+                        <div className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center gap-1.5 select-none text-[13px] sm:left-4 sm:text-sm">
+                          <span className="font-medium text-foreground">Cari skin :</span>
+                          <span className="text-muted-foreground/35">Vandal Kuronami</span>
+                        </div>
+                      )}
+                    </span>
+                  </label>
                   {/* Row 2 (mobile): Filter pill + Sort dropdown */}
                   <div className="flex gap-2 sm:contents">
                     {/* Mobile-only Filter toggle pill */}
@@ -536,53 +539,53 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                     {/* Sort dropdown */}
                     <div
                       ref={sortRef}
-                      className="relative flex h-9 flex-1 items-center gap-1 rounded-[0.75rem] border border-border/45 bg-card/55 pl-2.5 pr-1.5 sm:order-4 sm:h-11 sm:flex-none sm:min-w-[200px] sm:gap-2 sm:rounded-[0.9rem] sm:pl-4 sm:pr-3"
+                      className={`${styles.filterGroup} relative block flex-1 sm:order-4 sm:flex-none sm:min-w-[200px]`}
                     >
-                      <span className="hidden whitespace-nowrap text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70 sm:inline">
-                        Urutkan
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setSortOpen((current) => !current)}
-                        aria-haspopup="listbox"
-                        aria-expanded={sortOpen}
-                        className="flex h-9 w-full min-w-0 items-center justify-between gap-2 bg-transparent pr-1 text-[12px] text-foreground outline-none sm:h-11 sm:text-sm"
-                      >
-                        <span className="truncate">{sortLabel}</span>
-                        <ChevronDown
-                          size={13}
-                          className={`shrink-0 text-muted-foreground/70 transition-transform sm:hidden ${sortOpen ? "rotate-180" : ""}`}
-                        />
-                        <ChevronDown
-                          size={16}
-                          className={`hidden shrink-0 text-muted-foreground/70 transition-transform sm:block ${sortOpen ? "rotate-180" : ""}`}
-                        />
-                      </button>
-                      {sortOpen && (
-                        <ul
-                          role="listbox"
-                          className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 overflow-hidden rounded-[0.75rem] border border-border/45 bg-card/95 shadow-[0_18px_44px_rgba(0,3,15,0.55)] backdrop-blur-md sm:rounded-[0.9rem]"
+                      <span className={`${styles.filterField} relative flex h-10 w-full items-center p-0 sm:h-11`}>
+                        <button
+                          type="button"
+                          onClick={() => setSortOpen((current) => !current)}
+                          aria-haspopup="listbox"
+                          aria-expanded={sortOpen}
+                          className="flex h-full w-full items-center justify-between gap-2 bg-transparent px-3 text-[13px] text-foreground outline-none sm:px-4 sm:text-sm"
                         >
-                          {sortOptions.map((option) => {
-                            const isActive = option.value === sortBy;
-                            return (
-                              <li key={option.value} role="option" aria-selected={isActive}>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setSortBy(option.value);
-                                    setSortOpen(false);
-                                  }}
-                                  className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-[12px] transition sm:text-sm ${isActive ? "bg-primary/15 text-primary" : "text-foreground hover:bg-white/[0.04]"}`}
-                                >
-                                  {option.label}
-                                  {isActive && <span className="text-primary">•</span>}
-                                </button>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      )}
+                          <span className="flex items-center gap-1.5 truncate">
+                            <span className="hidden whitespace-nowrap text-muted-foreground/70 sm:inline">Urutkan :</span>
+                            <span className="font-medium text-foreground">{sortLabel}</span>
+                          </span>
+                          <ChevronDown
+                            size={16}
+                            className={`shrink-0 text-muted-foreground/70 transition-transform ${sortOpen ? "rotate-180" : ""}`}
+                          />
+                        </button>
+
+                        {sortOpen && (
+                          <ul
+                            role="listbox"
+                            className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 overflow-hidden rounded-[0.75rem] border border-border/45 bg-card/95 shadow-[0_18px_44px_rgba(0,3,15,0.55)] backdrop-blur-md sm:rounded-[0.9rem]"
+                          >
+                            {sortOptions.map((option) => {
+                              const isActive = option.value === sortBy;
+                              return (
+                                <li key={option.value} role="option" aria-selected={isActive}>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setSortBy(option.value);
+                                      setSortOpen(false);
+                                    }}
+                                    className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-[13px] transition sm:text-sm ${isActive ? "bg-primary/15 text-primary" : "text-foreground hover:bg-white/[0.04]"
+                                      }`}
+                                  >
+                                    {option.label}
+                                    {isActive && <span className="text-primary">•</span>}
+                                  </button>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        )}
+                      </span>
                     </div>
                   </div>
 
@@ -645,11 +648,10 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                       onClick={() => setPriceOpen((prev) => !prev)}
                       aria-haspopup="true"
                       aria-expanded={priceOpen}
-                      className={`inline-flex h-9 w-full items-center justify-center gap-2 rounded-[0.75rem] border px-3 font-display text-[12px] font-bold tracking-[0.04em] transition sm:h-11 sm:w-auto sm:rounded-[0.9rem] sm:px-4 sm:text-sm ${
-                        hasPriceFilter
-                          ? "border-primary/60 bg-primary/10 text-primary shadow-[0_0_14px_hsl(var(--primary)_/_0.18)]"
-                          : "border-border/45 bg-card/55 text-foreground/80 hover:border-primary/30 hover:text-primary"
-                      }`}
+                      className={`inline-flex h-9 w-full items-center justify-center gap-2 rounded-[0.75rem] border px-3 font-display text-[12px] font-bold tracking-[0.04em] transition sm:h-11 sm:w-auto sm:rounded-[0.9rem] sm:px-4 sm:text-sm ${hasPriceFilter
+                        ? "border-primary/60 bg-primary/10 text-primary shadow-[0_0_14px_hsl(var(--primary)_/_0.18)]"
+                        : "border-border/45 bg-card/55 text-foreground/80 hover:border-primary/30 hover:text-primary"
+                        }`}
                     >
                       <span>Filter Harga</span>
                       {hasPriceFilter && (
@@ -659,9 +661,8 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                       )}
                       <ChevronDown
                         size={14}
-                        className={`shrink-0 text-muted-foreground/70 transition-transform ${
-                          priceOpen ? "rotate-180" : ""
-                        }`}
+                        className={`shrink-0 text-muted-foreground/70 transition-transform ${priceOpen ? "rotate-180" : ""
+                          }`}
                       />
                     </button>
 
@@ -818,11 +819,10 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                         type="button"
                         onClick={() => setCurrentPage(item)}
                         aria-current={isActive ? "page" : undefined}
-                        className={`flex h-10 min-w-10 items-center justify-center rounded-[0.9rem] border px-3 font-display text-sm font-bold transition ${
-                          isActive
-                            ? "border-primary bg-primary text-primary-foreground shadow-[0_0_24px_hsl(var(--primary)_/_0.28)]"
-                            : "border-border/40 bg-card/55 text-foreground/78 hover:border-primary/30 hover:text-primary"
-                        }`}
+                        className={`flex h-10 min-w-10 items-center justify-center rounded-[0.9rem] border px-3 font-display text-sm font-bold transition ${isActive
+                          ? "border-primary bg-primary text-primary-foreground shadow-[0_0_24px_hsl(var(--primary)_/_0.28)]"
+                          : "border-border/40 bg-card/55 text-foreground/78 hover:border-primary/30 hover:text-primary"
+                          }`}
                       >
                         {item}
                       </button>
