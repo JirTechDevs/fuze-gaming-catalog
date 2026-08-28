@@ -8,6 +8,7 @@ import { valorantRanks } from "@/features/catalog/domain/valorant-ranks";
 import { useRealtimeProducts } from "@/features/catalog/hooks/use-realtime-products";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ProductCard from "@/features/storefront/components/product-card";
+import { Slider } from "@/components/ui/slider";
 import styles from "./catalog-section.module.css";
 
 interface CatalogSectionProps {
@@ -58,6 +59,9 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   const [maxPriceInput, setMaxPriceInput] = useState("");
   const [debouncedMinPrice, setDebouncedMinPrice] = useState("");
   const [debouncedMaxPrice, setDebouncedMaxPrice] = useState("");
+
+  const [priceOpen, setPriceOpen] = useState(false);
+  const priceRef = useRef<HTMLDivElement | null>(null);
 
   const isInitialized = useRef(false);
   const restoredPage = useRef<number | null>(null);
@@ -172,6 +176,23 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     };
   }, [sortOpen]);
 
+  // Close price dropdown on outside click / Escape.
+  useEffect(() => {
+    if (!priceOpen) return;
+    const onPointer = (event: PointerEvent) => {
+      if (!priceRef.current?.contains(event.target as Node)) setPriceOpen(false);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setPriceOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [priceOpen]);
+
   const sortLabel = sortOptions.find((option) => option.value === sortBy)?.label ?? "Terbaru";
 
   // Keep this block commented so we can quickly restore the extra demo section later.
@@ -211,6 +232,29 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     () => [...new Set(availableProducts.map((product) => product.changeNick))],
     [availableProducts],
   );
+
+  // Derived: slider max ceiling — round up to the nearest 500k above the highest product price, minimum 5M.
+  const sliderMax = useMemo(() => {
+    const maxProductPrice = availableProducts.reduce((acc, p) => Math.max(acc, p.price), 0);
+    return Math.max(5_000_000, Math.ceil(maxProductPrice / 500_000) * 500_000);
+  }, [availableProducts]);
+
+  const SLIDER_STEP = 10_000;
+
+  // Slider value: [min, max] in raw numbers (empty string = boundary)
+  const sliderValue: [number, number] = [
+    minPriceInput ? Number(minPriceInput) : 0,
+    maxPriceInput ? Number(maxPriceInput) : sliderMax,
+  ];
+
+  const hasPriceFilter = Boolean(minPriceInput || maxPriceInput);
+
+  const formatPrice = (value: number) =>
+    value >= 1_000_000
+      ? `${(value / 1_000_000).toFixed(value % 1_000_000 === 0 ? 0 : 1)}jt`
+      : value >= 1_000
+      ? `${(value / 1_000).toFixed(0)}rb`
+      : `${value}`;
 
   const available = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -467,7 +511,7 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                   <label className="block sm:order-1 sm:flex-1">
                     <input
                       type="text"
-                      placeholder="Cari kode / skin / nama akun..."
+                      placeholder="Cari skin : Vandal Kuronami"
                       value={search}
                       onChange={(event) => setSearch(event.target.value)}
                       className="h-9 w-full rounded-[0.75rem] border border-border/45 bg-card/55 px-3 text-[13px] text-foreground outline-none transition placeholder:text-muted-foreground/55 focus:border-primary/45 focus:ring-2 focus:ring-primary/15 sm:h-11 sm:rounded-[0.9rem] sm:px-4 sm:text-sm"
@@ -577,32 +621,122 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                         </span>
                       </label>
 
-                      <div className="flex items-center gap-2 sm:order-4 sm:min-w-[240px] sm:flex-1">
-                        <label className={`${styles.filterGroup} flex-1`}>
-                          <span className={`${styles.filterLabel} sm:sr-only`}>Harga Min</span>
-                          <span className={styles.filterField}>
-                            <input
-                              type="number"
-                              placeholder="Harga Min"
-                              value={minPriceInput}
-                              onChange={(e) => setMinPriceInput(e.target.value)}
-                              className={styles.filterInput}
-                            />
-                          </span>
-                        </label>
-                        <span className="self-end pb-3 text-muted-foreground/55 text-xs font-bold sm:self-center sm:pb-0">-</span>
-                        <label className={`${styles.filterGroup} flex-1`}>
-                          <span className={`${styles.filterLabel} sm:sr-only`}>Harga Max</span>
-                          <span className={styles.filterField}>
-                            <input
-                              type="number"
-                              placeholder="Harga Max"
-                              value={maxPriceInput}
-                              onChange={(e) => setMaxPriceInput(e.target.value)}
-                              className={styles.filterInput}
-                            />
-                          </span>
-                        </label>
+                      {/* ── Harga filter button + floating dropdown ── */}
+                      <div ref={priceRef} className="relative sm:order-4">
+                        <button
+                          type="button"
+                          id="price-filter-btn"
+                          onClick={() => setPriceOpen((prev) => !prev)}
+                          aria-haspopup="true"
+                          aria-expanded={priceOpen}
+                          className={`inline-flex h-9 items-center gap-2 rounded-[0.75rem] border px-3 font-display text-[12px] font-bold tracking-[0.04em] transition sm:h-11 sm:rounded-[0.9rem] sm:px-4 sm:text-sm ${
+                            hasPriceFilter
+                              ? "border-primary/60 bg-primary/10 text-primary shadow-[0_0_14px_hsl(var(--primary)_/_0.18)]"
+                              : "border-border/45 bg-card/55 text-foreground/80 hover:border-primary/30 hover:text-primary"
+                          }`}
+                        >
+                          <span>Harga</span>
+                          {hasPriceFilter && (
+                            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-primary-foreground">
+                              ✓
+                            </span>
+                          )}
+                          <ChevronDown
+                            size={13}
+                            className={`shrink-0 text-muted-foreground/70 transition-transform sm:hidden ${
+                              priceOpen ? "rotate-180" : ""
+                            }`}
+                          />
+                          <ChevronDown
+                            size={15}
+                            className={`hidden shrink-0 text-muted-foreground/70 transition-transform sm:block ${
+                              priceOpen ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+
+                        {priceOpen && (
+                          <div
+                            className="absolute left-0 top-[calc(100%+8px)] z-40 w-[300px] rounded-[1rem] border border-border/50 bg-card/95 p-4 shadow-[0_18px_44px_rgba(0,3,15,0.6)] backdrop-blur-md sm:w-[320px]"
+                            role="dialog"
+                            aria-label="Filter harga"
+                          >
+                            {/* Header */}
+                            <div className="mb-3 flex items-center justify-between">
+                              <span className="font-display text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/70">
+                                Filter Harga
+                              </span>
+                              {hasPriceFilter && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setMinPriceInput("");
+                                    setMaxPriceInput("");
+                                    setDebouncedMinPrice("");
+                                    setDebouncedMaxPrice("");
+                                  }}
+                                  className="text-[10px] font-bold text-primary/80 transition hover:text-primary"
+                                >
+                                  Reset
+                                </button>
+                              )}
+                            </div>
+
+                            {/* Dual-range slider */}
+                            <div className="mb-4">
+                              <Slider
+                                min={0}
+                                max={sliderMax}
+                                step={SLIDER_STEP}
+                                value={sliderValue}
+                                onValueChange={([newMin, newMax]) => {
+                                  setMinPriceInput(newMin === 0 ? "" : String(newMin));
+                                  setMaxPriceInput(newMax === sliderMax ? "" : String(newMax));
+                                }}
+                                className="my-2"
+                              />
+                              <div className="mt-1 flex justify-between">
+                                <span className="text-[10px] text-muted-foreground/55">
+                                  {formatPrice(sliderValue[0])}
+                                </span>
+                                <span className="text-[10px] text-muted-foreground/55">
+                                  {formatPrice(sliderValue[1])}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Min / Max number inputs */}
+                            <div className="flex items-center gap-2">
+                              <div className="flex-1">
+                                <label className="mb-1 block font-display text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground/60">
+                                  Min
+                                </label>
+                                <input
+                                  id="price-min-input"
+                                  type="number"
+                                  placeholder="0"
+                                  value={minPriceInput}
+                                  onChange={(e) => setMinPriceInput(e.target.value)}
+                                  className="h-9 w-full rounded-[0.75rem] border border-border/40 bg-background/40 px-3 text-[12px] text-foreground outline-none transition placeholder:text-muted-foreground/40 focus:border-primary/45 focus:ring-2 focus:ring-primary/15"
+                                />
+                              </div>
+                              <span className="mt-5 text-xs font-bold text-muted-foreground/40">—</span>
+                              <div className="flex-1">
+                                <label className="mb-1 block font-display text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground/60">
+                                  Max
+                                </label>
+                                <input
+                                  id="price-max-input"
+                                  type="number"
+                                  placeholder="Semua"
+                                  value={maxPriceInput}
+                                  onChange={(e) => setMaxPriceInput(e.target.value)}
+                                  className="h-9 w-full rounded-[0.75rem] border border-border/40 bg-background/40 px-3 text-[12px] text-foreground outline-none transition placeholder:text-muted-foreground/40 focus:border-primary/45 focus:ring-2 focus:ring-primary/15"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
