@@ -47,7 +47,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   const isLiteMode = forceLiteMode || isMobile || prefersReducedMotion;
   const [search, setSearch] = useState("");
   const [rankFilter, setRankFilter] = useState("all");
-  const [regionFilter, setRegionFilter] = useState("all");
   const [nickFilter, setNickFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
   const [sortOpen, setSortOpen] = useState(false);
@@ -74,7 +73,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   useEffect(() => {
     const savedSearch = sessionStorage.getItem("catalog_search");
     const savedRank = sessionStorage.getItem("catalog_rank");
-    const savedRegion = sessionStorage.getItem("catalog_region");
     const savedNick = sessionStorage.getItem("catalog_nick");
     const savedSortBy = sessionStorage.getItem("catalog_sort_by");
     const savedPage = sessionStorage.getItem("catalog_page");
@@ -83,7 +81,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
 
     if (savedSearch !== null) setSearch(savedSearch);
     if (savedRank !== null) setRankFilter(savedRank);
-    if (savedRegion !== null) setRegionFilter(savedRegion);
     if (savedNick !== null) setNickFilter(savedNick);
     if (savedSortBy !== null) setSortBy(savedSortBy);
     if (savedPage !== null) {
@@ -114,10 +111,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     sessionStorage.setItem("catalog_rank", rankFilter);
   }, [rankFilter]);
 
-  useEffect(() => {
-    if (!isInitialized.current) return;
-    sessionStorage.setItem("catalog_region", regionFilter);
-  }, [regionFilter]);
 
   useEffect(() => {
     if (!isInitialized.current) return;
@@ -223,10 +216,15 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     [availableProducts],
   );
 
-  const regionOptions = useMemo(
-    () => [...new Set(availableProducts.map((product) => product.region))],
-    [availableProducts],
-  );
+  // Helper: format raw number string as Indonesian dot-separated display ("600000" → "600.000")
+  const formatPriceDisplay = (raw: string): string => {
+    if (!raw) return "";
+    const digits = raw.replace(/\D/g, "");
+    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+  // Helper: strip formatting dots to get raw digits only
+  const parsePriceInput = (formatted: string): string =>
+    formatted.replace(/\./g, "");
 
   const nickOptions = useMemo(
     () => [...new Set(availableProducts.map((product) => product.changeNick))],
@@ -270,8 +268,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
 
       const matchesRank =
         rankFilter === "all" || product.rank.split(" ")[0] === rankFilter;
-      const matchesRegion =
-        regionFilter === "all" || product.region === regionFilter;
       const matchesNick =
         nickFilter === "all" || product.changeNick === nickFilter;
 
@@ -283,7 +279,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
       return (
         matchesSearch &&
         matchesRank &&
-        matchesRegion &&
         matchesNick &&
         matchesMinPrice &&
         matchesMaxPrice
@@ -303,7 +298,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     availableProducts,
     nickFilter,
     rankFilter,
-    regionFilter,
     search,
     sortBy,
     debouncedMinPrice,
@@ -374,7 +368,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   }, [
     search,
     rankFilter,
-    regionFilter,
     nickFilter,
     sortBy,
     debouncedMinPrice,
@@ -402,7 +395,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   const resetFilters = () => {
     setSearch("");
     setRankFilter("all");
-    setRegionFilter("all");
     setNickFilter("all");
     setSortBy("default");
     setCurrentPage(1);
@@ -414,7 +406,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     // Clear all storage keys to make sure next navigation starts fresh
     sessionStorage.removeItem("catalog_search");
     sessionStorage.removeItem("catalog_rank");
-    sessionStorage.removeItem("catalog_region");
     sessionStorage.removeItem("catalog_nick");
     sessionStorage.removeItem("catalog_sort_by");
     sessionStorage.removeItem("catalog_page");
@@ -507,18 +498,30 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
 
             <div className={styles.filtersPanel}>
               <div id="catalog-filters-content" className={styles.filtersBody}>
+                {/* ── Filter rows ── */}
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-                  <label className="block sm:order-1 sm:flex-1">
+
+                  {/* Row 1 (mobile) / Order 1 (desktop): Search with opaque prefix */}
+                  <div className="relative block sm:order-1 sm:flex-1">
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 select-none text-[13px] text-foreground/70 sm:left-4 sm:text-sm"
+                    >
+                      Cari skin&nbsp;:
+                    </span>
                     <input
                       type="text"
-                      placeholder="Cari skin : Vandal Kuronami"
+                      placeholder="Vandal Kuronami"
                       value={search}
                       onChange={(event) => setSearch(event.target.value)}
-                      className="h-9 w-full rounded-[0.75rem] border border-border/45 bg-card/55 px-3 text-[13px] text-foreground outline-none transition placeholder:text-muted-foreground/55 focus:border-primary/45 focus:ring-2 focus:ring-primary/15 sm:h-11 sm:rounded-[0.9rem] sm:px-4 sm:text-sm"
+                      aria-label="Cari skin"
+                      className="h-9 w-full rounded-[0.75rem] border border-border/45 bg-card/55 pl-[88px] pr-3 text-[13px] text-foreground outline-none transition placeholder:text-muted-foreground/35 focus:border-primary/45 focus:ring-2 focus:ring-primary/15 sm:h-11 sm:rounded-[0.9rem] sm:pl-[96px] sm:pr-4 sm:text-sm"
                     />
-                  </label>
+                  </div>
 
+                  {/* Row 2 (mobile): Filter pill + Sort dropdown */}
                   <div className="flex gap-2 sm:contents">
+                    {/* Mobile-only Filter toggle pill */}
                     <button
                       type="button"
                       onClick={() => setIsFilterOpen((current) => !current)}
@@ -530,9 +533,10 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                       <FilterIcon size={13} />
                     </button>
 
+                    {/* Sort dropdown */}
                     <div
                       ref={sortRef}
-                      className="relative flex h-9 flex-1 items-center gap-1 rounded-[0.75rem] border border-border/45 bg-card/55 pl-2.5 pr-1.5 sm:order-5 sm:h-11 sm:flex-none sm:min-w-[200px] sm:gap-2 sm:rounded-[0.9rem] sm:pl-4 sm:pr-3"
+                      className="relative flex h-9 flex-1 items-center gap-1 rounded-[0.75rem] border border-border/45 bg-card/55 pl-2.5 pr-1.5 sm:order-4 sm:h-11 sm:flex-none sm:min-w-[200px] sm:gap-2 sm:rounded-[0.9rem] sm:pl-4 sm:pr-3"
                     >
                       <span className="hidden whitespace-nowrap text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70 sm:inline">
                         Urutkan
@@ -582,7 +586,7 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                     </div>
                   </div>
 
-                  {/* Rank + Region + Reset — mobile: collapsible drawer, desktop: sm:contents flattens into the flex row (order 2/3/4) */}
+                  {/* Rank + Nick — mobile: collapsible drawer, desktop: sm:contents flattens into flex row */}
                   <div
                     className={`${isFilterOpen ? "rounded-[1rem] border border-border/35 bg-card/40 p-4" : "hidden"} sm:!contents`}
                   >
@@ -605,139 +609,21 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                       </label>
 
                       <label className={`${styles.filterGroup} sm:order-3 sm:min-w-[160px] sm:flex-1`}>
-                        <span className={`${styles.filterLabel} sm:sr-only`}>Region</span>
+                        <span className={`${styles.filterLabel} sm:sr-only`}>Ganti Nick</span>
                         <span className={`${styles.filterField} ${styles.selectWrap}`}>
                           <select
-                            value={regionFilter}
-                            onChange={(event) => setRegionFilter(event.target.value)}
+                            value={nickFilter}
+                            onChange={(event) => setNickFilter(event.target.value)}
                             className={styles.selectField}
                           >
-                            <option value="all">Semua Region</option>
-                            {regionOptions.map((region) => (
-                              <option key={region} value={region}>{region}</option>
+                            <option value="all">Ganti Nick</option>
+                            {nickOptions.map((nick) => (
+                              <option key={nick} value={nick}>{nick}</option>
                             ))}
                           </select>
                           <ChevronDown size={16} className={styles.selectIcon} />
                         </span>
                       </label>
-
-                      {/* ── Harga filter button + floating dropdown ── */}
-                      <div ref={priceRef} className="relative sm:order-4">
-                        <button
-                          type="button"
-                          id="price-filter-btn"
-                          onClick={() => setPriceOpen((prev) => !prev)}
-                          aria-haspopup="true"
-                          aria-expanded={priceOpen}
-                          className={`inline-flex h-9 items-center gap-2 rounded-[0.75rem] border px-3 font-display text-[12px] font-bold tracking-[0.04em] transition sm:h-11 sm:rounded-[0.9rem] sm:px-4 sm:text-sm ${
-                            hasPriceFilter
-                              ? "border-primary/60 bg-primary/10 text-primary shadow-[0_0_14px_hsl(var(--primary)_/_0.18)]"
-                              : "border-border/45 bg-card/55 text-foreground/80 hover:border-primary/30 hover:text-primary"
-                          }`}
-                        >
-                          <span>Harga</span>
-                          {hasPriceFilter && (
-                            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-primary-foreground">
-                              ✓
-                            </span>
-                          )}
-                          <ChevronDown
-                            size={13}
-                            className={`shrink-0 text-muted-foreground/70 transition-transform sm:hidden ${
-                              priceOpen ? "rotate-180" : ""
-                            }`}
-                          />
-                          <ChevronDown
-                            size={15}
-                            className={`hidden shrink-0 text-muted-foreground/70 transition-transform sm:block ${
-                              priceOpen ? "rotate-180" : ""
-                            }`}
-                          />
-                        </button>
-
-                        {priceOpen && (
-                          <div
-                            className="absolute left-0 top-[calc(100%+8px)] z-40 w-[300px] rounded-[1rem] border border-border/50 bg-card/95 p-4 shadow-[0_18px_44px_rgba(0,3,15,0.6)] backdrop-blur-md sm:w-[320px]"
-                            role="dialog"
-                            aria-label="Filter harga"
-                          >
-                            {/* Header */}
-                            <div className="mb-3 flex items-center justify-between">
-                              <span className="font-display text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/70">
-                                Filter Harga
-                              </span>
-                              {hasPriceFilter && (
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setMinPriceInput("");
-                                    setMaxPriceInput("");
-                                    setDebouncedMinPrice("");
-                                    setDebouncedMaxPrice("");
-                                  }}
-                                  className="text-[10px] font-bold text-primary/80 transition hover:text-primary"
-                                >
-                                  Reset
-                                </button>
-                              )}
-                            </div>
-
-                            {/* Dual-range slider */}
-                            <div className="mb-4">
-                              <Slider
-                                min={0}
-                                max={sliderMax}
-                                step={SLIDER_STEP}
-                                value={sliderValue}
-                                onValueChange={([newMin, newMax]) => {
-                                  setMinPriceInput(newMin === 0 ? "" : String(newMin));
-                                  setMaxPriceInput(newMax === sliderMax ? "" : String(newMax));
-                                }}
-                                className="my-2"
-                              />
-                              <div className="mt-1 flex justify-between">
-                                <span className="text-[10px] text-muted-foreground/55">
-                                  {formatPrice(sliderValue[0])}
-                                </span>
-                                <span className="text-[10px] text-muted-foreground/55">
-                                  {formatPrice(sliderValue[1])}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* Min / Max number inputs */}
-                            <div className="flex items-center gap-2">
-                              <div className="flex-1">
-                                <label className="mb-1 block font-display text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground/60">
-                                  Min
-                                </label>
-                                <input
-                                  id="price-min-input"
-                                  type="number"
-                                  placeholder="0"
-                                  value={minPriceInput}
-                                  onChange={(e) => setMinPriceInput(e.target.value)}
-                                  className="h-9 w-full rounded-[0.75rem] border border-border/40 bg-background/40 px-3 text-[12px] text-foreground outline-none transition placeholder:text-muted-foreground/40 focus:border-primary/45 focus:ring-2 focus:ring-primary/15"
-                                />
-                              </div>
-                              <span className="mt-5 text-xs font-bold text-muted-foreground/40">—</span>
-                              <div className="flex-1">
-                                <label className="mb-1 block font-display text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground/60">
-                                  Max
-                                </label>
-                                <input
-                                  id="price-max-input"
-                                  type="number"
-                                  placeholder="Semua"
-                                  value={maxPriceInput}
-                                  onChange={(e) => setMaxPriceInput(e.target.value)}
-                                  className="h-9 w-full rounded-[0.75rem] border border-border/40 bg-background/40 px-3 text-[12px] text-foreground outline-none transition placeholder:text-muted-foreground/40 focus:border-primary/45 focus:ring-2 focus:ring-primary/15"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
                     </div>
 
                     <div className="mt-4 flex justify-end sm:contents">
@@ -750,6 +636,121 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                       </button>
                     </div>
                   </div>
+
+                  {/* Row 3 (mobile) / Order 5 (desktop): Filter Harga — full width on mobile, inline on desktop */}
+                  <div ref={priceRef} className="relative sm:order-5">
+                    <button
+                      type="button"
+                      id="price-filter-btn"
+                      onClick={() => setPriceOpen((prev) => !prev)}
+                      aria-haspopup="true"
+                      aria-expanded={priceOpen}
+                      className={`inline-flex h-9 w-full items-center justify-center gap-2 rounded-[0.75rem] border px-3 font-display text-[12px] font-bold tracking-[0.04em] transition sm:h-11 sm:w-auto sm:rounded-[0.9rem] sm:px-4 sm:text-sm ${
+                        hasPriceFilter
+                          ? "border-primary/60 bg-primary/10 text-primary shadow-[0_0_14px_hsl(var(--primary)_/_0.18)]"
+                          : "border-border/45 bg-card/55 text-foreground/80 hover:border-primary/30 hover:text-primary"
+                      }`}
+                    >
+                      <span>Filter Harga</span>
+                      {hasPriceFilter && (
+                        <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-primary-foreground">
+                          ✓
+                        </span>
+                      )}
+                      <ChevronDown
+                        size={14}
+                        className={`shrink-0 text-muted-foreground/70 transition-transform ${
+                          priceOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {priceOpen && (
+                      <div
+                        className="absolute left-0 right-0 top-[calc(100%+8px)] z-40 rounded-[1rem] border border-border/50 bg-card/95 p-4 shadow-[0_18px_44px_rgba(0,3,15,0.6)] backdrop-blur-md sm:left-auto sm:right-0 sm:w-[320px]"
+                        role="dialog"
+                        aria-label="Filter harga"
+                      >
+                        {/* Header */}
+                        <div className="mb-3 flex items-center justify-between">
+                          <span className="font-display text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/70">
+                            Filter Harga
+                          </span>
+                          {hasPriceFilter && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setMinPriceInput("");
+                                setMaxPriceInput("");
+                                setDebouncedMinPrice("");
+                                setDebouncedMaxPrice("");
+                              }}
+                              className="text-[10px] font-bold text-primary/80 transition hover:text-primary"
+                            >
+                              Reset
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Dual-range slider */}
+                        <div className="mb-4">
+                          <Slider
+                            min={0}
+                            max={sliderMax}
+                            step={SLIDER_STEP}
+                            value={sliderValue}
+                            onValueChange={([newMin, newMax]) => {
+                              setMinPriceInput(newMin === 0 ? "" : String(newMin));
+                              setMaxPriceInput(newMax === sliderMax ? "" : String(newMax));
+                            }}
+                            className="my-2"
+                          />
+                          <div className="mt-1 flex justify-between">
+                            <span className="text-[10px] text-muted-foreground/55">
+                              {formatPrice(sliderValue[0])}
+                            </span>
+                            <span className="text-[10px] text-muted-foreground/55">
+                              {formatPrice(sliderValue[1])}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Min / Max text inputs with Indonesian dot formatting */}
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1">
+                            <label className="mb-1 block font-display text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground/60">
+                              Min
+                            </label>
+                            <input
+                              id="price-min-input"
+                              type="text"
+                              inputMode="numeric"
+                              placeholder="0"
+                              value={formatPriceDisplay(minPriceInput)}
+                              onChange={(e) => setMinPriceInput(parsePriceInput(e.target.value))}
+                              className="h-9 w-full rounded-[0.75rem] border border-border/40 bg-background/40 px-3 text-[12px] text-foreground outline-none transition placeholder:text-muted-foreground/40 focus:border-primary/45 focus:ring-2 focus:ring-primary/15"
+                            />
+                          </div>
+                          <span className="mt-5 text-xs font-bold text-muted-foreground/40">—</span>
+                          <div className="flex-1">
+                            <label className="mb-1 block font-display text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground/60">
+                              Max
+                            </label>
+                            <input
+                              id="price-max-input"
+                              type="text"
+                              inputMode="numeric"
+                              placeholder="Semua"
+                              value={formatPriceDisplay(maxPriceInput)}
+                              onChange={(e) => setMaxPriceInput(parsePriceInput(e.target.value))}
+                              className="h-9 w-full rounded-[0.75rem] border border-border/40 bg-background/40 px-3 text-[12px] text-foreground outline-none transition placeholder:text-muted-foreground/40 focus:border-primary/45 focus:ring-2 focus:ring-primary/15"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                 </div>
               </div>
             </div>
