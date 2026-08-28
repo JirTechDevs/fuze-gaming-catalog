@@ -604,30 +604,31 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                   </div>
 
                   {/* Row 3 (mobile) / Order 3 (desktop): Filter Harga — full width on mobile, inline on desktop */}
-                  <div ref={priceRef} className="relative sm:order-3">
-                    <button
-                      type="button"
-                      id="price-filter-btn"
-                      onClick={() => setPriceOpen((prev) => !prev)}
-                      aria-haspopup="true"
-                      aria-expanded={priceOpen}
-                      className={`inline-flex h-9 w-full items-center justify-center gap-2 rounded-[0.75rem] border px-3 font-body text-sm font-medium tracking-wide transition sm:h-11 sm:w-auto sm:rounded-[0.9rem] sm:px-4 ${hasPriceFilter
-                        ? "border-primary/60 bg-primary/10 text-primary shadow-[0_0_14px_hsl(var(--primary)_/_0.18)]"
-                        : "border-border/45 bg-card/55 text-foreground/80 hover:border-primary/30 hover:text-primary"
-                        }`}
-                    >
-                      <span>Filter Harga</span>
-                      {hasPriceFilter && (
-                        <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-primary-foreground">
-                          ✓
+                  <div ref={priceRef} className={`${styles.filterGroup} relative sm:order-3`}>
+                    <span className={`${styles.filterField} relative flex h-10 w-full items-center sm:h-11 ${hasPriceFilter ? "border-primary/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_0_14px_hsl(var(--primary)_/_0.18)]" : ""}`}>
+                      <button
+                        type="button"
+                        id="price-filter-btn"
+                        onClick={() => setPriceOpen((prev) => !prev)}
+                        aria-haspopup="true"
+                        aria-expanded={priceOpen}
+                        className={`flex h-full w-full items-center justify-between gap-2 bg-transparent px-3 text-[13px] text-foreground outline-none sm:px-4 sm:text-sm ${hasPriceFilter ? "text-primary" : ""}`}
+                      >
+                        <span className="flex items-center gap-1.5 truncate">
+                          <span className="font-medium">Filter Harga</span>
+                          {hasPriceFilter && (
+                            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-primary-foreground">
+                              ✓
+                            </span>
+                          )}
                         </span>
-                      )}
-                      <ChevronDown
-                        size={14}
-                        className={`shrink-0 text-muted-foreground/70 transition-transform ${priceOpen ? "rotate-180" : ""
-                          }`}
-                      />
-                    </button>
+                        <ChevronDown
+                          size={16}
+                          className={`shrink-0 text-muted-foreground/70 transition-transform ${priceOpen ? "rotate-180" : ""
+                            }`}
+                        />
+                      </button>
+                    </span>
 
                     {priceOpen && (
                       <div
