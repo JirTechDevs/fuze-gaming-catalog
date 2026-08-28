@@ -47,7 +47,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   const isLiteMode = forceLiteMode || isMobile || prefersReducedMotion;
   const [search, setSearch] = useState("");
   const [rankFilter, setRankFilter] = useState("all");
-  const [nickFilter, setNickFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
   const [sortOpen, setSortOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,7 +72,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   useEffect(() => {
     const savedSearch = sessionStorage.getItem("catalog_search");
     const savedRank = sessionStorage.getItem("catalog_rank");
-    const savedNick = sessionStorage.getItem("catalog_nick");
     const savedSortBy = sessionStorage.getItem("catalog_sort_by");
     const savedPage = sessionStorage.getItem("catalog_page");
     const savedMinPrice = sessionStorage.getItem("catalog_min_price");
@@ -81,7 +79,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
 
     if (savedSearch !== null) setSearch(savedSearch);
     if (savedRank !== null) setRankFilter(savedRank);
-    if (savedNick !== null) setNickFilter(savedNick);
     if (savedSortBy !== null) setSortBy(savedSortBy);
     if (savedPage !== null) {
       const pageNum = Number(savedPage);
@@ -111,11 +108,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     sessionStorage.setItem("catalog_rank", rankFilter);
   }, [rankFilter]);
 
-
-  useEffect(() => {
-    if (!isInitialized.current) return;
-    sessionStorage.setItem("catalog_nick", nickFilter);
-  }, [nickFilter]);
 
   useEffect(() => {
     if (!isInitialized.current) return;
@@ -226,11 +218,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   const parsePriceInput = (formatted: string): string =>
     formatted.replace(/\./g, "");
 
-  const nickOptions = useMemo(
-    () => [...new Set(availableProducts.map((product) => product.changeNick))],
-    [availableProducts],
-  );
-
   // Derived: slider max ceiling — round up to the nearest 500k above the highest product price, minimum 5M.
   const sliderMax = useMemo(() => {
     const maxProductPrice = availableProducts.reduce((acc, p) => Math.max(acc, p.price), 0);
@@ -268,8 +255,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
 
       const matchesRank =
         rankFilter === "all" || product.rank.split(" ")[0] === rankFilter;
-      const matchesNick =
-        nickFilter === "all" || product.changeNick === nickFilter;
 
       const matchesMinPrice =
         !debouncedMinPrice || product.price >= Number(debouncedMinPrice);
@@ -279,7 +264,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
       return (
         matchesSearch &&
         matchesRank &&
-        matchesNick &&
         matchesMinPrice &&
         matchesMaxPrice
       );
@@ -296,7 +280,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     return filtered;
   }, [
     availableProducts,
-    nickFilter,
     rankFilter,
     search,
     sortBy,
@@ -368,7 +351,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   }, [
     search,
     rankFilter,
-    nickFilter,
     sortBy,
     debouncedMinPrice,
     debouncedMaxPrice,
@@ -395,7 +377,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   const resetFilters = () => {
     setSearch("");
     setRankFilter("all");
-    setNickFilter("all");
     setSortBy("default");
     setCurrentPage(1);
     setMinPriceInput("");
@@ -406,7 +387,6 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     // Clear all storage keys to make sure next navigation starts fresh
     sessionStorage.removeItem("catalog_search");
     sessionStorage.removeItem("catalog_rank");
-    sessionStorage.removeItem("catalog_nick");
     sessionStorage.removeItem("catalog_sort_by");
     sessionStorage.removeItem("catalog_page");
     sessionStorage.removeItem("catalog_min_price");
@@ -589,7 +569,7 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                     </div>
                   </div>
 
-                  {/* Rank + Nick — mobile: collapsible drawer, desktop: sm:contents flattens into flex row */}
+                  {/* Rank — mobile: collapsible drawer, desktop: sm:contents flattens into flex row */}
                   <div
                     className={`${isFilterOpen ? "rounded-[1rem] border border-border/35 bg-card/40 p-4" : "hidden"} sm:!contents`}
                   >
@@ -610,45 +590,28 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                           <ChevronDown size={16} className={styles.selectIcon} />
                         </span>
                       </label>
-
-                      <label className={`${styles.filterGroup} sm:order-3 sm:min-w-[160px] sm:flex-1`}>
-                        <span className={`${styles.filterLabel} sm:sr-only`}>Ganti Nick</span>
-                        <span className={`${styles.filterField} ${styles.selectWrap}`}>
-                          <select
-                            value={nickFilter}
-                            onChange={(event) => setNickFilter(event.target.value)}
-                            className={styles.selectField}
-                          >
-                            <option value="all">Ganti Nick</option>
-                            {nickOptions.map((nick) => (
-                              <option key={nick} value={nick}>{nick}</option>
-                            ))}
-                          </select>
-                          <ChevronDown size={16} className={styles.selectIcon} />
-                        </span>
-                      </label>
                     </div>
 
                     <div className="mt-4 flex justify-end sm:contents">
                       <button
                         type="button"
                         onClick={resetFilters}
-                        className={`${styles.resetButton} px-6 sm:order-6`}
+                        className={`${styles.resetButton} px-6 sm:order-5`}
                       >
                         Reset Filter
                       </button>
                     </div>
                   </div>
 
-                  {/* Row 3 (mobile) / Order 5 (desktop): Filter Harga — full width on mobile, inline on desktop */}
-                  <div ref={priceRef} className="relative sm:order-5">
+                  {/* Row 3 (mobile) / Order 3 (desktop): Filter Harga — full width on mobile, inline on desktop */}
+                  <div ref={priceRef} className="relative sm:order-3">
                     <button
                       type="button"
                       id="price-filter-btn"
                       onClick={() => setPriceOpen((prev) => !prev)}
                       aria-haspopup="true"
                       aria-expanded={priceOpen}
-                      className={`inline-flex h-9 w-full items-center justify-center gap-2 rounded-[0.75rem] border px-3 font-display text-[12px] font-bold tracking-[0.04em] transition sm:h-11 sm:w-auto sm:rounded-[0.9rem] sm:px-4 sm:text-sm ${hasPriceFilter
+                      className={`inline-flex h-9 w-full items-center justify-center gap-2 rounded-[0.75rem] border px-3 font-body text-sm font-medium tracking-wide transition sm:h-11 sm:w-auto sm:rounded-[0.9rem] sm:px-4 ${hasPriceFilter
                         ? "border-primary/60 bg-primary/10 text-primary shadow-[0_0_14px_hsl(var(--primary)_/_0.18)]"
                         : "border-border/45 bg-card/55 text-foreground/80 hover:border-primary/30 hover:text-primary"
                         }`}

@@ -248,9 +248,9 @@
   border: 1px solid rgba(82, 140, 255, 0.24);
   background: rgba(13, 21, 48, 0.5);
   color: rgba(255, 255, 255, 0.8);
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-body), sans-serif;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   cursor: pointer;
   transition:
     border-color 0.25s ease,
