@@ -52,9 +52,108 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   const [sortOpen, setSortOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  // Price range filters
+  const [minPriceInput, setMinPriceInput] = useState("");
+  const [maxPriceInput, setMaxPriceInput] = useState("");
+  const [debouncedMinPrice, setDebouncedMinPrice] = useState("");
+  const [debouncedMaxPrice, setDebouncedMaxPrice] = useState("");
+
+  const isInitialized = useRef(false);
+  const restoredPage = useRef<number | null>(null);
+
   const gridRef = useRef<HTMLDivElement | null>(null);
   const sortRef = useRef<HTMLDivElement | null>(null);
   const skipScrollRef = useRef(true);
+
+  // Load state from sessionStorage on mount
+  useEffect(() => {
+    const savedSearch = sessionStorage.getItem("catalog_search");
+    const savedRank = sessionStorage.getItem("catalog_rank");
+    const savedRegion = sessionStorage.getItem("catalog_region");
+    const savedNick = sessionStorage.getItem("catalog_nick");
+    const savedSortBy = sessionStorage.getItem("catalog_sort_by");
+    const savedPage = sessionStorage.getItem("catalog_page");
+    const savedMinPrice = sessionStorage.getItem("catalog_min_price");
+    const savedMaxPrice = sessionStorage.getItem("catalog_max_price");
+
+    if (savedSearch !== null) setSearch(savedSearch);
+    if (savedRank !== null) setRankFilter(savedRank);
+    if (savedRegion !== null) setRegionFilter(savedRegion);
+    if (savedNick !== null) setNickFilter(savedNick);
+    if (savedSortBy !== null) setSortBy(savedSortBy);
+    if (savedPage !== null) {
+      const pageNum = Number(savedPage);
+      setCurrentPage(pageNum);
+      restoredPage.current = pageNum;
+    }
+    if (savedMinPrice !== null) {
+      setMinPriceInput(savedMinPrice);
+      setDebouncedMinPrice(savedMinPrice);
+    }
+    if (savedMaxPrice !== null) {
+      setMaxPriceInput(savedMaxPrice);
+      setDebouncedMaxPrice(savedMaxPrice);
+    }
+
+    isInitialized.current = true;
+  }, []);
+
+  // Save changes to sessionStorage
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_search", search);
+  }, [search]);
+
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_rank", rankFilter);
+  }, [rankFilter]);
+
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_region", regionFilter);
+  }, [regionFilter]);
+
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_nick", nickFilter);
+  }, [nickFilter]);
+
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_sort_by", sortBy);
+  }, [sortBy]);
+
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_page", currentPage.toString());
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_min_price", minPriceInput);
+  }, [minPriceInput]);
+
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_max_price", maxPriceInput);
+  }, [maxPriceInput]);
+
+  // Debouncing for price filters
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedMinPrice(minPriceInput);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [minPriceInput]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedMaxPrice(maxPriceInput);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [maxPriceInput]);
 
   // Close sort dropdown on outside click / Escape.
   useEffect(() => {
@@ -132,7 +231,19 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
       const matchesNick =
         nickFilter === "all" || product.changeNick === nickFilter;
 
-      return matchesSearch && matchesRank && matchesRegion && matchesNick;
+      const matchesMinPrice =
+        !debouncedMinPrice || product.price >= Number(debouncedMinPrice);
+      const matchesMaxPrice =
+        !debouncedMaxPrice || product.price <= Number(debouncedMaxPrice);
+
+      return (
+        matchesSearch &&
+        matchesRank &&
+        matchesRegion &&
+        matchesNick &&
+        matchesMinPrice &&
+        matchesMaxPrice
+      );
     });
 
     if (sortBy === "price-asc") {
@@ -144,7 +255,16 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     }
 
     return filtered;
-  }, [availableProducts, nickFilter, rankFilter, regionFilter, search, sortBy]);
+  }, [
+    availableProducts,
+    nickFilter,
+    rankFilter,
+    regionFilter,
+    search,
+    sortBy,
+    debouncedMinPrice,
+    debouncedMaxPrice,
+  ]);
 
   const totalPages = Math.max(1, Math.ceil(available.length / ACCOUNTS_PER_PAGE));
   const currentPageSafe = Math.min(currentPage, totalPages);
@@ -199,8 +319,23 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   }, [currentPageSafe, totalPages]);
 
   useEffect(() => {
+    if (!isInitialized.current) return;
+
+    if (restoredPage.current !== null) {
+      restoredPage.current = null;
+      return;
+    }
+
     setCurrentPage(1);
-  }, [search, rankFilter, regionFilter, nickFilter, sortBy]);
+  }, [
+    search,
+    rankFilter,
+    regionFilter,
+    nickFilter,
+    sortBy,
+    debouncedMinPrice,
+    debouncedMaxPrice,
+  ]);
 
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -227,6 +362,20 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     setNickFilter("all");
     setSortBy("default");
     setCurrentPage(1);
+    setMinPriceInput("");
+    setMaxPriceInput("");
+    setDebouncedMinPrice("");
+    setDebouncedMaxPrice("");
+
+    // Clear all storage keys to make sure next navigation starts fresh
+    sessionStorage.removeItem("catalog_search");
+    sessionStorage.removeItem("catalog_rank");
+    sessionStorage.removeItem("catalog_region");
+    sessionStorage.removeItem("catalog_nick");
+    sessionStorage.removeItem("catalog_sort_by");
+    sessionStorage.removeItem("catalog_page");
+    sessionStorage.removeItem("catalog_min_price");
+    sessionStorage.removeItem("catalog_max_price");
   };
 
   return (
@@ -427,13 +576,41 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                           <ChevronDown size={16} className={styles.selectIcon} />
                         </span>
                       </label>
+
+                      <div className="flex items-center gap-2 sm:order-4 sm:min-w-[240px] sm:flex-1">
+                        <label className={`${styles.filterGroup} flex-1`}>
+                          <span className={`${styles.filterLabel} sm:sr-only`}>Harga Min</span>
+                          <span className={styles.filterField}>
+                            <input
+                              type="number"
+                              placeholder="Harga Min"
+                              value={minPriceInput}
+                              onChange={(e) => setMinPriceInput(e.target.value)}
+                              className={styles.filterInput}
+                            />
+                          </span>
+                        </label>
+                        <span className="self-end pb-3 text-muted-foreground/55 text-xs font-bold sm:self-center sm:pb-0">-</span>
+                        <label className={`${styles.filterGroup} flex-1`}>
+                          <span className={`${styles.filterLabel} sm:sr-only`}>Harga Max</span>
+                          <span className={styles.filterField}>
+                            <input
+                              type="number"
+                              placeholder="Harga Max"
+                              value={maxPriceInput}
+                              onChange={(e) => setMaxPriceInput(e.target.value)}
+                              className={styles.filterInput}
+                            />
+                          </span>
+                        </label>
+                      </div>
                     </div>
 
                     <div className="mt-4 flex justify-end sm:contents">
                       <button
                         type="button"
                         onClick={resetFilters}
-                        className={`${styles.resetButton} px-6 sm:order-4`}
+                        className={`${styles.resetButton} px-6 sm:order-6`}
                       >
                         Reset Filter
                       </button>
