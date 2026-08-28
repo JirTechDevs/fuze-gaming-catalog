@@ -126,7 +126,12 @@ export default function ProductCard({
       tabIndex={isSold ? -1 : 0}
       onPointerEnter={prefetchDetail}
       onFocus={prefetchDetail}
-      onClick={() => !isSold && router.push(detailHref)}
+      onClick={() => {
+        if (!isSold) {
+          sessionStorage.setItem("catalog_scroll_y", window.scrollY.toString());
+          router.push(detailHref);
+        }
+      }}
       onKeyDown={(event) => {
         if (isSold) {
           return;
@@ -134,6 +139,7 @@ export default function ProductCard({
 
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
+          sessionStorage.setItem("catalog_scroll_y", window.scrollY.toString());
           router.push(detailHref);
         }
       }}

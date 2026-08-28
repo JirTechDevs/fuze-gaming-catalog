@@ -20,15 +20,7 @@ function getHeroCount(product: Product) {
   return product.agent || "-";
 }
 
-function isPremierLocked(product: Product) {
-  const normalized = product.premier.toLowerCase();
 
-  return (
-    normalized === "cannot be changed" ||
-    normalized === "can't be changed" ||
-    normalized === "cant be changed"
-  );
-}
 
 function getAccountSpecs(product: Product) {
   const specs = [
@@ -52,23 +44,7 @@ function getAccountSpecs(product: Product) {
   return specs;
 }
 
-function getAgentRankNote(product: Product) {
-  const notes = [];
 
-  if (product.changeNick) {
-    notes.push(`Nick ${product.changeNick}`);
-  }
-
-  if (product.sisaVP && product.sisaVP !== "-") {
-    notes.push(`${product.sisaVP} VP`);
-  }
-
-  if (product.premier && product.premier !== "-") {
-    notes.push(`Premier ${product.premier}`);
-  }
-
-  return notes.join(" • ") || "No special note";
-}
 
 function GamepadDoodle() {
   return (
@@ -228,19 +204,7 @@ export default function ProductDetailPage({
                     ))}
                   </div>
 
-                  <div className="rounded-[1.5rem] bg-background/12 p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)] sm:p-5">
-                    <p className="font-display text-base font-bold uppercase tracking-[0.04em] text-white sm:text-lg">
-                      Catatan Akun
-                    </p>
-                    <p className="mt-3 text-sm leading-6 text-white/78 sm:text-base sm:leading-7">
-                      {getAgentRankNote(product)}
-                    </p>
-                    <p className="mt-3 text-sm leading-6 text-white/78 sm:text-base sm:leading-7">
-                      {isPremierLocked(product)
-                        ? "Premier account locked and cannot be changed."
-                        : "Account ready for login and immediate purchase."}
-                    </p>
-                  </div>
+
 
                   <ProductDetailPricePanel product={product} />
                 </div>
