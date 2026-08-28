@@ -245,7 +245,8 @@
 .resetButton {
   display: flex;
   align-items: center;
-  width: 100%;
+  width: auto;
+  flex-shrink: 0;
   height: 44px;
   border-radius: 12px;
   border: 1.5px solid rgba(0, 183, 255, 0.32);
@@ -257,6 +258,7 @@
   font-family: var(--font-body), sans-serif;
   font-size: 14px;
   font-weight: 500;
+  white-space: nowrap;
   cursor: pointer;
   transition:
     border-color 0.25s ease,

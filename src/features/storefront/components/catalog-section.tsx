@@ -604,7 +604,7 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                   </div>
 
                   {/* Row 3 (mobile) / Order 3 (desktop): Filter Harga — full width on mobile, inline on desktop */}
-                  <div ref={priceRef} className={`${styles.filterGroup} relative sm:order-3`}>
+                  <div ref={priceRef} className={`${styles.filterGroup} relative sm:w-auto sm:flex-none sm:order-3`}>
                     <span className={`${styles.filterField} relative flex h-10 w-full items-center sm:h-11 ${hasPriceFilter ? "border-primary/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_0_14px_hsl(var(--primary)_/_0.18)]" : ""}`}>
                       <button
                         type="button"
