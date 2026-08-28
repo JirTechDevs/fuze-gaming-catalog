@@ -49,6 +49,16 @@ export default function StorefrontPage({ products, banners }: StorefrontPageProp
       return;
     }
 
+    const savedScrollY = sessionStorage.getItem("catalog_scroll_y");
+    if (savedScrollY !== null) {
+      const targetY = parseFloat(savedScrollY);
+      window.setTimeout(() => {
+        window.scrollTo({ top: targetY, behavior: "instant" });
+        sessionStorage.removeItem("catalog_scroll_y");
+      }, 100);
+      return;
+    }
+
     if (window.location.hash !== "#catalog") {
       return;
     }
