@@ -110,9 +110,7 @@ export default function Navbar({ isLiteMode = false }: NavbarProps) {
     <header className={styles.navbar}>
       <div className={styles.navInner}>
         <Link href="/" className={styles.logo}>
-          <span className={styles.logoMark}>
-            <img src="/images/logo.png" alt="Fuzevalo" className={styles.logoImage} />
-          </span>
+          <img src="/images/logo.png" alt="Fuzevalo" className={styles.logoImage} />
           <span className={styles.logoText}>
             FUZE<span className={styles.logoAccent}>VALO</span>
           </span>
