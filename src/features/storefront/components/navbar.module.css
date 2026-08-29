@@ -44,21 +44,12 @@
   flex-shrink: 0;
 }
 
-.logoMark {
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  border-radius: 0;
-  background: transparent;
-  overflow: hidden;
-}
-
 .logoImage {
   width: 36px;
   height: 36px;
+  flex-shrink: 0;
   object-fit: contain;
+  display: block;
 }
 
 .logoText {
@@ -68,6 +59,9 @@
   letter-spacing: 0.02em;
   color: var(--fuze-text-primary);
   white-space: nowrap;
+  line-height: 1;
+  /* trims the font's leading so cap-height centers against the logo mark */
+  text-box: trim-both cap alphabetic;
 }
 
 .logoAccent {
