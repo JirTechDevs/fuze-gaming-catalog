@@ -68,7 +68,7 @@
   letter-spacing: 0.02em;
   color: var(--fuze-text-primary);
   white-space: nowrap;
-  line-height: 1;
+  margin-top: -2px;
 }
 
 .logoAccent {
