@@ -1,8 +1,10 @@
 import { listCatalogProducts } from "@/features/catalog/application/list-products";
 import StorefrontPage from "@/features/storefront/components/storefront-page";
 import { listStorefrontBanners } from "@/features/storefront/server";
+import { trackStorefrontView } from "@/features/analytics/track-view";
 
 export default async function HomePage() {
+  trackStorefrontView("/");
   const products = await listCatalogProducts();
   const banners = await listStorefrontBanners();
 
