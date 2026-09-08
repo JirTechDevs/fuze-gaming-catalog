@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight, ImagePlus, PackagePlus, Search, Sparkles, TrendingUp, ShoppingBag, Package, PlusCircle, BarChart2 } from "lucide-react";
+import { ChevronRight, ImagePlus, PackagePlus, Search, Sparkles, TrendingUp, CalendarDays, Calendar, ShoppingBag, Package, PlusCircle, BarChart2 } from "lucide-react";
 import { getDashboardStats } from "@/features/analytics/server";
 
 const quickActions = [
@@ -38,10 +38,22 @@ export default async function DashboardPage() {
 
   const statCards = [
     {
-      label: "Pengunjung (30 hari)",
-      value: stats.views30d.toLocaleString("id-ID"),
+      label: "Pengunjung Hari Ini",
+      value: stats.viewsToday.toLocaleString("id-ID"),
       icon: TrendingUp,
-      note: "homepage + detail produk",
+      note: "unique visitor · hari ini",
+    },
+    {
+      label: "Pengunjung 7 Hari",
+      value: stats.views7d.toLocaleString("id-ID"),
+      icon: CalendarDays,
+      note: "unique visitor · 7 hari",
+    },
+    {
+      label: "Pengunjung 30 Hari",
+      value: stats.views30d.toLocaleString("id-ID"),
+      icon: Calendar,
+      note: "unique visitor · 30 hari",
     },
     {
       label: "Produk Aktif",
@@ -84,7 +96,7 @@ export default async function DashboardPage() {
         </p>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7">
         {statCards.map((card) => {
           const Icon = card.icon;
           return (

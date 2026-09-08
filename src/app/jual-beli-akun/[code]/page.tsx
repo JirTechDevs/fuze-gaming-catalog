@@ -59,6 +59,6 @@ export default async function ProductDetailRoute({
   const { data: { user } } = await supabase.auth.getUser();
   const product = await getCatalogProductByCode(normalizeCode(code));
   if (!product) notFound();
-  if (!user) trackStorefrontView(`/jual-beli-akun/${normalizeCode(code)}`);
+  if (!user) await trackStorefrontView(`/jual-beli-akun/${normalizeCode(code)}`);
   return <ProductDetailPage product={product} />;
 }

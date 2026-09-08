@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 export default async function HomePage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) trackStorefrontView("/");
+  if (!user) await trackStorefrontView("/");
   const products = await listCatalogProducts();
   const banners = await listStorefrontBanners();
 
