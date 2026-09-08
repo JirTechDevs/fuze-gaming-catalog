@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ChevronRight, ImagePlus, PackagePlus, Search, Sparkles } from "lucide-react";
+import { ChevronRight, ImagePlus, PackagePlus, Search, Sparkles, TrendingUp, ShoppingBag, Package, PlusCircle, BarChart2 } from "lucide-react";
+import { getDashboardStats } from "@/features/analytics/server";
 
 const quickActions = [
   {
@@ -32,7 +33,42 @@ const quickActions = [
   },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const stats = await getDashboardStats();
+
+  const statCards = [
+    {
+      label: "Pengunjung (30 hari)",
+      value: stats.views30d.toLocaleString("id-ID"),
+      icon: TrendingUp,
+      note: "homepage + detail produk",
+    },
+    {
+      label: "Produk Aktif",
+      value: stats.available.toLocaleString("id-ID"),
+      icon: Package,
+      note: "status available",
+    },
+    {
+      label: "Produk Terjual",
+      value: stats.sold.toLocaleString("id-ID"),
+      icon: ShoppingBag,
+      note: "status sold",
+    },
+    {
+      label: "Ditambah Bulan Ini",
+      value: stats.addedThisMonth.toLocaleString("id-ID"),
+      icon: PlusCircle,
+      note: "produk baru",
+    },
+    {
+      label: "Conversion Rate",
+      value: `${stats.conversionRate}%`,
+      icon: BarChart2,
+      note: "sold / total produk",
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <section className="rounded-[1.8rem] border border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.88),hsl(var(--background)/0.92))] p-6 sm:p-7">
@@ -46,6 +82,29 @@ export default function DashboardPage() {
           Semua fondasi admin sudah siap. Dari sini kamu bisa langsung masuk ke
           modul catalog untuk tambah, edit, atau rapikan akun yang tampil di storefront.
         </p>
+      </section>
+
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        {statCards.map((card) => {
+          const Icon = card.icon;
+          return (
+            <div
+              key={card.label}
+              className="rounded-[1.5rem] border border-border/35 bg-card/72 p-5 backdrop-blur-sm"
+            >
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-muted-foreground/68">{card.label}</p>
+                <div className="flex h-8 w-8 items-center justify-center rounded-[0.75rem] border border-primary/18 bg-primary/8 text-primary">
+                  <Icon className="size-4" />
+                </div>
+              </div>
+              <p className="mt-3 font-display text-3xl font-bold tracking-[0.04em] text-foreground">
+                {card.value}
+              </p>
+              <p className="mt-1 text-[11px] text-muted-foreground/52">{card.note}</p>
+            </div>
+          );
+        })}
       </section>
 
       <section className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-4">
