@@ -2,6 +2,9 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabasePublishableKey, getSupabaseUrl } from "@/lib/supabase/env";
 
+const SESSION_COOKIE = "fvz_sid";
+const SESSION_TTL = 60 * 60 * 24; // 24h in seconds
+
 const PROTECTED_PATH_PREFIXES = ["/dashboard", "/admin"];
 
 export async function middleware(request: NextRequest) {
@@ -36,6 +39,16 @@ export async function middleware(request: NextRequest) {
   if (isProtected && !user) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // Stamp a session cookie for unique-visitor tracking on storefront pages.
+  if (!user && !request.cookies.get(SESSION_COOKIE)) {
+    response.cookies.set(SESSION_COOKIE, crypto.randomUUID(), {
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: SESSION_TTL,
+      path: "/",
+    });
   }
 
   return response;
