@@ -8,6 +8,7 @@ import { valorantRanks } from "@/features/catalog/domain/valorant-ranks";
 import { useRealtimeProducts } from "@/features/catalog/hooks/use-realtime-products";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ProductCard from "@/features/storefront/components/product-card";
+import { Slider } from "@/components/ui/slider";
 import styles from "./catalog-section.module.css";
 
 interface CatalogSectionProps {
@@ -46,15 +47,102 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   const isLiteMode = forceLiteMode || isMobile || prefersReducedMotion;
   const [search, setSearch] = useState("");
   const [rankFilter, setRankFilter] = useState("all");
-  const [regionFilter, setRegionFilter] = useState("all");
-  const [nickFilter, setNickFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
   const [sortOpen, setSortOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  // Price range filters
+  const [minPriceInput, setMinPriceInput] = useState("");
+  const [maxPriceInput, setMaxPriceInput] = useState("");
+  const [debouncedMinPrice, setDebouncedMinPrice] = useState("");
+  const [debouncedMaxPrice, setDebouncedMaxPrice] = useState("");
+
+  const [priceOpen, setPriceOpen] = useState(false);
+  const priceRef = useRef<HTMLDivElement | null>(null);
+
+  const isInitialized = useRef(false);
+  const restoredPage = useRef<number | null>(null);
+
   const gridRef = useRef<HTMLDivElement | null>(null);
   const sortRef = useRef<HTMLDivElement | null>(null);
   const skipScrollRef = useRef(true);
+
+  // Load state from sessionStorage on mount
+  useEffect(() => {
+    const savedSearch = sessionStorage.getItem("catalog_search");
+    const savedRank = sessionStorage.getItem("catalog_rank");
+    const savedSortBy = sessionStorage.getItem("catalog_sort_by");
+    const savedPage = sessionStorage.getItem("catalog_page");
+    const savedMinPrice = sessionStorage.getItem("catalog_min_price");
+    const savedMaxPrice = sessionStorage.getItem("catalog_max_price");
+
+    if (savedSearch !== null) setSearch(savedSearch);
+    if (savedRank !== null) setRankFilter(savedRank);
+    if (savedSortBy !== null) setSortBy(savedSortBy);
+    if (savedPage !== null) {
+      const pageNum = Number(savedPage);
+      setCurrentPage(pageNum);
+      restoredPage.current = pageNum;
+    }
+    if (savedMinPrice !== null) {
+      setMinPriceInput(savedMinPrice);
+      setDebouncedMinPrice(savedMinPrice);
+    }
+    if (savedMaxPrice !== null) {
+      setMaxPriceInput(savedMaxPrice);
+      setDebouncedMaxPrice(savedMaxPrice);
+    }
+
+    isInitialized.current = true;
+  }, []);
+
+  // Save changes to sessionStorage
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_search", search);
+  }, [search]);
+
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_rank", rankFilter);
+  }, [rankFilter]);
+
+
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_sort_by", sortBy);
+  }, [sortBy]);
+
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_page", currentPage.toString());
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_min_price", minPriceInput);
+  }, [minPriceInput]);
+
+  useEffect(() => {
+    if (!isInitialized.current) return;
+    sessionStorage.setItem("catalog_max_price", maxPriceInput);
+  }, [maxPriceInput]);
+
+  // Debouncing for price filters
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedMinPrice(minPriceInput);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [minPriceInput]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedMaxPrice(maxPriceInput);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [maxPriceInput]);
 
   // Close sort dropdown on outside click / Escape.
   useEffect(() => {
@@ -72,6 +160,23 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
       document.removeEventListener("keydown", onKey);
     };
   }, [sortOpen]);
+
+  // Close price dropdown on outside click / Escape.
+  useEffect(() => {
+    if (!priceOpen) return;
+    const onPointer = (event: PointerEvent) => {
+      if (!priceRef.current?.contains(event.target as Node)) setPriceOpen(false);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setPriceOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [priceOpen]);
 
   const sortLabel = sortOptions.find((option) => option.value === sortBy)?.label ?? "Terbaru";
 
@@ -103,15 +208,38 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     [availableProducts],
   );
 
-  const regionOptions = useMemo(
-    () => [...new Set(availableProducts.map((product) => product.region))],
-    [availableProducts],
-  );
+  // Helper: format raw number string as Indonesian dot-separated display ("600000" → "600.000")
+  const formatPriceDisplay = (raw: string): string => {
+    if (!raw) return "";
+    const digits = raw.replace(/\D/g, "");
+    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+  // Helper: strip formatting dots to get raw digits only
+  const parsePriceInput = (formatted: string): string =>
+    formatted.replace(/\./g, "");
 
-  const nickOptions = useMemo(
-    () => [...new Set(availableProducts.map((product) => product.changeNick))],
-    [availableProducts],
-  );
+  // Derived: slider max ceiling — round up to the nearest 500k above the highest product price, minimum 5M.
+  const sliderMax = useMemo(() => {
+    const maxProductPrice = availableProducts.reduce((acc, p) => Math.max(acc, p.price), 0);
+    return Math.max(5_000_000, Math.ceil(maxProductPrice / 500_000) * 500_000);
+  }, [availableProducts]);
+
+  const SLIDER_STEP = 10_000;
+
+  // Slider value: [min, max] in raw numbers (empty string = boundary)
+  const sliderValue: [number, number] = [
+    minPriceInput ? Number(minPriceInput) : 0,
+    maxPriceInput ? Number(maxPriceInput) : sliderMax,
+  ];
+
+  const hasPriceFilter = Boolean(minPriceInput || maxPriceInput);
+
+  const formatPrice = (value: number) =>
+    value >= 1_000_000
+      ? `${(value / 1_000_000).toFixed(value % 1_000_000 === 0 ? 0 : 1)}jt`
+      : value >= 1_000
+        ? `${(value / 1_000).toFixed(0)}rb`
+        : `${value}`;
 
   const available = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -127,12 +255,18 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
 
       const matchesRank =
         rankFilter === "all" || product.rank.split(" ")[0] === rankFilter;
-      const matchesRegion =
-        regionFilter === "all" || product.region === regionFilter;
-      const matchesNick =
-        nickFilter === "all" || product.changeNick === nickFilter;
 
-      return matchesSearch && matchesRank && matchesRegion && matchesNick;
+      const matchesMinPrice =
+        !debouncedMinPrice || product.price >= Number(debouncedMinPrice);
+      const matchesMaxPrice =
+        !debouncedMaxPrice || product.price <= Number(debouncedMaxPrice);
+
+      return (
+        matchesSearch &&
+        matchesRank &&
+        matchesMinPrice &&
+        matchesMaxPrice
+      );
     });
 
     if (sortBy === "price-asc") {
@@ -144,7 +278,14 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
     }
 
     return filtered;
-  }, [availableProducts, nickFilter, rankFilter, regionFilter, search, sortBy]);
+  }, [
+    availableProducts,
+    rankFilter,
+    search,
+    sortBy,
+    debouncedMinPrice,
+    debouncedMaxPrice,
+  ]);
 
   const totalPages = Math.max(1, Math.ceil(available.length / ACCOUNTS_PER_PAGE));
   const currentPageSafe = Math.min(currentPage, totalPages);
@@ -199,8 +340,21 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   }, [currentPageSafe, totalPages]);
 
   useEffect(() => {
+    if (!isInitialized.current) return;
+
+    if (restoredPage.current !== null) {
+      restoredPage.current = null;
+      return;
+    }
+
     setCurrentPage(1);
-  }, [search, rankFilter, regionFilter, nickFilter, sortBy]);
+  }, [
+    search,
+    rankFilter,
+    sortBy,
+    debouncedMinPrice,
+    debouncedMaxPrice,
+  ]);
 
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -223,10 +377,20 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
   const resetFilters = () => {
     setSearch("");
     setRankFilter("all");
-    setRegionFilter("all");
-    setNickFilter("all");
     setSortBy("default");
     setCurrentPage(1);
+    setMinPriceInput("");
+    setMaxPriceInput("");
+    setDebouncedMinPrice("");
+    setDebouncedMaxPrice("");
+
+    // Clear all storage keys to make sure next navigation starts fresh
+    sessionStorage.removeItem("catalog_search");
+    sessionStorage.removeItem("catalog_rank");
+    sessionStorage.removeItem("catalog_sort_by");
+    sessionStorage.removeItem("catalog_page");
+    sessionStorage.removeItem("catalog_min_price");
+    sessionStorage.removeItem("catalog_max_price");
   };
 
   return (
@@ -256,21 +420,21 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
             isLiteMode
               ? { opacity: particle.opacity, y: 0, x: 0, scale: 1 }
               : {
-                  opacity: [particle.opacity, particle.opacity * 1.4, particle.opacity],
-                  y: [0, -18, 0],
-                  x: [0, 10, 0],
-                  scale: [1, 1.06, 0.98],
-                }
+                opacity: [particle.opacity, particle.opacity * 1.4, particle.opacity],
+                y: [0, -18, 0],
+                x: [0, 10, 0],
+                scale: [1, 1.06, 0.98],
+              }
           }
           transition={
             isLiteMode
               ? { duration: 0.2 }
               : {
-                  duration: particle.duration,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "easeInOut",
-                  delay: particle.delay,
-                }
+                duration: particle.duration,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: particle.delay,
+              }
           }
         />
       ))}
@@ -314,18 +478,33 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
 
             <div className={styles.filtersPanel}>
               <div id="catalog-filters-content" className={styles.filtersBody}>
+                {/* ── Filter rows ── */}
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-                  <label className="block sm:order-1 sm:flex-1">
-                    <input
-                      type="text"
-                      placeholder="Cari kode / skin / nama akun..."
-                      value={search}
-                      onChange={(event) => setSearch(event.target.value)}
-                      className="h-9 w-full rounded-[0.75rem] border border-border/45 bg-card/55 px-3 text-[13px] text-foreground outline-none transition placeholder:text-muted-foreground/55 focus:border-primary/45 focus:ring-2 focus:ring-primary/15 sm:h-11 sm:rounded-[0.9rem] sm:px-4 sm:text-sm"
-                    />
-                  </label>
 
+                  {/* Row 1 (mobile) / Order 1 (desktop): Search with opaque prefix */}
+                  <label className={`${styles.filterGroup} relative block w-full sm:order-1 sm:flex-1`}>
+                    <span className="sr-only">Cari Skin</span>
+                    <span className={`${styles.filterField} relative flex h-10 w-full items-center sm:h-11`}>
+                      <input
+                        type="text"
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                        aria-label="Cari skin"
+                        className="h-full w-full appearance-none border-none bg-transparent px-3 text-[13px] text-foreground outline-none sm:px-4 sm:text-sm"
+                      />
+
+                      {/* Custom Overlay Placeholder */}
+                      {!search && (
+                        <div className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center gap-1.5 select-none text-[13px] sm:left-4 sm:text-sm">
+                          <span className="font-medium text-foreground">Cari skin :</span>
+                          <span className="text-muted-foreground/35">Vandal Kuronami</span>
+                        </div>
+                      )}
+                    </span>
+                  </label>
+                  {/* Row 2 (mobile): Filter pill + Sort dropdown */}
                   <div className="flex gap-2 sm:contents">
+                    {/* Mobile-only Filter toggle pill */}
                     <button
                       type="button"
                       onClick={() => setIsFilterOpen((current) => !current)}
@@ -337,59 +516,60 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                       <FilterIcon size={13} />
                     </button>
 
+                    {/* Sort dropdown */}
                     <div
                       ref={sortRef}
-                      className="relative flex h-9 flex-1 items-center gap-1 rounded-[0.75rem] border border-border/45 bg-card/55 pl-2.5 pr-1.5 sm:order-5 sm:h-11 sm:flex-none sm:min-w-[200px] sm:gap-2 sm:rounded-[0.9rem] sm:pl-4 sm:pr-3"
+                      className={`${styles.filterGroup} relative block flex-1 sm:order-4 sm:flex-none sm:min-w-[200px]`}
                     >
-                      <span className="hidden whitespace-nowrap text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70 sm:inline">
-                        Urutkan
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setSortOpen((current) => !current)}
-                        aria-haspopup="listbox"
-                        aria-expanded={sortOpen}
-                        className="flex h-9 w-full min-w-0 items-center justify-between gap-2 bg-transparent pr-1 text-[12px] text-foreground outline-none sm:h-11 sm:text-sm"
-                      >
-                        <span className="truncate">{sortLabel}</span>
-                        <ChevronDown
-                          size={13}
-                          className={`shrink-0 text-muted-foreground/70 transition-transform sm:hidden ${sortOpen ? "rotate-180" : ""}`}
-                        />
-                        <ChevronDown
-                          size={16}
-                          className={`hidden shrink-0 text-muted-foreground/70 transition-transform sm:block ${sortOpen ? "rotate-180" : ""}`}
-                        />
-                      </button>
-                      {sortOpen && (
-                        <ul
-                          role="listbox"
-                          className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 overflow-hidden rounded-[0.75rem] border border-border/45 bg-card/95 shadow-[0_18px_44px_rgba(0,3,15,0.55)] backdrop-blur-md sm:rounded-[0.9rem]"
+                      <span className={`${styles.filterField} relative flex h-10 w-full items-center p-0 sm:h-11`}>
+                        <button
+                          type="button"
+                          onClick={() => setSortOpen((current) => !current)}
+                          aria-haspopup="listbox"
+                          aria-expanded={sortOpen}
+                          className="flex h-full w-full items-center justify-between gap-2 bg-transparent px-3 text-[13px] text-foreground outline-none sm:px-4 sm:text-sm"
                         >
-                          {sortOptions.map((option) => {
-                            const isActive = option.value === sortBy;
-                            return (
-                              <li key={option.value} role="option" aria-selected={isActive}>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setSortBy(option.value);
-                                    setSortOpen(false);
-                                  }}
-                                  className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-[12px] transition sm:text-sm ${isActive ? "bg-primary/15 text-primary" : "text-foreground hover:bg-white/[0.04]"}`}
-                                >
-                                  {option.label}
-                                  {isActive && <span className="text-primary">•</span>}
-                                </button>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      )}
+                          <span className="flex items-center gap-1.5 truncate">
+                            <span className="hidden whitespace-nowrap text-muted-foreground/70 sm:inline">Urutkan :</span>
+                            <span className="font-medium text-foreground">{sortLabel}</span>
+                          </span>
+                          <ChevronDown
+                            size={16}
+                            className={`shrink-0 text-muted-foreground/70 transition-transform ${sortOpen ? "rotate-180" : ""}`}
+                          />
+                        </button>
+
+                        {sortOpen && (
+                          <ul
+                            role="listbox"
+                            className="absolute left-0 right-0 top-[calc(100%+6px)] z-30 overflow-hidden rounded-[0.75rem] border border-border/45 bg-card/95 shadow-[0_18px_44px_rgba(0,3,15,0.55)] backdrop-blur-md sm:rounded-[0.9rem]"
+                          >
+                            {sortOptions.map((option) => {
+                              const isActive = option.value === sortBy;
+                              return (
+                                <li key={option.value} role="option" aria-selected={isActive}>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setSortBy(option.value);
+                                      setSortOpen(false);
+                                    }}
+                                    className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-[13px] transition sm:text-sm ${isActive ? "bg-primary/15 text-primary" : "text-foreground hover:bg-white/[0.04]"
+                                      }`}
+                                  >
+                                    {option.label}
+                                    {isActive && <span className="text-primary">•</span>}
+                                  </button>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        )}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Rank + Region + Reset — mobile: collapsible drawer, desktop: sm:contents flattens into the flex row (order 2/3/4) */}
+                  {/* Rank — mobile: collapsible drawer, desktop: sm:contents flattens into flex row */}
                   <div
                     className={`${isFilterOpen ? "rounded-[1rem] border border-border/35 bg-card/40 p-4" : "hidden"} sm:!contents`}
                   >
@@ -410,35 +590,132 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                           <ChevronDown size={16} className={styles.selectIcon} />
                         </span>
                       </label>
-
-                      <label className={`${styles.filterGroup} sm:order-3 sm:min-w-[160px] sm:flex-1`}>
-                        <span className={`${styles.filterLabel} sm:sr-only`}>Region</span>
-                        <span className={`${styles.filterField} ${styles.selectWrap}`}>
-                          <select
-                            value={regionFilter}
-                            onChange={(event) => setRegionFilter(event.target.value)}
-                            className={styles.selectField}
-                          >
-                            <option value="all">Semua Region</option>
-                            {regionOptions.map((region) => (
-                              <option key={region} value={region}>{region}</option>
-                            ))}
-                          </select>
-                          <ChevronDown size={16} className={styles.selectIcon} />
-                        </span>
-                      </label>
                     </div>
 
                     <div className="mt-4 flex justify-end sm:contents">
                       <button
                         type="button"
                         onClick={resetFilters}
-                        className={`${styles.resetButton} px-6 sm:order-4`}
+                        className={`${styles.resetButton} px-6 sm:order-5`}
                       >
                         Reset Filter
                       </button>
                     </div>
                   </div>
+
+                  {/* Row 3 (mobile) / Order 3 (desktop): Filter Harga — full width on mobile, inline on desktop */}
+                  <div ref={priceRef} className={`${styles.filterGroup} relative sm:w-auto sm:flex-none sm:order-3`}>
+                    <span className={`${styles.filterField} relative flex h-10 w-full items-center sm:h-11 ${hasPriceFilter ? "border-primary/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_0_14px_hsl(var(--primary)_/_0.18)]" : ""}`}>
+                      <button
+                        type="button"
+                        id="price-filter-btn"
+                        onClick={() => setPriceOpen((prev) => !prev)}
+                        aria-haspopup="true"
+                        aria-expanded={priceOpen}
+                        className={`flex h-full w-full items-center justify-between gap-2 bg-transparent px-3 text-[13px] text-foreground outline-none sm:px-4 sm:text-sm ${hasPriceFilter ? "text-primary" : ""}`}
+                      >
+                        <span className="flex items-center gap-1.5 truncate">
+                          <span className="font-medium">Filter Harga</span>
+                          {hasPriceFilter && (
+                            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-primary-foreground">
+                              ✓
+                            </span>
+                          )}
+                        </span>
+                        <ChevronDown
+                          size={16}
+                          className={`shrink-0 text-muted-foreground/70 transition-transform ${priceOpen ? "rotate-180" : ""
+                            }`}
+                        />
+                      </button>
+                    </span>
+
+                    {priceOpen && (
+                      <div
+                        className="absolute left-0 right-0 top-[calc(100%+8px)] z-40 rounded-[1rem] border border-border/50 bg-card/95 p-4 shadow-[0_18px_44px_rgba(0,3,15,0.6)] backdrop-blur-md sm:left-auto sm:right-0 sm:w-[320px]"
+                        role="dialog"
+                        aria-label="Filter harga"
+                      >
+                        {/* Header */}
+                        <div className="mb-3 flex items-center justify-between">
+                          <span className="font-display text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/70">
+                            Filter Harga
+                          </span>
+                          {hasPriceFilter && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setMinPriceInput("");
+                                setMaxPriceInput("");
+                                setDebouncedMinPrice("");
+                                setDebouncedMaxPrice("");
+                              }}
+                              className="text-[10px] font-bold text-primary/80 transition hover:text-primary"
+                            >
+                              Reset
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Dual-range slider */}
+                        <div className="mb-4">
+                          <Slider
+                            min={0}
+                            max={sliderMax}
+                            step={SLIDER_STEP}
+                            value={sliderValue}
+                            onValueChange={([newMin, newMax]) => {
+                              setMinPriceInput(newMin === 0 ? "" : String(newMin));
+                              setMaxPriceInput(newMax === sliderMax ? "" : String(newMax));
+                            }}
+                            className="my-2"
+                          />
+                          <div className="mt-1 flex justify-between">
+                            <span className="text-[10px] text-muted-foreground/55">
+                              {formatPrice(sliderValue[0])}
+                            </span>
+                            <span className="text-[10px] text-muted-foreground/55">
+                              {formatPrice(sliderValue[1])}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Min / Max text inputs with Indonesian dot formatting */}
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1">
+                            <label className="mb-1 block font-display text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground/60">
+                              Min
+                            </label>
+                            <input
+                              id="price-min-input"
+                              type="text"
+                              inputMode="numeric"
+                              placeholder="0"
+                              value={formatPriceDisplay(minPriceInput)}
+                              onChange={(e) => setMinPriceInput(parsePriceInput(e.target.value))}
+                              className="h-9 w-full rounded-[0.75rem] border border-border/40 bg-background/40 px-3 text-[12px] text-foreground outline-none transition placeholder:text-muted-foreground/40 focus:border-primary/45 focus:ring-2 focus:ring-primary/15"
+                            />
+                          </div>
+                          <span className="mt-5 text-xs font-bold text-muted-foreground/40">—</span>
+                          <div className="flex-1">
+                            <label className="mb-1 block font-display text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground/60">
+                              Max
+                            </label>
+                            <input
+                              id="price-max-input"
+                              type="text"
+                              inputMode="numeric"
+                              placeholder="Semua"
+                              value={formatPriceDisplay(maxPriceInput)}
+                              onChange={(e) => setMaxPriceInput(parsePriceInput(e.target.value))}
+                              className="h-9 w-full rounded-[0.75rem] border border-border/40 bg-background/40 px-3 text-[12px] text-foreground outline-none transition placeholder:text-muted-foreground/40 focus:border-primary/45 focus:ring-2 focus:ring-primary/15"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -506,11 +783,10 @@ export default function CatalogSection({ products: initialProducts, forceLiteMod
                         type="button"
                         onClick={() => setCurrentPage(item)}
                         aria-current={isActive ? "page" : undefined}
-                        className={`flex h-10 min-w-10 items-center justify-center rounded-[0.9rem] border px-3 font-display text-sm font-bold transition ${
-                          isActive
-                            ? "border-primary bg-primary text-primary-foreground shadow-[0_0_24px_hsl(var(--primary)_/_0.28)]"
-                            : "border-border/40 bg-card/55 text-foreground/78 hover:border-primary/30 hover:text-primary"
-                        }`}
+                        className={`flex h-10 min-w-10 items-center justify-center rounded-[0.9rem] border px-3 font-display text-sm font-bold transition ${isActive
+                          ? "border-primary bg-primary text-primary-foreground shadow-[0_0_24px_hsl(var(--primary)_/_0.28)]"
+                          : "border-border/40 bg-card/55 text-foreground/78 hover:border-primary/30 hover:text-primary"
+                          }`}
                       >
                         {item}
                       </button>

@@ -12,7 +12,8 @@ interface HeroSectionProps {
 }
 
 const fallbackHeroBanners: StorefrontBanner[] = [
-  { src: "/images/banners/pink.webp", alt: "Fuzevalo banner pink edition" },
+  { src: "/images/banners/banner-1.jpeg", alt: "Fuzevalo banner 1" },
+  { src: "/images/banners/banner-2.png", alt: "Fuzevalo banner 2" },
 ];
 
 const featureStats = [

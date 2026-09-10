@@ -64,13 +64,13 @@ export default function AdminShell({ children }: AdminShellProps) {
       >
         <SidebarHeader className="px-3 py-4">
           <div className="flex items-center gap-3 rounded-[1.1rem] border border-primary/18 bg-primary/6 px-3 py-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-[0.95rem] border border-primary/25 bg-background/60">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[0.95rem] border border-primary/25 bg-background/60">
               <Image
                 src="/images/logo.png"
                 alt="Fuzevalo"
-                width={22}
-                height={22}
-                className="h-[22px] w-[22px] object-contain"
+                width={30}
+                height={30}
+                className="h-[30px] w-[30px] object-contain"
               />
             </div>
             <div className="min-w-0 group-data-[collapsible=icon]:hidden">

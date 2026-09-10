@@ -91,7 +91,11 @@ async function fetchProductList(): Promise<Product[]> {
     .order("created_at", { ascending: false });
 
   if (error) {
-    throw new Error(`Failed to list storefront products: ${error.message}`);
+    // Don't crash the build/render if Supabase is unreachable (e.g. Free
+    // tier egress restriction). Storefront degrades to empty catalog
+    // instead of 500. Log so it stays visible in Vercel logs.
+    console.error(`Failed to list storefront products: ${error.message}`);
+    return [];
   }
 
   return ((data ?? []) as CatalogProductRow[]).map(mapCatalogRowToProduct);

@@ -5,7 +5,7 @@ import sharp from "sharp";
 import pngToIco from "png-to-ico";
 import { writeFile } from "node:fs/promises";
 
-const SOURCE = "public/images/logo.png";
+const SOURCE = process.argv[2] || "public/images/logo.png";
 const OUT = "public/favicon.ico";
 const SIZES = [16, 32, 48, 64];
 

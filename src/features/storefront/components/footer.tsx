@@ -62,7 +62,7 @@ export default function Footer({ compact = false }: FooterProps) {
           <img
             src="/images/logo.png"
             alt="Fuzevalo"
-            className="h-6 w-6 opacity-40"
+            className="h-8 w-8 opacity-40"
           />
           <p className="font-display text-[10px] tracking-[0.3em] text-muted-foreground/40">
             © 2026 FUZEVALO — ALL RIGHTS RESERVED
@@ -81,10 +81,10 @@ export default function Footer({ compact = false }: FooterProps) {
               <Image
                 src="/images/logo.png"
                 alt="Fuzevalo"
-                width={72}
-                height={72}
+                width={100}
+                height={100}
                 className="object-contain"
-                style={{ height: 72, width: 72 }}
+                style={{ height: 100, width: 100 }}
               />
               <span className="font-display text-3xl font-bold tracking-wider text-white sm:text-[2.15rem]">
                 FUZE<span className="text-primary">VALO</span>

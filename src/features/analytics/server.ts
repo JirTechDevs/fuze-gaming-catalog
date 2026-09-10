@@ -4,6 +4,8 @@ export type DashboardStats = {
   available: number;
   sold: number;
   addedThisMonth: number;
+  viewsToday: number;
+  views7d: number;
   views30d: number;
   conversionRate: number;
 };
@@ -15,9 +17,10 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   startOfMonth.setDate(1);
   startOfMonth.setHours(0, 0, 0, 0);
 
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
 
-  const [availableRes, soldRes, addedRes, viewsRes] = await Promise.all([
+  const [availableRes, soldRes, addedRes, todayRes, week7Res, month30Res] = await Promise.all([
     supabase
       .from("catalog_items")
       .select("*", { count: "exact", head: true })
@@ -33,7 +36,15 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     supabase
       .from("storefront_views")
       .select("*", { count: "exact", head: true })
-      .gte("viewed_at", thirtyDaysAgo.toISOString()),
+      .gte("viewed_at", startOfToday.toISOString()),
+    supabase
+      .from("storefront_views")
+      .select("*", { count: "exact", head: true })
+      .gte("viewed_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+    supabase
+      .from("storefront_views")
+      .select("*", { count: "exact", head: true })
+      .gte("viewed_at", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()),
   ]);
 
   const available = availableRes.count ?? 0;
@@ -44,7 +55,9 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     available,
     sold,
     addedThisMonth: addedRes.count ?? 0,
-    views30d: viewsRes.count ?? 0,
+    viewsToday: todayRes.count ?? 0,
+    views7d: week7Res.count ?? 0,
+    views30d: month30Res.count ?? 0,
     conversionRate: total > 0 ? Math.round((sold / total) * 1000) / 10 : 0,
   };
 }
