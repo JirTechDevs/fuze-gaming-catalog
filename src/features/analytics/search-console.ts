@@ -4,6 +4,7 @@ export type SearchConsoleData = {
   ctr: number;
   position: number;
   topQueries: { query: string; clicks: number; impressions: number }[];
+  daily: { date: string; clicks: number; impressions: number }[];
 };
 
 export async function getSearchConsoleData(): Promise<SearchConsoleData | null> {
@@ -67,27 +68,18 @@ export async function getSearchConsoleData(): Promise<SearchConsoleData | null> 
       .toISOString()
       .split("T")[0];
 
-    const [summaryRes, queriesRes] = await Promise.all([
-      fetch(
-        `https://searchconsole.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${access_token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ startDate, endDate, dimensions: [] }),
-        },
-      ),
-      fetch(
-        `https://searchconsole.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${access_token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ startDate, endDate, dimensions: ["query"], rowLimit: 10 }),
-        },
-      ),
+    const apiUrl = `https://searchconsole.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`;
+    const headers = { Authorization: `Bearer ${access_token}`, "Content-Type": "application/json" };
+
+    const [summaryRes, queriesRes, dailyRes] = await Promise.all([
+      fetch(apiUrl, { method: "POST", headers, body: JSON.stringify({ startDate, endDate, dimensions: [] }) }),
+      fetch(apiUrl, { method: "POST", headers, body: JSON.stringify({ startDate, endDate, dimensions: ["query"], rowLimit: 10 }) }),
+      fetch(apiUrl, { method: "POST", headers, body: JSON.stringify({ startDate, endDate, dimensions: ["date"], rowLimit: 28 }) }),
     ]);
 
     const summary = await summaryRes.json() as { rows?: { clicks: number; impressions: number; ctr: number; position: number }[] };
     const queries = await queriesRes.json() as { rows?: { keys: string[]; clicks: number; impressions: number }[] };
+    const daily  = await dailyRes.json()  as { rows?: { keys: string[]; clicks: number; impressions: number }[] };
 
     const row = summary.rows?.[0];
     if (!row) return null;
@@ -99,6 +91,11 @@ export async function getSearchConsoleData(): Promise<SearchConsoleData | null> 
       position: row.position,
       topQueries: (queries.rows ?? []).map((r) => ({
         query: r.keys[0],
+        clicks: Math.round(r.clicks),
+        impressions: Math.round(r.impressions),
+      })),
+      daily: (daily.rows ?? []).map((r) => ({
+        date: r.keys[0],
         clicks: Math.round(r.clicks),
         impressions: Math.round(r.impressions),
       })),

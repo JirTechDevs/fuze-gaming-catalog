@@ -1,6 +1,7 @@
 import { BarChart2, Calendar, CalendarDays, ExternalLink, Globe, MousePointerClick, Search, TrendingUp } from "lucide-react";
 import { getDashboardStats } from "@/features/analytics/server";
 import { getSearchConsoleData } from "@/features/analytics/search-console";
+import GscChart from "@/features/analytics/components/gsc-chart";
 
 export default async function AnalyticsPage() {
   const [stats, gsc] = await Promise.all([
@@ -96,6 +97,13 @@ export default async function AnalyticsPage() {
                 );
               })}
             </div>
+
+            {gsc.daily.length > 0 && (
+              <div className="rounded-[1.4rem] border border-border/35 bg-card/72 p-5">
+                <p className="mb-4 font-display text-xs tracking-[0.24em] text-muted-foreground/60">CLICKS & IMPRESSIONS — 28 HARI</p>
+                <GscChart data={gsc.daily} />
+              </div>
+            )}
 
             {gsc.topQueries.length > 0 && (
               <div className="rounded-[1.4rem] border border-border/35 bg-card/72 p-5">
