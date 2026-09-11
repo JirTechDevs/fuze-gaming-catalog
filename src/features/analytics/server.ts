@@ -59,9 +59,9 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       .gte("viewed_at", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()),
     supabase
       .from("storefront_views")
-      .select("visited_date")
-      .gte("visited_date", chartStartDate)
-      .order("visited_date", { ascending: true })
+      .select("viewed_at")
+      .gte("viewed_at", `${chartStartDate}T00:00:00.000Z`)
+      .order("viewed_at", { ascending: true })
       .range(0, 9999),
   ]);
 
@@ -71,7 +71,10 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const visitorCountByDate = new Map<string, number>();
 
   for (const view of dailyTrafficRes.data ?? []) {
-    const date = view.visited_date;
+    // `viewed_at` is the original event timestamp. Do not use `visited_date`
+    // here: legacy rows received that column's default value when it was added,
+    // which would incorrectly place historic traffic on one migration day.
+    const date = view.viewed_at?.slice(0, 10);
     if (date) {
       visitorCountByDate.set(date, (visitorCountByDate.get(date) ?? 0) + 1);
     }
