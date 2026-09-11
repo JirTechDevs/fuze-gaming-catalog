@@ -1,6 +1,34 @@
 import { createServiceRoleClient } from "@/lib/supabase/admin";
 
 const TRAFFIC_PAGE_SIZE = 1_000;
+const JAKARTA_TIME_ZONE = "Asia/Jakarta";
+const jakartaDateFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: JAKARTA_TIME_ZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+function getJakartaDateKey(date: Date) {
+  const parts = jakartaDateFormatter.formatToParts(date);
+  const values = Object.fromEntries(
+    parts
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value]),
+  );
+
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function shiftDateKey(dateKey: string, days: number) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day + days));
+  return date.toISOString().slice(0, 10);
+}
+
+function getJakartaDayStart(dateKey: string) {
+  return `${dateKey}T00:00:00+07:00`;
+}
 
 export type DailyStorefrontTraffic = {
   date: string;
@@ -26,16 +54,14 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   startOfMonth.setDate(1);
   startOfMonth.setHours(0, 0, 0, 0);
 
-  const startOfToday = new Date();
-  startOfToday.setHours(0, 0, 0, 0);
-
+  const todayDate = getJakartaDateKey(new Date());
+  const weekStartDate = shiftDateKey(todayDate, -6);
+  const monthStartDate = shiftDateKey(todayDate, -29);
   // Keep the storefront chart on the same 28-calendar-day window used by
   // Google Search Console, including today.
-  const chartStart = new Date(startOfToday);
-  chartStart.setDate(chartStart.getDate() - 27);
-  const chartStartDate = chartStart.toISOString().slice(0, 10);
+  const chartStartDate = shiftDateKey(todayDate, -27);
 
-  const [availableRes, soldRes, addedRes, todayRes, week7Res, month30Res, dailyTrafficFirstPageRes] = await Promise.all([
+  const [availableRes, soldRes, addedRes, dailyTrafficFirstPageRes] = await Promise.all([
     supabase
       .from("catalog_items")
       .select("*", { count: "exact", head: true })
@@ -50,20 +76,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       .gte("created_at", startOfMonth.toISOString()),
     supabase
       .from("storefront_views")
-      .select("*", { count: "exact", head: true })
-      .gte("viewed_at", startOfToday.toISOString()),
-    supabase
-      .from("storefront_views")
-      .select("*", { count: "exact", head: true })
-      .gte("viewed_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
-    supabase
-      .from("storefront_views")
-      .select("*", { count: "exact", head: true })
-      .gte("viewed_at", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()),
-    supabase
-      .from("storefront_views")
-      .select("viewed_at", { count: "exact" })
-      .gte("viewed_at", `${chartStartDate}T00:00:00.000Z`)
+      .select("viewed_at, session_id", { count: "exact" })
+      .gte("viewed_at", getJakartaDayStart(monthStartDate))
       .order("viewed_at", { ascending: true })
       .range(0, TRAFFIC_PAGE_SIZE - 1),
   ]);
@@ -71,7 +85,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const available = availableRes.count ?? 0;
   const sold = soldRes.count ?? 0;
   const total = available + sold;
-  const visitorCountByDate = new Map<string, number>();
+  const visitorSessionsByDate = new Map<string, Set<string>>();
   let trafficHistoryStart: string | null = null;
   const trafficPageCount = Math.ceil(
     (dailyTrafficFirstPageRes.count ?? dailyTrafficFirstPageRes.data?.length ?? 0) / TRAFFIC_PAGE_SIZE,
@@ -81,8 +95,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       const from = (pageIndex + 1) * TRAFFIC_PAGE_SIZE;
       return supabase
         .from("storefront_views")
-        .select("viewed_at")
-        .gte("viewed_at", `${chartStartDate}T00:00:00.000Z`)
+        .select("viewed_at, session_id")
+        .gte("viewed_at", getJakartaDayStart(monthStartDate))
         .order("viewed_at", { ascending: true })
         .range(from, from + TRAFFIC_PAGE_SIZE - 1);
     }),
@@ -96,28 +110,39 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     // `viewed_at` is the original event timestamp. Do not use `visited_date`
     // here: legacy rows received that column's default value when it was added,
     // which would incorrectly place historic traffic on one migration day.
-    const date = view.viewed_at?.slice(0, 10);
-    if (date) {
+    if (view.viewed_at) {
+      const date = getJakartaDateKey(new Date(view.viewed_at));
+      const sessionId = view.session_id ?? `legacy-event:${view.viewed_at}`;
       trafficHistoryStart ??= date;
-      visitorCountByDate.set(date, (visitorCountByDate.get(date) ?? 0) + 1);
+
+      const visitors = visitorSessionsByDate.get(date) ?? new Set<string>();
+      visitors.add(sessionId);
+      visitorSessionsByDate.set(date, visitors);
     }
   }
 
-  const dailyTraffic = Array.from({ length: 28 }, (_, index) => {
-    const date = new Date(chartStart);
-    date.setDate(chartStart.getDate() + index);
-    const dateKey = date.toISOString().slice(0, 10);
+  const visitorsForDate = (date: string) => visitorSessionsByDate.get(date)?.size ?? 0;
+  const visitorsInPeriod = (startDate: string) => {
+    let visitors = 0;
+    for (let date = startDate; date <= todayDate; date = shiftDateKey(date, 1)) {
+      visitors += visitorsForDate(date);
+    }
+    return visitors;
+  };
 
-    return { date: dateKey, visitors: visitorCountByDate.get(dateKey) ?? 0 };
+  const dailyTraffic = Array.from({ length: 28 }, (_, index) => {
+    const dateKey = shiftDateKey(chartStartDate, index);
+
+    return { date: dateKey, visitors: visitorsForDate(dateKey) };
   });
 
   return {
     available,
     sold,
     addedThisMonth: addedRes.count ?? 0,
-    viewsToday: todayRes.count ?? 0,
-    views7d: week7Res.count ?? 0,
-    views30d: month30Res.count ?? 0,
+    viewsToday: visitorsForDate(todayDate),
+    views7d: visitorsInPeriod(weekStartDate),
+    views30d: visitorsInPeriod(monthStartDate),
     conversionRate: total > 0 ? Math.round((sold / total) * 1000) / 10 : 0,
     dailyTraffic,
     trafficHistoryStart,
