@@ -5,8 +5,8 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } f
 type DailyRow = { date: string; clicks: number; impressions: number };
 
 function formatDate(dateStr: string) {
-  const d = new Date(dateStr);
-  return `${d.getDate()}/${d.getMonth() + 1}`;
+  const [, month, day] = dateStr.split("-");
+  return `${day}/${month}`;
 }
 
 export default function GscChart({ data }: { data: DailyRow[] }) {

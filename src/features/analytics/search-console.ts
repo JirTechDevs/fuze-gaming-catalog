@@ -62,11 +62,12 @@ export async function getSearchConsoleData(): Promise<SearchConsoleData | null> 
     });
     const { access_token } = await tokenRes.json() as { access_token: string };
 
-    // Query Search Console API — last 28 days
-    const endDate = new Date().toISOString().split("T")[0];
-    const startDate = new Date(Date.now() - 28 * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .split("T")[0];
+    // Query the same 28-calendar-day period shown in the storefront chart.
+    const end = new Date();
+    const start = new Date(end);
+    start.setDate(start.getDate() - 27);
+    const endDate = end.toISOString().split("T")[0];
+    const startDate = start.toISOString().split("T")[0];
 
     const apiUrl = `https://searchconsole.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`;
     const headers = { Authorization: `Bearer ${access_token}`, "Content-Type": "application/json" };
