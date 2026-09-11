@@ -69,6 +69,12 @@ export default async function AnalyticsPage() {
           Mencakup semua traffic: Google, WhatsApp, direct, social media. Bot dan admin dikecualikan. Unique per session per hari.
         </p>
 
+        {stats.unattributedTrafficEvents > 0 && (
+          <p className="text-[11px] text-amber-500/80">
+            {stats.unattributedTrafficEvents.toLocaleString("id-ID")} event sebelum session tracking aktif tidak dimasukkan ke pengunjung unik.
+          </p>
+        )}
+
         <div className="rounded-[1.4rem] border border-border/35 bg-card/72 p-5">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <div>

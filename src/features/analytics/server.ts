@@ -45,6 +45,7 @@ export type DashboardStats = {
   conversionRate: number;
   dailyTraffic: DailyStorefrontTraffic[];
   trafficHistoryStart: string | null;
+  unattributedTrafficEvents: number;
 };
 
 export async function getDashboardStats(): Promise<DashboardStats> {
@@ -87,6 +88,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const total = available + sold;
   const visitorSessionsByDate = new Map<string, Set<string>>();
   let trafficHistoryStart: string | null = null;
+  let unattributedTrafficEvents = 0;
   const trafficPageCount = Math.ceil(
     (dailyTrafficFirstPageRes.count ?? dailyTrafficFirstPageRes.data?.length ?? 0) / TRAFFIC_PAGE_SIZE,
   );
@@ -112,7 +114,16 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     // which would incorrectly place historic traffic on one migration day.
     if (view.viewed_at) {
       const date = getJakartaDateKey(new Date(view.viewed_at));
-      const sessionId = view.session_id ?? `legacy-event:${view.viewed_at}`;
+      const sessionId = view.session_id;
+
+      // These legacy rows predate session tracking. They are real page events,
+      // but cannot be counted as unique visitors, so keep them out of the
+      // unique-visitor trend and summary cards.
+      if (!sessionId) {
+        unattributedTrafficEvents += 1;
+        continue;
+      }
+
       trafficHistoryStart ??= date;
 
       const visitors = visitorSessionsByDate.get(date) ?? new Set<string>();
@@ -146,5 +157,6 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     conversionRate: total > 0 ? Math.round((sold / total) * 1000) / 10 : 0,
     dailyTraffic,
     trafficHistoryStart,
+    unattributedTrafficEvents,
   };
 }
