@@ -1,5 +1,7 @@
 import { createServiceRoleClient } from "@/lib/supabase/admin";
 
+const TRAFFIC_PAGE_SIZE = 1_000;
+
 export type DailyStorefrontTraffic = {
   date: string;
   visitors: number;
@@ -33,7 +35,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   chartStart.setDate(chartStart.getDate() - 27);
   const chartStartDate = chartStart.toISOString().slice(0, 10);
 
-  const [availableRes, soldRes, addedRes, todayRes, week7Res, month30Res, dailyTrafficRes] = await Promise.all([
+  const [availableRes, soldRes, addedRes, todayRes, week7Res, month30Res, dailyTrafficFirstPageRes] = await Promise.all([
     supabase
       .from("catalog_items")
       .select("*", { count: "exact", head: true })
@@ -60,10 +62,10 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       .gte("viewed_at", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()),
     supabase
       .from("storefront_views")
-      .select("viewed_at")
+      .select("viewed_at", { count: "exact" })
       .gte("viewed_at", `${chartStartDate}T00:00:00.000Z`)
       .order("viewed_at", { ascending: true })
-      .range(0, 9999),
+      .range(0, TRAFFIC_PAGE_SIZE - 1),
   ]);
 
   const available = availableRes.count ?? 0;
@@ -71,8 +73,26 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const total = available + sold;
   const visitorCountByDate = new Map<string, number>();
   let trafficHistoryStart: string | null = null;
+  const trafficPageCount = Math.ceil(
+    (dailyTrafficFirstPageRes.count ?? dailyTrafficFirstPageRes.data?.length ?? 0) / TRAFFIC_PAGE_SIZE,
+  );
+  const remainingTrafficPages = await Promise.all(
+    Array.from({ length: Math.max(trafficPageCount - 1, 0) }, (_, pageIndex) => {
+      const from = (pageIndex + 1) * TRAFFIC_PAGE_SIZE;
+      return supabase
+        .from("storefront_views")
+        .select("viewed_at")
+        .gte("viewed_at", `${chartStartDate}T00:00:00.000Z`)
+        .order("viewed_at", { ascending: true })
+        .range(from, from + TRAFFIC_PAGE_SIZE - 1);
+    }),
+  );
+  const dailyTrafficEvents = [
+    ...(dailyTrafficFirstPageRes.data ?? []),
+    ...remainingTrafficPages.flatMap((page) => page.data ?? []),
+  ];
 
-  for (const view of dailyTrafficRes.data ?? []) {
+  for (const view of dailyTrafficEvents) {
     // `viewed_at` is the original event timestamp. Do not use `visited_date`
     // here: legacy rows received that column's default value when it was added,
     // which would incorrectly place historic traffic on one migration day.
