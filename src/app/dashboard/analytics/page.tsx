@@ -22,9 +22,6 @@ export default async function AnalyticsPage() {
     { label: "30 Hari",  value: stats.views30d.toLocaleString("id-ID"),   icon: Calendar,     note: "unique visitor" },
   ];
   const comparisonStart = stats.trafficHistoryStart;
-  const gscComparisonData = gsc && comparisonStart
-    ? gsc.daily.filter((row) => row.date >= comparisonStart)
-    : gsc?.daily ?? [];
   const comparisonPeriodLabel = comparisonStart
     ? `Data tersedia sejak ${formatShortDate(comparisonStart)}`
     : "28 hari terakhir";
@@ -143,16 +140,16 @@ export default async function AnalyticsPage() {
               })}
             </div>
 
-            {gscComparisonData.length > 0 && (
+            {gsc.daily.length > 0 && (
               <div className="rounded-[1.4rem] border border-border/35 bg-card/72 p-5">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <p className="font-display text-xs tracking-[0.24em] text-muted-foreground/60">CLICKS & IMPRESSIONS</p>
-                    <p className="mt-1 text-[11px] text-muted-foreground/48">Menggunakan periode data yang sama dengan grafik pengunjung storefront</p>
+                    <p className="mt-1 text-[11px] text-muted-foreground/48">Data Google Search Console · independen dari tracker storefront</p>
                   </div>
-                  <span className="rounded-full border border-[#4285F4]/20 bg-[#4285F4]/7 px-2.5 py-1 text-[10px] text-[#4285F4]">{comparisonPeriodLabel}</span>
+                  <span className="rounded-full border border-[#4285F4]/20 bg-[#4285F4]/7 px-2.5 py-1 text-[10px] text-[#4285F4]">28 hari terakhir</span>
                 </div>
-                <GscChart data={gscComparisonData} />
+                <GscChart data={gsc.daily} />
               </div>
             )}
 
