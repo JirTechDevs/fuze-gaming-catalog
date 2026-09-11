@@ -4,6 +4,12 @@ import { getSearchConsoleData } from "@/features/analytics/search-console";
 import GscChart from "@/features/analytics/components/gsc-chart";
 import StorefrontTrafficChart from "@/features/analytics/components/storefront-traffic-chart";
 
+function formatShortDate(date: string) {
+  const [, month, day] = date.split("-");
+  const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+  return `${Number(day)} ${months[Number(month) - 1]}`;
+}
+
 export default async function AnalyticsPage() {
   const [stats, gsc] = await Promise.all([
     getDashboardStats(),
@@ -15,6 +21,13 @@ export default async function AnalyticsPage() {
     { label: "7 Hari",   value: stats.views7d.toLocaleString("id-ID"),    icon: CalendarDays, note: "unique visitor" },
     { label: "30 Hari",  value: stats.views30d.toLocaleString("id-ID"),   icon: Calendar,     note: "unique visitor" },
   ];
+  const comparisonStart = stats.trafficHistoryStart;
+  const gscComparisonData = gsc && comparisonStart
+    ? gsc.daily.filter((row) => row.date >= comparisonStart)
+    : gsc?.daily ?? [];
+  const comparisonPeriodLabel = comparisonStart
+    ? `Data tersedia sejak ${formatShortDate(comparisonStart)}`
+    : "28 hari terakhir";
 
   return (
     <div className="space-y-8">
@@ -60,9 +73,9 @@ export default async function AnalyticsPage() {
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <div>
               <p className="font-display text-xs tracking-[0.24em] text-muted-foreground/60">PENGUNJUNG HARIAN</p>
-              <p className="mt-1 text-[11px] text-muted-foreground/48">Semua sumber traffic · timeline yang sama dengan Google Search di bawah</p>
+              <p className="mt-1 text-[11px] text-muted-foreground/48">Semua sumber traffic · hanya menampilkan hari dengan data pelacakan yang valid</p>
             </div>
-            <span className="rounded-full border border-primary/18 bg-primary/7 px-2.5 py-1 text-[10px] text-primary/75">28 hari terakhir</span>
+            <span className="rounded-full border border-primary/18 bg-primary/7 px-2.5 py-1 text-[10px] text-primary/75">{comparisonPeriodLabel}</span>
           </div>
           <StorefrontTrafficChart data={stats.dailyTraffic} />
         </div>
@@ -110,16 +123,16 @@ export default async function AnalyticsPage() {
               })}
             </div>
 
-            {gsc.daily.length > 0 && (
+            {gscComparisonData.length > 0 && (
               <div className="rounded-[1.4rem] border border-border/35 bg-card/72 p-5">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <p className="font-display text-xs tracking-[0.24em] text-muted-foreground/60">CLICKS & IMPRESSIONS</p>
-                    <p className="mt-1 text-[11px] text-muted-foreground/48">Bandingkan dengan grafik pengunjung storefront pada timeframe yang sama</p>
+                    <p className="mt-1 text-[11px] text-muted-foreground/48">Menggunakan periode data yang sama dengan grafik pengunjung storefront</p>
                   </div>
-                  <span className="rounded-full border border-[#4285F4]/20 bg-[#4285F4]/7 px-2.5 py-1 text-[10px] text-[#4285F4]">28 hari terakhir</span>
+                  <span className="rounded-full border border-[#4285F4]/20 bg-[#4285F4]/7 px-2.5 py-1 text-[10px] text-[#4285F4]">{comparisonPeriodLabel}</span>
                 </div>
-                <GscChart data={gsc.daily} />
+                <GscChart data={gscComparisonData} />
               </div>
             )}
 

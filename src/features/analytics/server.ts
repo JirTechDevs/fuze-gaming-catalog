@@ -14,6 +14,7 @@ export type DashboardStats = {
   views30d: number;
   conversionRate: number;
   dailyTraffic: DailyStorefrontTraffic[];
+  trafficHistoryStart: string | null;
 };
 
 export async function getDashboardStats(): Promise<DashboardStats> {
@@ -69,6 +70,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const sold = soldRes.count ?? 0;
   const total = available + sold;
   const visitorCountByDate = new Map<string, number>();
+  let trafficHistoryStart: string | null = null;
 
   for (const view of dailyTrafficRes.data ?? []) {
     // `viewed_at` is the original event timestamp. Do not use `visited_date`
@@ -76,6 +78,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     // which would incorrectly place historic traffic on one migration day.
     const date = view.viewed_at?.slice(0, 10);
     if (date) {
+      trafficHistoryStart ??= date;
       visitorCountByDate.set(date, (visitorCountByDate.get(date) ?? 0) + 1);
     }
   }
@@ -97,5 +100,6 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     views30d: month30Res.count ?? 0,
     conversionRate: total > 0 ? Math.round((sold / total) * 1000) / 10 : 0,
     dailyTraffic,
+    trafficHistoryStart,
   };
 }

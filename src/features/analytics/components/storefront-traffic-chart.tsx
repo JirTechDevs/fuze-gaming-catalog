@@ -9,7 +9,11 @@ function formatDate(date: string) {
 }
 
 export default function StorefrontTrafficChart({ data }: { data: DailyStorefrontTraffic[] }) {
-  const chartData = data.map((row) => ({ ...row, label: formatDate(row.date) }));
+  // The tracker has no historical data before its first recorded visit. Hide
+  // those pre-tracking dates instead of drawing a misleading line of zeros.
+  const firstRecordedIndex = data.findIndex((row) => row.visitors > 0);
+  const visibleData = firstRecordedIndex === -1 ? data : data.slice(firstRecordedIndex);
+  const chartData = visibleData.map((row) => ({ ...row, label: formatDate(row.date) }));
 
   return (
     <ResponsiveContainer width="100%" height={220}>
