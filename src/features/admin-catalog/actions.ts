@@ -43,6 +43,7 @@ function toLineList(raw: string) {
 
 function revalidateCatalogAdminPaths() {
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/analytics");
   revalidatePath("/dashboard/catalog");
 }
 
@@ -132,7 +133,7 @@ export async function saveCatalogAction(
   const existingRecord = id
     ? await supabase
         .from("catalog_items")
-        .select("id, code, main_image_path, gallery_image_paths")
+        .select("id, code, main_image_path, gallery_image_paths, status, sold_at")
         .eq("id", id)
         .maybeSingle()
     : null;
@@ -166,17 +167,23 @@ export async function saveCatalogAction(
     );
   }
 
+  const soldAt = payload.status === "sold"
+    ? (existingRecord?.data?.status === "sold" ? existingRecord.data.sold_at : new Date().toISOString())
+    : null;
+
   const query = id
     ? supabase
         .from("catalog_items")
         .update({
           ...payload,
+          sold_at: soldAt,
           main_image_path: persistedImages.mainImagePath,
           gallery_image_paths: persistedImages.galleryImagePaths,
         })
         .eq("id", id)
     : supabase.from("catalog_items").insert({
         ...payload,
+        sold_at: soldAt,
         main_image_path: persistedImages.mainImagePath,
         gallery_image_paths: persistedImages.galleryImagePaths,
       });
@@ -207,7 +214,10 @@ export async function toggleCatalogStatusAction(
 
   const { error } = await supabase
     .from("catalog_items")
-    .update({ status: nextStatus })
+    .update({
+      status: nextStatus,
+      sold_at: nextStatus === "sold" ? new Date().toISOString() : null,
+    })
     .eq("id", id);
 
   if (error) {

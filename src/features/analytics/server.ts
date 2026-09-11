@@ -33,6 +33,7 @@ function getJakartaDayStart(dateKey: string) {
 export type DailyStorefrontTraffic = {
   date: string;
   visitors: number;
+  sales: number;
 };
 
 export type DashboardStats = {
@@ -46,6 +47,7 @@ export type DashboardStats = {
   dailyTraffic: DailyStorefrontTraffic[];
   trafficHistoryStart: string | null;
   unattributedTrafficEvents: number;
+  salesTrackingAvailable: boolean;
 };
 
 export async function getDashboardStats(): Promise<DashboardStats> {
@@ -62,7 +64,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   // Google Search Console, including today.
   const chartStartDate = shiftDateKey(todayDate, -27);
 
-  const [availableRes, soldRes, addedRes, dailyTrafficFirstPageRes] = await Promise.all([
+  const [availableRes, soldRes, addedRes, dailyTrafficFirstPageRes, dailySalesRes] = await Promise.all([
     supabase
       .from("catalog_items")
       .select("*", { count: "exact", head: true })
@@ -81,12 +83,19 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       .gte("viewed_at", getJakartaDayStart(monthStartDate))
       .order("viewed_at", { ascending: true })
       .range(0, TRAFFIC_PAGE_SIZE - 1),
+    supabase
+      .from("catalog_items")
+      .select("sold_at")
+      .eq("status", "sold")
+      .not("sold_at", "is", null)
+      .gte("sold_at", getJakartaDayStart(chartStartDate)),
   ]);
 
   const available = availableRes.count ?? 0;
   const sold = soldRes.count ?? 0;
   const total = available + sold;
   const visitorSessionsByDate = new Map<string, Set<string>>();
+  const salesCountByDate = new Map<string, number>();
   let trafficHistoryStart: string | null = null;
   let unattributedTrafficEvents = 0;
   const trafficPageCount = Math.ceil(
@@ -107,6 +116,13 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     ...(dailyTrafficFirstPageRes.data ?? []),
     ...remainingTrafficPages.flatMap((page) => page.data ?? []),
   ];
+
+  for (const sale of dailySalesRes.data ?? []) {
+    if (sale.sold_at) {
+      const date = getJakartaDateKey(new Date(sale.sold_at));
+      salesCountByDate.set(date, (salesCountByDate.get(date) ?? 0) + 1);
+    }
+  }
 
   for (const view of dailyTrafficEvents) {
     // `viewed_at` is the original event timestamp. Do not use `visited_date`
@@ -144,7 +160,11 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const dailyTraffic = Array.from({ length: 28 }, (_, index) => {
     const dateKey = shiftDateKey(chartStartDate, index);
 
-    return { date: dateKey, visitors: visitorsForDate(dateKey) };
+    return {
+      date: dateKey,
+      visitors: visitorsForDate(dateKey),
+      sales: salesCountByDate.get(dateKey) ?? 0,
+    };
   });
 
   return {
@@ -158,5 +178,6 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     dailyTraffic,
     trafficHistoryStart,
     unattributedTrafficEvents,
+    salesTrackingAvailable: !dailySalesRes.error,
   };
 }

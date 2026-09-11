@@ -1,6 +1,6 @@
 "use client";
 
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { DailyStorefrontTraffic } from "@/features/analytics/server";
 
 function formatDate(date: string) {
@@ -26,11 +26,21 @@ export default function StorefrontTrafficChart({ data }: { data: DailyStorefront
           interval="preserveStartEnd"
         />
         <YAxis
+          yAxisId="visitors"
           allowDecimals={false}
           tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))", opacity: 0.6 }}
           tickLine={false}
           axisLine={false}
           allowDataOverflow={false}
+        />
+        <YAxis
+          yAxisId="sales"
+          orientation="right"
+          allowDecimals={false}
+          tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))", opacity: 0.6 }}
+          tickLine={false}
+          axisLine={false}
+          width={28}
         />
         <Tooltip
           contentStyle={{
@@ -40,16 +50,30 @@ export default function StorefrontTrafficChart({ data }: { data: DailyStorefront
             fontSize: 12,
           }}
           labelStyle={{ color: "hsl(var(--foreground))", marginBottom: 4 }}
-          formatter={(value: number) => [`${value.toLocaleString("id-ID")} pengunjung`, "Storefront"]}
+        />
+        <Legend
+          wrapperStyle={{ fontSize: 11, paddingTop: 8, color: "hsl(var(--muted-foreground))" }}
         />
         <Line
+          yAxisId="visitors"
           type="monotone"
           dataKey="visitors"
           stroke="hsl(var(--primary))"
           strokeWidth={2.5}
           dot={false}
           activeDot={{ r: 4, fill: "hsl(var(--primary))", strokeWidth: 0 }}
-          name="Pengunjung storefront"
+          name="Pengunjung unik"
+        />
+        <Line
+          yAxisId="sales"
+          type="monotone"
+          dataKey="sales"
+          stroke="#f59e0b"
+          strokeWidth={2}
+          strokeDasharray="6 5"
+          dot={{ r: 3, fill: "#f59e0b", strokeWidth: 0 }}
+          activeDot={{ r: 4, fill: "#f59e0b", strokeWidth: 0 }}
+          name="Akun terjual"
         />
       </LineChart>
     </ResponsiveContainer>

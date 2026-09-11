@@ -28,6 +28,11 @@ export default async function AnalyticsPage() {
   const comparisonPeriodLabel = comparisonStart
     ? `Data tersedia sejak ${formatShortDate(comparisonStart)}`
     : "28 hari terakhir";
+  const chartVisitors = stats.dailyTraffic.reduce((total, day) => total + day.visitors, 0);
+  const chartSales = stats.dailyTraffic.reduce((total, day) => total + day.sales, 0);
+  const visitorToSaleRate = chartVisitors > 0
+    ? Math.round((chartSales / chartVisitors) * 10_000) / 100
+    : 0;
 
   return (
     <div className="space-y-8">
@@ -78,12 +83,21 @@ export default async function AnalyticsPage() {
         <div className="rounded-[1.4rem] border border-border/35 bg-card/72 p-5">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <div>
-              <p className="font-display text-xs tracking-[0.24em] text-muted-foreground/60">PENGUNJUNG HARIAN</p>
-              <p className="mt-1 text-[11px] text-muted-foreground/48">Semua sumber traffic · hanya menampilkan hari dengan data pelacakan yang valid</p>
+              <p className="font-display text-xs tracking-[0.24em] text-muted-foreground/60">PENGUNJUNG & PENJUALAN HARIAN</p>
+              <p className="mt-1 text-[11px] text-muted-foreground/48">Garis solid: pengunjung unik · garis putus: akun terjual</p>
             </div>
             <span className="rounded-full border border-primary/18 bg-primary/7 px-2.5 py-1 text-[10px] text-primary/75">{comparisonPeriodLabel}</span>
           </div>
           <StorefrontTrafficChart data={stats.dailyTraffic} />
+          {stats.salesTrackingAvailable ? (
+            <p className="mt-3 text-[11px] text-muted-foreground/55">
+              Insight periode ini: <span className="text-foreground/82">{chartSales.toLocaleString("id-ID")} akun terjual</span> dari {chartVisitors.toLocaleString("id-ID")} pengunjung unik ({visitorToSaleRate}% conversion).
+            </p>
+          ) : (
+            <p className="mt-3 text-[11px] text-amber-500/80">
+              Tracking penjualan harian belum aktif. Jalankan migration <code className="rounded bg-secondary px-1 py-0.5">20260911_add_catalog_sale_tracking.sql</code> terlebih dahulu.
+            </p>
+          )}
         </div>
       </section>
 
