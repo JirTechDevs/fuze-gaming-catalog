@@ -5,11 +5,11 @@ import {
 } from "@/features/analytics/aggregate";
 
 describe("daily unique visitor aggregation", () => {
-  it("counts the same visitor once per UTC day and once again the next day", () => {
+  it("counts the same visitor once per WIB day and once again the next day", () => {
     const result = aggregateDailyUniqueVisitors([
-      { viewedAt: "2026-09-10T23:30:00.000Z", sessionId: "visitor-a" },
-      { viewedAt: "2026-09-10T23:45:00.000Z", sessionId: "visitor-a" },
-      { viewedAt: "2026-09-11T00:30:00.000Z", sessionId: "visitor-a" },
+      { viewedAt: "2026-09-10T15:30:00.000Z", sessionId: "visitor-a" },
+      { viewedAt: "2026-09-10T16:45:00.000Z", sessionId: "visitor-a" },
+      { viewedAt: "2026-09-10T17:30:00.000Z", sessionId: "visitor-a" },
     ]);
 
     expect(result.visitorsByDate.get("2026-09-10")?.size).toBe(1);

@@ -1,13 +1,19 @@
 import { listCatalogProducts } from "@/features/catalog/application/list-products";
 import StorefrontPage from "@/features/storefront/components/storefront-page";
 import { listStorefrontBanners } from "@/features/storefront/server";
-import { trackStorefrontView } from "@/features/analytics/track-view";
+import TrackVisit from "@/features/analytics/components/track-visit";
+
+// Was implicitly dynamic via the old server-side tracker; keep render behavior unchanged.
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  await trackStorefrontView();
-
   const products = await listCatalogProducts();
   const banners = await listStorefrontBanners();
 
-  return <StorefrontPage products={products} banners={banners} />;
+  return (
+    <>
+      <TrackVisit />
+      <StorefrontPage products={products} banners={banners} />
+    </>
+  );
 }

@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCatalogProductByCode } from "@/features/catalog/application/get-product-by-code";
 import ProductDetailPage from "@/features/storefront/components/product-detail-page";
-import { trackStorefrontView } from "@/features/analytics/track-view";
+import TrackVisit from "@/features/analytics/components/track-visit";
+
+// Was implicitly dynamic via the old server-side tracker; keep render behavior unchanged.
+export const dynamic = "force-dynamic";
 
 interface ProductDetailRouteProps {
   params: Promise<{ code: string }>;
@@ -56,6 +59,10 @@ export default async function ProductDetailRoute({
   const { code } = await params;
   const product = await getCatalogProductByCode(normalizeCode(code));
   if (!product) notFound();
-  await trackStorefrontView();
-  return <ProductDetailPage product={product} />;
+  return (
+    <>
+      <TrackVisit />
+      <ProductDetailPage product={product} />
+    </>
+  );
 }
