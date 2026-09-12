@@ -4,9 +4,8 @@ import {
   sumDailyUniques,
 } from "@/features/analytics/aggregate";
 import {
-  getStorefrontAnalyticsStartAt,
-  getUtcDateKey,
-  getUtcDayStart,
+  getJakartaDateKey,
+  getJakartaDayStart,
   shiftDateKey,
 } from "@/features/analytics/time";
 
@@ -40,19 +39,14 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   startOfMonth.setHours(0, 0, 0, 0);
 
   const now = new Date();
-  const todayDate = getUtcDateKey(now);
+  const todayDate = getJakartaDateKey(now);
   const weekStartDate = shiftDateKey(todayDate, -6);
   const monthStartDate = shiftDateKey(todayDate, -29);
   // Keep the storefront chart on the same 28-calendar-day window used by
   // Google Search Console, including today.
   const chartStartDate = shiftDateKey(todayDate, -27);
 
-  // Official analytics begins at the exact deployment timestamp. Do not pull
-  // pre-cutover rows into visitor metrics.
-  const cutoffIso = getStorefrontAnalyticsStartAt();
-  const monthWindowStartIso = getUtcDayStart(monthStartDate);
-  const trafficQueryStart =
-    cutoffIso && cutoffIso > monthWindowStartIso ? cutoffIso : monthWindowStartIso;
+  const trafficQueryStart = getJakartaDayStart(monthStartDate);
 
   const [availableRes, soldRes, addedRes, dailyTrafficFirstPageRes, dailySalesRes] = await Promise.all([
     supabase
@@ -71,6 +65,10 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       .from("storefront_views")
       .select("viewed_at, session_id", { count: "exact" })
       .gte("viewed_at", trafficQueryStart)
+      // Only rows from the client beacon carry user_agent. Everything recorded by
+      // the old server-side tracker (bot-inflated) is excluded, so counting
+      // starts at the deploy of the beacon.
+      .not("user_agent", "is", null)
       .order("viewed_at", { ascending: true })
       .range(0, TRAFFIC_PAGE_SIZE - 1),
     supabase
@@ -78,7 +76,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       .select("sold_at")
       .eq("status", "sold")
       .not("sold_at", "is", null)
-      .gte("sold_at", getUtcDayStart(chartStartDate)),
+      .gte("sold_at", getJakartaDayStart(chartStartDate)),
   ]);
 
   const available = availableRes.count ?? 0;
@@ -96,6 +94,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
         .from("storefront_views")
         .select("viewed_at, session_id")
         .gte("viewed_at", trafficQueryStart)
+        .not("user_agent", "is", null)
         .order("viewed_at", { ascending: true })
         .range(from, from + TRAFFIC_PAGE_SIZE - 1);
     }),
@@ -107,7 +106,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 
   for (const sale of dailySalesRes.data ?? []) {
     if (sale.sold_at) {
-      const date = getUtcDateKey(new Date(sale.sold_at));
+      const date = getJakartaDateKey(new Date(sale.sold_at));
       salesCountByDate.set(date, (salesCountByDate.get(date) ?? 0) + 1);
     }
   }

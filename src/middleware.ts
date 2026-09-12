@@ -1,13 +1,12 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabasePublishableKey, getSupabaseUrl } from "@/lib/supabase/env";
+import { ADMIN_DEVICE_COOKIE, VISITOR_COOKIE } from "@/features/analytics/track-visit";
 
-const VISITOR_COOKIE = "fvz_sid";
 // Persistent anonymous visitor identity (~2 years), NOT a short-lived session.
-const VISITOR_TTL = 60 * 60 * 24 * 365 * 2;
+const COOKIE_TTL = 60 * 60 * 24 * 365 * 2;
 
 const PROTECTED_PATH_PREFIXES = ["/dashboard", "/admin"];
-const STOREFRONT_EXCLUDED_PATH_PREFIXES = ["/login", "/api", "/catalog"];
 
 type CookieUpdate = { name: string; value: string; options: CookieOptions };
 
@@ -45,36 +44,29 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Stamp a persistent anonymous visitor cookie. Setting it on the request
-  // before building the response lets the downstream Server Component read it
-  // on this very first request (fixing the first-visit NULL session bug).
-  if (!user && !request.cookies.get(VISITOR_COOKIE)) {
-    request.cookies.set(VISITOR_COOKIE, crypto.randomUUID());
-  }
-
-  const isExcludedStorefront = STOREFRONT_EXCLUDED_PATH_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
-  );
-  const shouldTrackStorefront = !isProtected && !isExcludedStorefront && !user;
-
-  request.headers.set("x-fvz-path", pathname);
-  request.headers.set("x-fvz-track", shouldTrackStorefront ? "1" : "0");
-
   const response = NextResponse.next({ request });
 
   for (const { name, value, options } of authCookieUpdates) {
     response.cookies.set(name, value, options);
   }
 
-  const visitorId = request.cookies.get(VISITOR_COOKIE)?.value;
-  if (!user && visitorId) {
-    response.cookies.set(VISITOR_COOKIE, visitorId, {
-      httpOnly: true,
-      sameSite: "lax",
-      maxAge: VISITOR_TTL,
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
-    });
+  const cookieOptions: Partial<CookieOptions> = {
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: COOKIE_TTL,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+  };
+
+  if (user) {
+    // Marks this device as admin for good (survives logout), so the owner
+    // browsing the storefront logged-out is never counted as a visitor.
+    response.cookies.set(ADMIN_DEVICE_COOKIE, "1", cookieOptions);
+  } else {
+    // Minted on page loads only; /api/public/track (outside the matcher)
+    // requires the browser to send it back.
+    const visitorId = request.cookies.get(VISITOR_COOKIE)?.value ?? crypto.randomUUID();
+    response.cookies.set(VISITOR_COOKIE, visitorId, cookieOptions);
   }
 
   return response;

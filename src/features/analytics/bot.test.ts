@@ -7,6 +7,9 @@ describe("conservative bot detection", () => {
     expect(isBotUserAgent("curl/8.4.0")).toBe(true);
     expect(isBotUserAgent("python-requests/2.31")).toBe(true);
     expect(isBotUserAgent("SemrushBot")).toBe(true);
+    expect(isBotUserAgent("")).toBe(true);
+    expect(isBotUserAgent("WhatsApp/2.24.1 A")).toBe(true);
+    expect(isBotUserAgent("Mozilla/5.0 HeadlessChrome/120.0 Safari/537.36")).toBe(true);
   });
 
   it("does not flag real browser user agents", () => {

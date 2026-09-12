@@ -1,4 +1,4 @@
-import { getUtcDateKey, shiftDateKey } from "@/features/analytics/time";
+import { getJakartaDateKey, shiftDateKey } from "@/features/analytics/time";
 
 export type VisitorEvent = {
   viewedAt: string | null;
@@ -11,7 +11,7 @@ export type DailyVisitorAggregation = {
   historyStart: string | null;
 };
 
-// One visitor counts at most once per UTC calendar day. NULL session ids are
+// One visitor counts at most once per WIB calendar day. NULL session ids are
 // historical/unattributable events and are excluded from unique visitors.
 export function aggregateDailyUniqueVisitors(
   events: VisitorEvent[],
@@ -24,7 +24,7 @@ export function aggregateDailyUniqueVisitors(
     const viewedAt = event.viewedAt ? new Date(event.viewedAt) : null;
     if (!viewedAt || Number.isNaN(viewedAt.getTime())) continue;
 
-    const date = getUtcDateKey(viewedAt);
+    const date = getJakartaDateKey(viewedAt);
     const sessionId = event.sessionId;
 
     if (!sessionId) {

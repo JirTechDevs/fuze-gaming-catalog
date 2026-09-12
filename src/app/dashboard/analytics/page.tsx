@@ -68,7 +68,7 @@ export default async function AnalyticsPage() {
         </div>
 
         <p className="text-[11px] text-muted-foreground/45">
-          Mencakup semua traffic: Google, WhatsApp, direct, social media. Bot dan admin dikecualikan. Unique per visitor per hari (UTC).
+          Mencakup semua traffic: Google, WhatsApp, direct, social media. Bot dan admin dikecualikan. Unique per visitor per hari (WIB).
         </p>
 
         {stats.unattributedTrafficEvents > 0 && (
