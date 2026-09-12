@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { getCatalogProductByCode } from "@/features/catalog/application/get-product-by-code";
 import ProductDetailPage from "@/features/storefront/components/product-detail-page";
 import { trackStorefrontView } from "@/features/analytics/track-view";
-import { createClient } from "@/lib/supabase/server";
 
 interface ProductDetailRouteProps {
   params: Promise<{ code: string }>;
@@ -55,10 +54,8 @@ export default async function ProductDetailRoute({
   params,
 }: ProductDetailRouteProps) {
   const { code } = await params;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
   const product = await getCatalogProductByCode(normalizeCode(code));
   if (!product) notFound();
-  if (!user) await trackStorefrontView(`/jual-beli-akun/${normalizeCode(code)}`);
+  await trackStorefrontView();
   return <ProductDetailPage product={product} />;
 }

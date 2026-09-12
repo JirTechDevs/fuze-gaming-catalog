@@ -1,14 +1,18 @@
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabasePublishableKey, getSupabaseUrl } from "@/lib/supabase/env";
 
-const SESSION_COOKIE = "fvz_sid";
-const SESSION_TTL = 60 * 60 * 24; // 24h in seconds
+const VISITOR_COOKIE = "fvz_sid";
+// Persistent anonymous visitor identity (~2 years), NOT a short-lived session.
+const VISITOR_TTL = 60 * 60 * 24 * 365 * 2;
 
 const PROTECTED_PATH_PREFIXES = ["/dashboard", "/admin"];
+const STOREFRONT_EXCLUDED_PATH_PREFIXES = ["/login", "/api", "/catalog"];
+
+type CookieUpdate = { name: string; value: string; options: CookieOptions };
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next({ request });
+  const authCookieUpdates: CookieUpdate[] = [];
 
   const supabase = createServerClient(
     getSupabaseUrl(),
@@ -20,7 +24,7 @@ export async function middleware(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options);
+            authCookieUpdates.push({ name, value, options });
           });
         },
       },
@@ -32,8 +36,8 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
-  const isProtected = PROTECTED_PATH_PREFIXES.some((prefix) =>
-    pathname === prefix || pathname.startsWith(`${prefix}/`),
+  const isProtected = PROTECTED_PATH_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
 
   if (isProtected && !user) {
@@ -41,13 +45,35 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Stamp a session cookie for unique-visitor tracking on storefront pages.
-  if (!user && !request.cookies.get(SESSION_COOKIE)) {
-    response.cookies.set(SESSION_COOKIE, crypto.randomUUID(), {
+  // Stamp a persistent anonymous visitor cookie. Setting it on the request
+  // before building the response lets the downstream Server Component read it
+  // on this very first request (fixing the first-visit NULL session bug).
+  if (!user && !request.cookies.get(VISITOR_COOKIE)) {
+    request.cookies.set(VISITOR_COOKIE, crypto.randomUUID());
+  }
+
+  const isExcludedStorefront = STOREFRONT_EXCLUDED_PATH_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  );
+  const shouldTrackStorefront = !isProtected && !isExcludedStorefront && !user;
+
+  request.headers.set("x-fvz-path", pathname);
+  request.headers.set("x-fvz-track", shouldTrackStorefront ? "1" : "0");
+
+  const response = NextResponse.next({ request });
+
+  for (const { name, value, options } of authCookieUpdates) {
+    response.cookies.set(name, value, options);
+  }
+
+  const visitorId = request.cookies.get(VISITOR_COOKIE)?.value;
+  if (!user && visitorId) {
+    response.cookies.set(VISITOR_COOKIE, visitorId, {
       httpOnly: true,
       sameSite: "lax",
-      maxAge: SESSION_TTL,
+      maxAge: VISITOR_TTL,
       path: "/",
+      secure: process.env.NODE_ENV === "production",
     });
   }
 
