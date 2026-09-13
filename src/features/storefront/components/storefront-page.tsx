@@ -5,6 +5,7 @@ import type { Product } from "@/features/catalog/domain/product";
 import { useStorefrontLiteMode } from "@/hooks/use-storefront-lite-mode";
 import type { StorefrontBanner } from "@/features/storefront/server";
 import CatalogSection from "@/features/storefront/components/catalog-section";
+import EntryPopup from "@/features/storefront/components/entry-popup";
 import Footer from "@/features/storefront/components/footer";
 import HeroSection from "@/features/storefront/components/hero-section";
 import IntroScreen from "@/features/storefront/components/intro-screen";
@@ -31,6 +32,7 @@ function FloatingWhatsAppGlyph() {
 
 export default function StorefrontPage({ products, banners }: StorefrontPageProps) {
   const [introComplete, setIntroComplete] = useState(false);
+  const [entryPopupOpen, setEntryPopupOpen] = useState(false);
   const { isLiteMode, resolved } = useStorefrontLiteMode();
   const shouldRenderLiteMode = !resolved || isLiteMode;
   // ponytail: guard so the animated intro (Framer + useReducedMotion) only mounts after hydration.
@@ -43,6 +45,14 @@ export default function StorefrontPage({ products, banners }: StorefrontPageProp
       setIntroComplete(true);
     }
   }, [isLiteMode, resolved]);
+
+  // ponytail: show entry popup once the intro finishes (fires immediately in lite mode).
+  // No localStorage — spec wants it every visit; gated on client state so it never SSRs.
+  useEffect(() => {
+    if (introComplete) {
+      setEntryPopupOpen(true);
+    }
+  }, [introComplete]);
 
   useEffect(() => {
     if (!introComplete) {
@@ -104,6 +114,9 @@ export default function StorefrontPage({ products, banners }: StorefrontPageProp
       </div>
       {mounted && resolved && !isLiteMode && !introComplete && (
         <IntroScreen onComplete={() => setIntroComplete(true)} />
+      )}
+      {mounted && (
+        <EntryPopup open={entryPopupOpen} onOpenChange={setEntryPopupOpen} />
       )}
     </>
   );

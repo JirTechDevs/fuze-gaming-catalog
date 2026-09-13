@@ -1,6 +1,11 @@
 "use client";
 
-import { buildWhatsAppLink, formatPrice, type Product } from "@/features/catalog/domain/product";
+import {
+  buildWhatsAppLink,
+  buildWhatsAppUrl,
+  formatPrice,
+  type Product,
+} from "@/features/catalog/domain/product";
 import { useRealtimeProductStatus } from "@/features/catalog/hooks/use-realtime-product-status";
 import styles from "./product-detail-page.module.css";
 
@@ -50,15 +55,28 @@ export default function ProductDetailPricePanel({
       </div>
 
       {isAvailable ? (
-        <a
-          href={buildWhatsAppLink(product)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(180deg,#16C784,#12A76F)] px-5 py-4 text-center font-display text-sm font-semibold text-white shadow-[0_10px_24px_rgba(22,199,132,0.32),inset_0_1px_0_rgba(255,255,255,0.16)] transition hover:brightness-105 sm:text-base"
-        >
-          <WhatsAppGlyph />
-          Beli Sekarang
-        </a>
+        <div className="mt-5 flex flex-row gap-3">
+          <a
+            href={buildWhatsAppLink(product)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[linear-gradient(180deg,#16C784,#12A76F)] px-4 py-4 text-center font-display text-sm font-semibold text-white shadow-[0_10px_24px_rgba(22,199,132,0.32),inset_0_1px_0_rgba(255,255,255,0.16)] transition hover:brightness-105 sm:text-base"
+          >
+            <WhatsAppGlyph />
+            Beli Sekarang
+          </a>
+          <a
+            href={buildWhatsAppUrl(
+              `halo min, aku mau tukar tambah ${product.code} dengan akun yang lama`,
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary/18 px-4 py-4 text-center font-display text-sm font-semibold text-primary shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)] transition hover:bg-primary/28 sm:text-base"
+          >
+            <WhatsAppGlyph />
+            Tukar Tambah
+          </a>
+        </div>
       ) : (
         <span className="mt-5 flex items-center justify-center rounded-[1.2rem] bg-background/28 px-5 py-4 text-center font-display text-sm font-bold text-muted-foreground sm:text-base">
           Akun Sudah Sold

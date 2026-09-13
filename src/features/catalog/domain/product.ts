@@ -28,10 +28,12 @@ export function formatPrice(price: number): string {
   return new Intl.NumberFormat("id-ID").format(price);
 }
 
-export function buildWhatsAppLink(product: Product): string {
-  const message = encodeURIComponent(
-    `Halo min! aku mau beli akun code "${product.code}"`,
-  );
+export const WHATSAPP_NUMBER = "628881462675";
 
-  return `https://wa.me/628881462675?text=${message}`;
+export function buildWhatsAppUrl(message: string): string {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+export function buildWhatsAppLink(product: Product): string {
+  return buildWhatsAppUrl(`Halo min! aku mau beli akun code "${product.code}"`);
 }
