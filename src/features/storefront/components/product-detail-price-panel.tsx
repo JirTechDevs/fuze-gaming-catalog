@@ -55,7 +55,7 @@ export default function ProductDetailPricePanel({
       </div>
 
       {isAvailable ? (
-        <div className="mt-5 flex flex-row gap-3">
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
           <a
             href={buildWhatsAppLink(product)}
             target="_blank"
