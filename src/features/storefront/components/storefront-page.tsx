@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
+import { getJakartaDateKey } from "@/features/analytics/time";
 import { useStorefrontLiteMode } from "@/hooks/use-storefront-lite-mode";
 import type { StorefrontBanner } from "@/features/storefront/server";
 import CatalogSection from "@/features/storefront/components/catalog-section";
@@ -46,12 +47,23 @@ export default function StorefrontPage({ products, banners }: StorefrontPageProp
     }
   }, [isLiteMode, resolved]);
 
-  // ponytail: show entry popup once the intro finishes (fires immediately in lite mode).
-  // No localStorage — spec wants it every visit; gated on client state so it never SSRs.
+  // ponytail: show entry popup once per WIB day (reuses the analytics day key, same
+  // "1 per day" rule as visitor counting). localStorage is per-browser; wrapped in
+  // try/catch for private mode. Client-only effect, so it never SSRs.
   useEffect(() => {
-    if (introComplete) {
-      setEntryPopupOpen(true);
+    if (!introComplete) {
+      return;
     }
+    const today = getJakartaDateKey(new Date());
+    try {
+      if (localStorage.getItem("entry_popup_last_shown") === today) {
+        return;
+      }
+      localStorage.setItem("entry_popup_last_shown", today);
+    } catch {
+      // ignore storage errors (private mode / disabled) and just show the popup
+    }
+    setEntryPopupOpen(true);
   }, [introComplete]);
 
   useEffect(() => {
