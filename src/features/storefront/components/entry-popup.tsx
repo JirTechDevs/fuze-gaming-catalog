@@ -43,7 +43,7 @@ export default function EntryPopup({ open, onOpenChange }: EntryPopupProps) {
             Beli
           </button>
           <a
-            href={buildWhatsAppUrl("haii min, aku mau jual akun valo")}
+            href={buildWhatsAppUrl("Haii min fuze! aku mau jual akun valo")}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => onOpenChange(false)}

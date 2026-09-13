@@ -67,11 +67,11 @@ export default function ProductDetailPricePanel({
           </a>
           <a
             href={buildWhatsAppUrl(
-              `halo min, aku mau tukar tambah ${product.code} dengan akun yang lama`,
+              `Halo min fuze! aku mau tukar tambah "${product.code}" dengan akun yang lama`,
             )}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary/18 px-4 py-4 text-center font-display text-sm font-semibold text-primary shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)] transition hover:bg-primary/28 sm:text-base"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[linear-gradient(180deg,#00b7ff,#0e91e7)] px-4 py-4 text-center font-display text-sm font-semibold text-white shadow-[0_10px_24px_rgba(0,183,255,0.32),inset_0_1px_0_rgba(255,255,255,0.16)] transition hover:brightness-105 sm:text-base"
           >
             <WhatsAppGlyph />
             Tukar Tambah

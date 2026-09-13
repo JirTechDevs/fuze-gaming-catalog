@@ -35,5 +35,5 @@ export function buildWhatsAppUrl(message: string): string {
 }
 
 export function buildWhatsAppLink(product: Product): string {
-  return buildWhatsAppUrl(`Halo min! aku mau beli akun code "${product.code}"`);
+  return buildWhatsAppUrl(`Halo min fuze! aku mau beli akun code "${product.code}"`);
 }
