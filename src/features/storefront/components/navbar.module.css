@@ -53,19 +53,9 @@
 }
 
 .logoText {
-  font-family: var(--font-display), sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: var(--fuze-text-primary);
-  white-space: nowrap;
-  line-height: 1;
-  /* trims the font's leading so cap-height centers against the logo mark */
-  text-box: trim-both cap alphabetic;
-}
-
-.logoAccent {
-  color: var(--fuze-blue-primary);
+  height: 15px;
+  width: auto;
+  display: block;
 }
 
 /* ========================
