@@ -2,6 +2,11 @@
   command = "bun run build"
   publish = ".next"
 
+# NEXT_PUBLIC_* values are inlined into the client bundle by design; don't let
+# secret scanning fail the build over them even when imported as secrets.
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
+
 # Admin previews still use stored /img/ URLs; proxy them at Netlify's CDN so
 # they never reach a function. Mirrors the R2_PUBLIC_URL rewrite in next.config.ts.
 [[redirects]]
