@@ -111,7 +111,7 @@ export default function Navbar({ isLiteMode = false }: NavbarProps) {
       <div className={styles.navInner}>
         <Link href="/" className={styles.logo}>
           <img src="/images/logo.png" alt="Fuzevalo" className={styles.logoImage} />
-          <img src="/images/wordmark.png" alt="" className={styles.logoText} />
+          <img src="/images/wordmark.webp" alt="" className={styles.logoText} />
         </Link>
 
         <div className={styles.navMenu}>

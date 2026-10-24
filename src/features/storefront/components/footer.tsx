@@ -86,7 +86,7 @@ export default function Footer({ compact = false }: FooterProps) {
                 className="object-contain"
                 style={{ height: 100, width: 100 }}
               />
-              <img src="/images/wordmark.png" alt="" className="h-5 w-auto min-w-0 object-contain object-left sm:h-6" />
+              <img src="/images/wordmark.webp" alt="" className="h-5 w-auto min-w-0 object-contain object-left sm:h-6" />
             </div>
             <p className="max-w-sm text-base leading-relaxed text-muted-foreground/75">
               Marketplace jual beli akun Valorant murah, aman, dan bergaransi.
