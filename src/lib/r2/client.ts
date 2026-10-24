@@ -40,6 +40,16 @@ export function buildImagePublicUrl(objectKey: string) {
   return `${IMAGE_URL_PREFIX}${objectKey}`;
 }
 
+// Storefront links R2 directly so image bytes never pass through the host
+// (no function call, no host bandwidth). Stored /img/ URLs stay as-is in the DB.
+// ponytail: R2_PUBLIC_URL is the rate-limited r2.dev URL; swap it for a custom
+// domain (img.fuzevalo.com) once the zone is on Cloudflare — env change only.
+export function toDirectImageUrl(url: string) {
+  const base = process.env.R2_PUBLIC_URL;
+  if (!base || !url.startsWith(IMAGE_URL_PREFIX)) return url;
+  return `${base}/${url.slice(IMAGE_URL_PREFIX.length)}`;
+}
+
 // Extract object key from a URL we manage. Handles both new /img/ URLs and
 // legacy Supabase Storage URLs (until legacy data is fully cleaned up).
 export function extractManagedObjectKey(url: string | null | undefined): string | null {

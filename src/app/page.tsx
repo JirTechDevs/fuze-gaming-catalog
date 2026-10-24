@@ -3,8 +3,8 @@ import StorefrontPage from "@/features/storefront/components/storefront-page";
 import { listStorefrontBanners } from "@/features/storefront/server";
 import TrackVisit from "@/features/analytics/components/track-visit";
 
-// Was implicitly dynamic via the old server-side tracker; keep render behavior unchanged.
-export const dynamic = "force-dynamic";
+// ISR: render once per minute, matching the 60s unstable_cache on catalog data.
+export const revalidate = 60;
 
 export default async function HomePage() {
   const products = await listCatalogProducts();

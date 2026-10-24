@@ -1,0 +1,10 @@
+[build]
+  command = "bun run build"
+  publish = ".next"
+
+# Admin previews still use stored /img/ URLs; proxy them at Netlify's CDN so
+# they never reach a function. Mirrors the R2_PUBLIC_URL rewrite in next.config.ts.
+[[redirects]]
+  from = "/img/*"
+  to = "https://pub-859319375b0e42648e087b52050bc0a2.r2.dev/:splat"
+  status = 200

@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { toDirectImageUrl } from "@/lib/r2/client";
 import { createPublicClient } from "@/lib/supabase/public";
 import type {
   Product,
@@ -62,8 +63,11 @@ function normalizePremierValue(value: string | null) {
 }
 
 function mapCatalogRowToProduct(row: CatalogProductRow): Product {
-  const primaryImage = row.main_image_path || CATALOG_IMAGE_FALLBACK;
-  const images = uniqueImages([primaryImage, ...(row.gallery_image_paths ?? [])]);
+  const primaryImage = toDirectImageUrl(row.main_image_path || CATALOG_IMAGE_FALLBACK);
+  const images = uniqueImages([
+    primaryImage,
+    ...(row.gallery_image_paths ?? []).map(toDirectImageUrl),
+  ]);
 
   return {
     id: row.id,

@@ -4,8 +4,13 @@ import { getCatalogProductByCode } from "@/features/catalog/application/get-prod
 import ProductDetailPage from "@/features/storefront/components/product-detail-page";
 import TrackVisit from "@/features/analytics/components/track-visit";
 
-// Was implicitly dynamic via the old server-side tracker; keep render behavior unchanged.
-export const dynamic = "force-dynamic";
+// ISR: render once per minute, matching the 60s unstable_cache on catalog data.
+export const revalidate = 60;
+
+// Empty list = no build-time pages; each code renders on first hit, then caches.
+export function generateStaticParams() {
+  return [];
+}
 
 interface ProductDetailRouteProps {
   params: Promise<{ code: string }>;
