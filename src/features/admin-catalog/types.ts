@@ -3,6 +3,15 @@ import type { ActionResult } from "@/lib/action-result";
 export type CatalogStatus = "available" | "sold";
 export type ChangeNickStatus = "Ready" | "Not Ready";
 
+export type CatalogListItem = {
+  id: string;
+  code: string;
+  rank: string;
+  price: number;
+  status: CatalogStatus;
+  region: string;
+};
+
 export type CatalogRecordRow = {
   id: string;
   code: string;

@@ -66,7 +66,7 @@ function DeleteConfirmButton() {
 }
 
 interface CatalogRowActionsProps {
-  item: CatalogRecord;
+  item: Pick<CatalogRecord, "id" | "status" | "code">;
 }
 
 export default function CatalogRowActions({ item }: CatalogRowActionsProps) {

@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { createServiceRoleClient } from "@/lib/supabase/admin";
 import {
   aggregateDailyUniqueVisitors,
@@ -31,7 +32,8 @@ export type DashboardStats = {
   salesTrackingAvailable: boolean;
 };
 
-export async function getDashboardStats(): Promise<DashboardStats> {
+export const getDashboardStats = unstable_cache(
+  async (): Promise<DashboardStats> => {
   const supabase = createServiceRoleClient();
 
   const startOfMonth = new Date();
@@ -144,4 +146,10 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     unattributedTrafficEvents: unattributedEvents,
     salesTrackingAvailable: !dailySalesRes.error,
   };
-}
+},
+["dashboard-stats"],
+{
+  revalidate: 60,
+  tags: ["dashboard-stats"],
+},
+);

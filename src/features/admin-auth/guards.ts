@@ -1,12 +1,18 @@
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 
-export async function requireAuthenticatedUser() {
+export const getAuthenticatedUser = cache(async () => {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
-  const user = data?.user ?? null;
+  if (error || !data?.user) return null;
+  return data.user;
+});
 
-  if (error || !user) {
+export async function requireAuthenticatedUser() {
+  const user = await getAuthenticatedUser();
+
+  if (!user) {
     redirect("/login");
   }
 
@@ -14,9 +20,7 @@ export async function requireAuthenticatedUser() {
 }
 
 export async function redirectAuthenticatedUser() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-  const user = data?.user ?? null;
+  const user = await getAuthenticatedUser();
 
   if (user) {
     redirect("/dashboard");
