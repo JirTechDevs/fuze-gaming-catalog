@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import { Eye, EyeOff, Pencil, Trash2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Pencil, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,7 +33,9 @@ function StatusButton({ currentStatus }: { currentStatus: CatalogRecord["status"
       className="inline-flex h-10 min-w-10 items-center justify-center rounded-[0.9rem] border border-border/40 bg-card/72 text-foreground/74 transition hover:border-primary/30 hover:text-primary disabled:opacity-60"
       title={currentStatus === "available" ? "Mark as sold" : "Mark as available"}
     >
-      {currentStatus === "available" ? (
+      {pending ? (
+        <Loader2 className="size-4 animate-spin text-primary" />
+      ) : currentStatus === "available" ? (
         <EyeOff className="size-4" />
       ) : (
         <Eye className="size-4" />
@@ -49,9 +51,16 @@ function DeleteConfirmButton() {
     <AlertDialogAction
       type="submit"
       disabled={pending}
-      className="rounded-[0.95rem] bg-destructive text-destructive-foreground hover:bg-destructive/90 disabled:opacity-70"
+      className="inline-flex items-center gap-2 rounded-[0.95rem] bg-destructive text-destructive-foreground hover:bg-destructive/90 disabled:opacity-70"
     >
-      {pending ? "MENGHAPUS..." : "Ya, hapus"}
+      {pending ? (
+        <>
+          <Loader2 className="size-4 animate-spin" />
+          MENGHAPUS...
+        </>
+      ) : (
+        "Ya, hapus"
+      )}
     </AlertDialogAction>
   );
 }

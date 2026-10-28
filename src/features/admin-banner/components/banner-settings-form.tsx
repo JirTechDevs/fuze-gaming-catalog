@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import { ImagePlus, Save, Upload, X } from "lucide-react";
+import { ImagePlus, Loader2, Save, Upload, X } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { saveBannerSettingsAction } from "@/features/admin-banner/actions";
 import type { BannerSettingsRecord } from "@/features/admin-banner/server";
@@ -29,8 +29,17 @@ function SubmitButton({ disabled = false }: { disabled?: boolean }) {
       disabled={isDisabled}
       className="inline-flex h-11 items-center justify-center gap-2 rounded-[1rem] bg-primary px-5 font-display text-sm font-bold tracking-[0.16em] text-primary-foreground transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-70"
     >
-      <Save className="size-4" />
-      {pending ? "MENYIMPAN..." : "SIMPAN BANNER"}
+      {pending ? (
+        <>
+          <Loader2 className="size-4 animate-spin" />
+          MENYIMPAN...
+        </>
+      ) : (
+        <>
+          <Save className="size-4" />
+          SIMPAN BANNER
+        </>
+      )}
     </button>
   );
 }

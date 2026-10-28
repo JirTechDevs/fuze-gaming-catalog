@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans, Rajdhani } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -77,6 +78,17 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${inter.variable} ${jakartasans.variable} ${rajdhani.variable}`}>
       <body>
+        <NextTopLoader
+          color="#00d2ff"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #00d2ff,0 0 5px #00d2ff"
+        />
         {children}
         <Toaster />
       </body>
