@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Search } from "lucide-react";
 import CatalogRowActions from "@/features/admin-catalog/components/catalog-row-actions";
 import { listAdminCatalog } from "@/features/admin-catalog/server";
 import { formatPrice } from "@/features/catalog/domain/product";
@@ -7,14 +7,19 @@ import { formatPrice } from "@/features/catalog/domain/product";
 interface DashboardCatalogPageProps {
   searchParams: Promise<{
     q?: string;
+    page?: string;
   }>;
 }
 
 export default async function DashboardCatalogPage({
   searchParams,
 }: DashboardCatalogPageProps) {
-  const { q = "" } = await searchParams;
-  const items = await listAdminCatalog(q);
+  const { q = "", page = "1" } = await searchParams;
+  const currentPage = Math.max(1, parseInt(page, 10) || 1);
+  const pageSize = 25;
+  const { items, total, totalPages } = await listAdminCatalog(q, currentPage, pageSize);
+  const from = total === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const to = Math.min(total, currentPage * pageSize);
 
   return (
     <div className="space-y-6">
@@ -159,6 +164,50 @@ export default async function DashboardCatalogPage({
                   </div>
                 </article>
               ))}
+            </div>
+
+            {/* Pagination footer */}
+            <div className="mt-5 flex flex-col items-center justify-between gap-3 border-t border-border/30 pt-4 sm:flex-row">
+              <p className="text-xs text-muted-foreground/70">
+                Menampilkan <span className="font-medium text-foreground">{from}</span>–<span className="font-medium text-foreground">{to}</span> dari{" "}
+                <span className="font-medium text-foreground">{total}</span> catalog
+              </p>
+
+              {totalPages > 1 && (
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/dashboard/catalog?${new URLSearchParams({
+                      ...(q ? { q } : {}),
+                      page: String(currentPage - 1),
+                    }).toString()}`}
+                    aria-disabled={currentPage <= 1}
+                    className={`inline-flex h-9 items-center gap-1.5 rounded-[0.8rem] border border-border/40 bg-card/70 px-3 text-xs text-foreground transition hover:bg-card/95 ${
+                      currentPage <= 1 ? "pointer-events-none opacity-40" : ""
+                    }`}
+                  >
+                    <ChevronLeft className="size-3.5" />
+                    Previous
+                  </Link>
+
+                  <span className="px-2 text-xs text-muted-foreground/80">
+                    Hal {currentPage} / {totalPages}
+                  </span>
+
+                  <Link
+                    href={`/dashboard/catalog?${new URLSearchParams({
+                      ...(q ? { q } : {}),
+                      page: String(currentPage + 1),
+                    }).toString()}`}
+                    aria-disabled={currentPage >= totalPages}
+                    className={`inline-flex h-9 items-center gap-1.5 rounded-[0.8rem] border border-border/40 bg-card/70 px-3 text-xs text-foreground transition hover:bg-card/95 ${
+                      currentPage >= totalPages ? "pointer-events-none opacity-40" : ""
+                    }`}
+                  >
+                    Next
+                    <ChevronRight className="size-3.5" />
+                  </Link>
+                </div>
+              )}
             </div>
           </>
         )}

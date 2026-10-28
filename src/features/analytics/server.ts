@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { createServiceRoleClient } from "@/lib/supabase/admin";
 
 export type DashboardStats = {
@@ -10,7 +11,8 @@ export type DashboardStats = {
   conversionRate: number;
 };
 
-export async function getDashboardStats(): Promise<DashboardStats> {
+export const getDashboardStats = unstable_cache(
+  async (): Promise<DashboardStats> => {
   const supabase = createServiceRoleClient();
 
   const startOfMonth = new Date();
@@ -60,4 +62,10 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     views30d: month30Res.count ?? 0,
     conversionRate: total > 0 ? Math.round((sold / total) * 1000) / 10 : 0,
   };
-}
+},
+["dashboard-stats"],
+{
+  revalidate: 60,
+  tags: ["dashboard-stats"],
+},
+);

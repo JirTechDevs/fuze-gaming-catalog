@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireAuthenticatedUser } from "@/features/admin-auth/guards";
 import type { CatalogStatus } from "@/features/admin-catalog/types";
@@ -44,6 +44,7 @@ function toLineList(raw: string) {
 function revalidateCatalogAdminPaths() {
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/catalog");
+  revalidateTag("dashboard-stats");
 }
 
 async function findCatalogByCode(code: string) {
