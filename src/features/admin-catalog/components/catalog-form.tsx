@@ -4,13 +4,16 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import {
+  AlertCircle,
   ChevronLeft,
   ImagePlus,
+  Loader2,
   Save,
   Trash2,
   Upload,
   X,
 } from "lucide-react";
+import { toast } from "@/components/ui/sonner";
 import { saveCatalogAction } from "@/features/admin-catalog/actions";
 import { valorantRanks } from "@/features/catalog/domain/valorant-ranks";
 import type {
@@ -35,6 +38,32 @@ const initialState: CatalogFormState = initialActionResult;
 
 const rupiahFormatter = new Intl.NumberFormat("id-ID");
 
+function FormPendingOverlay({ mode }: { mode: CatalogFormProps["mode"] }) {
+  const { pending } = useFormStatus();
+  if (!pending) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-md px-4 transition-opacity animate-in fade-in duration-200">
+      <div className="flex max-w-sm flex-col items-center rounded-[1.8rem] border border-border/50 bg-card/95 p-8 text-center shadow-2xl">
+        <div className="relative mb-5 flex size-16 items-center justify-center rounded-2xl bg-primary/10 border border-primary/25">
+          <Loader2 className="size-8 animate-spin text-primary" />
+          <div className="absolute inset-0 rounded-2xl bg-primary/20 blur-xl -z-10" />
+        </div>
+        <h3 className="font-display text-lg font-bold tracking-[0.08em] text-foreground">
+          {mode === "create" ? "Menyimpan Catalog..." : "Menyimpan Perubahan..."}
+        </h3>
+        <p className="mt-2 text-xs leading-5 text-muted-foreground/80">
+          Sedang memproses, mengompresi gambar ke WebP, dan mengupload ke cloud storage. Mohon tunggu sebentar...
+        </p>
+        <div className="mt-4 flex items-center gap-2 text-[11px] font-medium tracking-wide text-primary/80">
+          <span className="size-2 rounded-full bg-primary animate-ping" />
+          Jangan tutup atau refresh halaman
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SubmitButton({ mode }: { mode: CatalogFormProps["mode"] }) {
   const { pending } = useFormStatus();
 
@@ -44,8 +73,17 @@ function SubmitButton({ mode }: { mode: CatalogFormProps["mode"] }) {
       disabled={pending}
       className="inline-flex h-11 items-center justify-center gap-2 rounded-[1rem] bg-primary px-5 font-display text-sm font-bold tracking-[0.16em] text-primary-foreground transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-70"
     >
-      <Save className="size-4" />
-      {pending ? "MENYIMPAN..." : mode === "create" ? "CREATE CATALOG" : "SAVE CHANGES"}
+      {pending ? (
+        <>
+          <Loader2 className="size-4 animate-spin" />
+          MENYIMPAN...
+        </>
+      ) : (
+        <>
+          <Save className="size-4" />
+          {mode === "create" ? "CREATE CATALOG" : "SAVE CHANGES"}
+        </>
+      )}
     </button>
   );
 }
@@ -395,15 +433,21 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
 
     if (!event.currentTarget.reportValidity()) {
       event.preventDefault();
-      setClientError("Lengkapi semua field wajib dulu sebelum menyimpan catalog.");
+      const message = "Lengkapi semua field wajib dulu sebelum menyimpan catalog.";
+      setClientError(message);
+      toast.error(message);
       return;
     }
 
     if (!mainFile && !mainExistingPath) {
       event.preventDefault();
-      setClientError("Foto Utama (Thumbnail) wajib diisi sebelum menyimpan catalog.");
+      const message = "Foto Utama (Thumbnail) wajib diisi sebelum menyimpan catalog.";
+      setClientError(message);
+      toast.error(message);
     }
   }
+
+  const activeError = clientError || (state.status === "error" ? state.message : null);
 
   return (
     <div className="space-y-6">
@@ -412,6 +456,8 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
         onSubmit={handleFormSubmit}
         className="rounded-[1.8rem] border border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.88),hsl(var(--background)/0.92))] p-5 sm:p-7"
       >
+        <FormPendingOverlay mode={mode} />
+
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="font-display text-[11px] tracking-[0.36em] text-primary/64">
@@ -438,6 +484,13 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
             <SubmitButton mode={mode} />
           </div>
         </div>
+
+        {activeError && (
+          <div className="mb-6 flex items-center gap-3 rounded-[1rem] border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive animate-in fade-in duration-200">
+            <AlertCircle className="size-5 shrink-0 text-destructive" />
+            <p className="font-medium">{activeError}</p>
+          </div>
+        )}
 
         <HiddenFileInput
           inputRef={mainInputRef}
