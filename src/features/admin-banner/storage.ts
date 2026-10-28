@@ -51,7 +51,7 @@ async function deleteManagedBannerImage(imagePath: string | null | undefined) {
 
 async function uploadBannerImage(file: File, slot: number) {
   const output = await convertImageToWebp(file);
-  const objectKey = `storefront-banners/banner-${slot}.webp`;
+  const objectKey = `storefront-banners/banner-${slot}_${Date.now()}.webp`;
   await putR2Object(objectKey, output, "image/webp");
   return buildImagePublicUrl(objectKey);
 }
