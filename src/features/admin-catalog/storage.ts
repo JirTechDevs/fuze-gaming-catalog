@@ -48,7 +48,12 @@ export function sanitizeCatalogCode(code: string) {
 }
 
 export function buildCatalogImageObjectPath(code: string, imageNumber: number) {
-  return `${sanitizeCatalogCode(code)}IMG${imageNumber}.webp`;
+  return `${sanitizeCatalogCode(code)}IMG${imageNumber}_${Date.now()}.webp`;
+}
+
+function matchesCatalogImageSlot(key: string, code: string, imageNumber: number) {
+  const prefix = `${sanitizeCatalogCode(code)}IMG${imageNumber}`;
+  return key === `${prefix}.webp` || key.startsWith(`${prefix}_`);
 }
 
 export function getManagedCatalogImageObjectPath(imagePath: string) {
@@ -110,9 +115,8 @@ async function resolveCatalogImageSource(
   imageNumber: number,
   source: CatalogImageSource,
 ) {
-  const targetObjectKey = buildCatalogImageObjectPath(code, imageNumber);
-
   if (source.kind === "upload") {
+    const targetObjectKey = buildCatalogImageObjectPath(code, imageNumber);
     return uploadCatalogImage(source.file, targetObjectKey);
   }
 
@@ -120,6 +124,12 @@ async function resolveCatalogImageSource(
     return source.path;
   }
 
+  const currentKey = extractManagedObjectKey(source.path);
+  if (currentKey && matchesCatalogImageSlot(currentKey, code, imageNumber)) {
+    return source.path;
+  }
+
+  const targetObjectKey = buildCatalogImageObjectPath(code, imageNumber);
   return moveManagedCatalogImage(source.path, targetObjectKey);
 }
 
