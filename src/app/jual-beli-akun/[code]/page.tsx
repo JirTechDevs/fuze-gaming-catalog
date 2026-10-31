@@ -2,8 +2,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCatalogProductByCode } from "@/features/catalog/application/get-product-by-code";
 import ProductDetailPage from "@/features/storefront/components/product-detail-page";
-import { trackStorefrontView } from "@/features/analytics/track-view";
-import { createClient } from "@/lib/supabase/server";
+import TrackVisit from "@/features/analytics/components/track-visit";
+
+// ISR: render once per minute, matching the 60s unstable_cache on catalog data.
+export const revalidate = 60;
+
+// Empty list = no build-time pages; each code renders on first hit, then caches.
+export function generateStaticParams() {
+  return [];
+}
 
 interface ProductDetailRouteProps {
   params: Promise<{ code: string }>;
@@ -55,10 +62,12 @@ export default async function ProductDetailRoute({
   params,
 }: ProductDetailRouteProps) {
   const { code } = await params;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
   const product = await getCatalogProductByCode(normalizeCode(code));
   if (!product) notFound();
-  if (!user) await trackStorefrontView(`/jual-beli-akun/${normalizeCode(code)}`);
-  return <ProductDetailPage product={product} />;
+  return (
+    <>
+      <TrackVisit />
+      <ProductDetailPage product={product} />
+    </>
+  );
 }

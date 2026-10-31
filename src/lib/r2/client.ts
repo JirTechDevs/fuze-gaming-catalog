@@ -40,6 +40,15 @@ export function buildImagePublicUrl(objectKey: string) {
   return `${IMAGE_URL_PREFIX}${objectKey}`;
 }
 
+// Indonesian ISPs DNS-block *.r2.dev, so images must load from our own domain:
+// /img/ is rewritten to R2 by next.config.ts. Maps any stored r2.dev URL back to /img/.
+// ponytail: costs host bandwidth; point a custom domain (img.fuzevalo.com) at R2 to skip the host.
+export function toProxiedImageUrl(url: string) {
+  const base = process.env.R2_PUBLIC_URL;
+  if (!base || !url.startsWith(`${base}/`)) return url;
+  return `${IMAGE_URL_PREFIX}${url.slice(base.length + 1)}`;
+}
+
 // Extract object key from a URL we manage. Handles both new /img/ URLs and
 // legacy Supabase Storage URLs (until legacy data is fully cleaned up).
 export function extractManagedObjectKey(url: string | null | undefined): string | null {

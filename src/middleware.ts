@@ -1,14 +1,17 @@
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabasePublishableKey, getSupabaseUrl } from "@/lib/supabase/env";
+import { ADMIN_DEVICE_COOKIE, VISITOR_COOKIE } from "@/features/analytics/track-visit";
 
-const SESSION_COOKIE = "fvz_sid";
-const SESSION_TTL = 60 * 60 * 24; // 24h in seconds
+// Persistent anonymous visitor identity (~2 years), NOT a short-lived session.
+const COOKIE_TTL = 60 * 60 * 24 * 365 * 2;
 
 const PROTECTED_PATH_PREFIXES = ["/dashboard", "/admin"];
 
+type CookieUpdate = { name: string; value: string; options: CookieOptions };
+
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next({ request });
+  const authCookieUpdates: CookieUpdate[] = [];
 
   const supabase = createServerClient(
     getSupabaseUrl(),
@@ -20,7 +23,7 @@ export async function middleware(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options);
+            authCookieUpdates.push({ name, value, options });
           });
         },
       },
@@ -32,8 +35,8 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
-  const isProtected = PROTECTED_PATH_PREFIXES.some((prefix) =>
-    pathname === prefix || pathname.startsWith(`${prefix}/`),
+  const isProtected = PROTECTED_PATH_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
 
   if (isProtected && !user) {
@@ -41,14 +44,29 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Stamp a session cookie for unique-visitor tracking on storefront pages.
-  if (!user && !request.cookies.get(SESSION_COOKIE)) {
-    response.cookies.set(SESSION_COOKIE, crypto.randomUUID(), {
-      httpOnly: true,
-      sameSite: "lax",
-      maxAge: SESSION_TTL,
-      path: "/",
-    });
+  const response = NextResponse.next({ request });
+
+  for (const { name, value, options } of authCookieUpdates) {
+    response.cookies.set(name, value, options);
+  }
+
+  const cookieOptions: Partial<CookieOptions> = {
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: COOKIE_TTL,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+  };
+
+  if (user) {
+    // Marks this device as admin for good (survives logout), so the owner
+    // browsing the storefront logged-out is never counted as a visitor.
+    response.cookies.set(ADMIN_DEVICE_COOKIE, "1", cookieOptions);
+  } else {
+    // Minted on page loads only; /api/public/track (outside the matcher)
+    // requires the browser to send it back.
+    const visitorId = request.cookies.get(VISITOR_COOKIE)?.value ?? crypto.randomUUID();
+    response.cookies.set(VISITOR_COOKIE, visitorId, cookieOptions);
   }
 
   return response;
@@ -56,6 +74,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|images/|api/public/).*)",
+    "/((?!_next/static|_next/image|favicon.ico|images/|img/|api/).*)",
   ],
 };

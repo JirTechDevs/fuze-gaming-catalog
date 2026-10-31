@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import type { Product } from "@/features/catalog/domain/product";
+import { getJakartaDateKey } from "@/features/analytics/time";
 import { useStorefrontLiteMode } from "@/hooks/use-storefront-lite-mode";
 import type { StorefrontBanner } from "@/features/storefront/server";
 import CatalogSection from "@/features/storefront/components/catalog-section";
+import EntryPopup from "@/features/storefront/components/entry-popup";
 import Footer from "@/features/storefront/components/footer";
 import HeroSection from "@/features/storefront/components/hero-section";
 import IntroScreen from "@/features/storefront/components/intro-screen";
@@ -31,6 +33,7 @@ function FloatingWhatsAppGlyph() {
 
 export default function StorefrontPage({ products, banners }: StorefrontPageProps) {
   const [introComplete, setIntroComplete] = useState(false);
+  const [entryPopupOpen, setEntryPopupOpen] = useState(false);
   const { isLiteMode, resolved } = useStorefrontLiteMode();
   const shouldRenderLiteMode = !resolved || isLiteMode;
   // ponytail: guard so the animated intro (Framer + useReducedMotion) only mounts after hydration.
@@ -43,6 +46,25 @@ export default function StorefrontPage({ products, banners }: StorefrontPageProp
       setIntroComplete(true);
     }
   }, [isLiteMode, resolved]);
+
+  // ponytail: show entry popup once per WIB day (reuses the analytics day key, same
+  // "1 per day" rule as visitor counting). localStorage is per-browser; wrapped in
+  // try/catch for private mode. Client-only effect, so it never SSRs.
+  useEffect(() => {
+    if (!introComplete) {
+      return;
+    }
+    const today = getJakartaDateKey(new Date());
+    try {
+      if (localStorage.getItem("entry_popup_last_shown") === today) {
+        return;
+      }
+      localStorage.setItem("entry_popup_last_shown", today);
+    } catch {
+      // ignore storage errors (private mode / disabled) and just show the popup
+    }
+    setEntryPopupOpen(true);
+  }, [introComplete]);
 
   useEffect(() => {
     if (!introComplete) {
@@ -104,6 +126,9 @@ export default function StorefrontPage({ products, banners }: StorefrontPageProp
       </div>
       {mounted && resolved && !isLiteMode && !introComplete && (
         <IntroScreen onComplete={() => setIntroComplete(true)} />
+      )}
+      {mounted && (
+        <EntryPopup open={entryPopupOpen} onOpenChange={setEntryPopupOpen} />
       )}
     </>
   );

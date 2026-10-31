@@ -86,9 +86,7 @@ export default function Footer({ compact = false }: FooterProps) {
                 className="object-contain"
                 style={{ height: 100, width: 100 }}
               />
-              <span className="font-display text-3xl font-bold tracking-wider text-white sm:text-[2.15rem]">
-                FUZE<span className="text-primary">VALO</span>
-              </span>
+              <img src="/images/wordmark.webp" alt="" className="h-5 w-auto min-w-0 object-contain object-left sm:h-6" />
             </div>
             <p className="max-w-sm text-base leading-relaxed text-muted-foreground/75">
               Marketplace jual beli akun Valorant murah, aman, dan bergaransi.

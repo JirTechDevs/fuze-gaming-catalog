@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { createPublicClient } from "@/lib/supabase/public";
 import { getSupabaseUrl } from "@/lib/supabase/env";
+import { toProxiedImageUrl } from "@/lib/r2/client";
 
 export interface StorefrontBanner {
   src: string;
@@ -28,7 +29,7 @@ function normalizeBannerSource(value: unknown) {
     normalized.startsWith("https://") ||
     normalized.startsWith("/")
   ) {
-    return normalized;
+    return toProxiedImageUrl(normalized);
   }
 
   if (normalized.startsWith("storage/v1/object/public/")) {

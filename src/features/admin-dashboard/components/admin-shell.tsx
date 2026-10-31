@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ImagePlus, LayoutDashboard, LogOut, Package2 } from "lucide-react";
+import { BarChart2, ImagePlus, LayoutDashboard, LogOut, Package2 } from "lucide-react";
 import { signOutAction } from "@/features/admin-auth/actions";
 import {
   AlertDialog,
@@ -43,6 +43,7 @@ interface AdminShellProps {
 
 const menuItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart2 },
   { href: "/dashboard/catalog", label: "Catalog", icon: Package2 },
   { href: "/dashboard/banner", label: "Banner", icon: ImagePlus },
 ];
