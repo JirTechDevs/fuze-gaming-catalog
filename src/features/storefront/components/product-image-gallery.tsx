@@ -17,7 +17,7 @@ export default function ProductImageGallery({
   return (
     <section className="flex h-full flex-col rounded-[1.6rem] bg-card/70 p-3 shadow-[0_0_40px_hsl(var(--primary)_/_0.08)] backdrop-blur-md sm:rounded-[2rem] sm:p-4">
       <div className="relative flex h-full flex-col overflow-hidden rounded-[1.4rem] bg-[radial-gradient(circle_at_top,_hsl(var(--primary)/0.22),_transparent_54%),linear-gradient(180deg,_hsl(var(--secondary)/0.9),_hsl(var(--card)))] p-3 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)] sm:rounded-[1.7rem] sm:p-5">
-        <div className="absolute left-3 right-3 top-3 z-10 flex flex-wrap items-start justify-between gap-2 sm:left-5 sm:right-5 sm:top-5">
+        <div className="mb-3 flex flex-wrap items-start justify-between gap-2 sm:mb-4">
           <div className="flex min-w-0 items-center gap-2 rounded-[1rem] bg-background/88 px-3 py-2 shadow-[0_0_18px_hsl(var(--primary)_/_0.16)] backdrop-blur-md sm:rounded-[1.2rem] sm:px-4 sm:py-2.5">
             <Shield size={14} className="shrink-0 text-primary" />
             <span className="break-all font-display text-sm font-bold tracking-[0.14em] text-primary sm:text-lg sm:tracking-[0.16em]">
@@ -36,9 +36,8 @@ export default function ProductImageGallery({
           <img
             src={activeImage}
             alt={`${product.code} preview`}
-            className="h-full min-h-[18rem] w-full object-contain object-top sm:min-h-[32rem] lg:min-h-[40rem] xl:min-h-[46rem]"
+            className="block h-auto w-full"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/10 to-transparent" />
         </div>
 
         {images.length > 1 && (
@@ -60,7 +59,7 @@ export default function ProductImageGallery({
                   <img
                     src={image}
                     alt={`${product.code} thumbnail ${index + 1}`}
-                    className="h-20 w-24 object-cover sm:h-24 sm:w-28"
+                    className="h-24 w-[4.8rem] object-contain sm:h-28 sm:w-[5.6rem]"
                   />
                   <div
                     className={`absolute inset-0 transition ${

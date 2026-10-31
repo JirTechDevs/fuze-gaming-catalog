@@ -13,7 +13,7 @@ export default function ProductDetailLoading() {
 
         <div className="grid gap-6 lg:grid-cols-2 lg:items-stretch xl:gap-8">
           <section className="h-full">
-            <div className="aspect-[4/3] w-full animate-pulse rounded-[1.8rem] bg-muted/20" />
+            <div className="aspect-[4/5] w-full animate-pulse rounded-[1.8rem] bg-muted/20" />
             <div className="mt-4 flex gap-3">
               {[0, 1, 2, 3].map((slot) => (
                 <div

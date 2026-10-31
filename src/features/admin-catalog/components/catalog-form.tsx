@@ -663,6 +663,9 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
                 <p className="text-sm text-foreground">
                   Drag &amp; drop atau klik untuk pilih gambar utama.
                 </p>
+                <p className="text-xs text-muted-foreground/72">
+                  Ukuran poster: 1080 × 1350 px (rasio 4:5).
+                </p>
                 <div className="flex flex-wrap gap-2">
                   <FileTriggerButton icon={Upload} onClick={handleOpenMainPicker}>
                     Upload Thumbnail

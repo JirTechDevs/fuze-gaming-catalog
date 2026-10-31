@@ -121,7 +121,7 @@ export default function ProductCard({
       }}
       whileHover={isLiteMode ? undefined : { y: -4, transition: { type: "spring", stiffness: 350, damping: 18 } }}
       className={`${styles.card} ${isSold ? styles.sold : ""}`}
-      style={{ contentVisibility: "auto", containIntrinsicSize: "320px 360px" }}
+      style={{ contentVisibility: "auto", containIntrinsicSize: "320px 560px" }}
       role="link"
       tabIndex={isSold ? -1 : 0}
       onPointerEnter={prefetchDetail}
@@ -164,7 +164,6 @@ export default function ProductCard({
             loading="lazy"
             decoding="async"
           />
-          <div className={styles.thumbShade} />
 
           {featuredLabel && (
             <span
