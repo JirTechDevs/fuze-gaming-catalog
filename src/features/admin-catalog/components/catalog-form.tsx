@@ -1,7 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
-import { useFormStatus } from "react-dom";
+import { startTransition, useActionState, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   AlertCircle,
@@ -38,8 +37,7 @@ const initialState: CatalogFormState = initialActionResult;
 
 const rupiahFormatter = new Intl.NumberFormat("id-ID");
 
-function FormPendingOverlay({ mode }: { mode: CatalogFormProps["mode"] }) {
-  const { pending } = useFormStatus();
+function FormPendingOverlay({ mode, pending }: { mode: CatalogFormProps["mode"]; pending: boolean }) {
   if (!pending) return null;
 
   return (
@@ -64,9 +62,7 @@ function FormPendingOverlay({ mode }: { mode: CatalogFormProps["mode"] }) {
   );
 }
 
-function SubmitButton({ mode }: { mode: CatalogFormProps["mode"] }) {
-  const { pending } = useFormStatus();
-
+function SubmitButton({ mode, pending }: { mode: CatalogFormProps["mode"]; pending: boolean }) {
   return (
     <button
       type="submit"
@@ -307,7 +303,7 @@ function normalizePremierValue(value: string | undefined) {
 
 export default function CatalogForm({ mode, record }: CatalogFormProps) {
   const formAction = saveCatalogAction.bind(null, record?.id ?? null);
-  const [state, action] = useActionState(formAction, initialState);
+  const [state, action, isPending] = useActionState<CatalogFormState, FormData>(formAction, initialState);
   useActionToast(state);
   const mainInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
@@ -428,11 +424,12 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
     setPriceValue(toPriceDigits(event.target.value));
   }
 
+  // ponytail: submit manually because <form action={fn}> resets every field, files included, even when saving fails.
   function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setClientError(null);
 
     if (!event.currentTarget.reportValidity()) {
-      event.preventDefault();
       const message = "Lengkapi semua field wajib dulu sebelum menyimpan catalog.";
       setClientError(message);
       toast.error(message);
@@ -440,11 +437,14 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
     }
 
     if (!mainFile && !mainExistingPath) {
-      event.preventDefault();
       const message = "Foto Utama (Thumbnail) wajib diisi sebelum menyimpan catalog.";
       setClientError(message);
       toast.error(message);
+      return;
     }
+
+    const formData = new FormData(event.currentTarget);
+    startTransition(() => action(formData));
   }
 
   const activeError = clientError || (state.status === "error" ? state.message : null);
@@ -452,11 +452,10 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
   return (
     <div className="space-y-6">
       <form
-        action={action}
         onSubmit={handleFormSubmit}
         className="rounded-[1.8rem] border border-border/35 bg-[linear-gradient(180deg,hsl(var(--card)/0.88),hsl(var(--background)/0.92))] p-5 sm:p-7"
       >
-        <FormPendingOverlay mode={mode} />
+        <FormPendingOverlay mode={mode} pending={isPending} />
 
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -481,7 +480,7 @@ export default function CatalogForm({ mode, record }: CatalogFormProps) {
             >
               Batal
             </Link>
-            <SubmitButton mode={mode} />
+            <SubmitButton mode={mode} pending={isPending} />
           </div>
         </div>
 
